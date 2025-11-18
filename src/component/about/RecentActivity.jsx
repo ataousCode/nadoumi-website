@@ -1,5 +1,6 @@
 import React from 'react'
 import site from '../../data/site.json'
+import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
 const images = import.meta.glob('../../assets/images/*', { eager: true })
 const resolveImage = (file) => {
@@ -61,15 +62,27 @@ const defaultItems = [
 ]
 
 function RecentActivity({ title = 'Recent Activity', items = defaultItems, className = '' }) {
+  const { locale, t } = useI18n()
+  const [list, setList] = React.useState(items)
+
+  React.useEffect(() => {
+    import(`../../i18n/locales/${locale}/about.recent.json`).then((mod) => {
+      const arr = Array.isArray(mod.default) ? mod.default : []
+      setList(arr.length > 0 ? arr : items)
+    }).catch(() => setList(items))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale])
+
+  const subtitle = t('about.recent.subtitle') || site?.description
   return (
     <section className={`bg-white ${className}`} aria-labelledby="recent-activity-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <h2 id="recent-activity-heading" className="text-2xl sm:text-3xl font-bold text-gray-900">{title}</h2>
-          {site?.description && <p className="mt-2 text-gray-700 max-w-3xl mx-auto">{site.description}</p>}
+          {subtitle && <p className="mt-2 text-gray-700 max-w-3xl mx-auto">{subtitle}</p>}
         </div>
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {items.map((it) => {
+          {list.map((it) => {
             const img = resolveImage(it.image)
             return (
               <article key={it.id} className="rounded-2xl border border-orange-100 bg-white shadow-sm overflow-hidden">

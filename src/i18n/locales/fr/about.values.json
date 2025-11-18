@@ -1,0 +1,8 @@
+[
+  { "id": 1, "title": "Intégrité", "description": "Transparence, honnêteté et responsabilité. Chaque partenariat repose sur la confiance et l’éthique." },
+  { "id": 2, "title": "Excellence", "description": "Recherche de la maîtrise dans tout ce que nous faisons, avec des solutions qui dépassent les attentes et durent dans le temps." },
+  { "id": 3, "title": "Orientation client", "description": "Les ambitions de nos clients sont au cœur de chaque décision, avec des solutions sur mesure pour les aider à réussir au‑delà des frontières." },
+  { "id": 4, "title": "Transparence", "description": "Communication ouverte et attentes claires dans toutes nos actions." },
+  { "id": 5, "title": "Fiabilité", "description": "Exécution constante et résultats fiables sur lesquels vous pouvez compter." },
+  { "id": 6, "title": "Impact", "description": "Des résultats qui comptent pour les clients, les partenaires et les communautés." }
+]

@@ -1,15 +1,27 @@
 import React from 'react'
-import values from '../../data/values.json'
+import base from '../../data/values.json'
+import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
-function Value({ title = 'Our Core Values', subtitle = 'What we stand for', items = values, className = '' }) {
+function Value({ title = 'Our Core Values', subtitle = 'What we stand for', items = base, className = '' }) {
+  const { locale } = useI18n()
+  const [list, setList] = React.useState(items)
+
+  React.useEffect(() => {
+    import(`../../i18n/locales/${locale}/about.values.json`).then((mod) => {
+      const arr = Array.isArray(mod.default) ? mod.default : []
+      setList(arr.length > 0 ? arr : items)
+    }).catch(() => setList(items))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale])
+
   const extras = [
-    { title: 'Transparency', description: 'Open communication and clear expectations in everything we do.' },
-    { title: 'Reliability', description: 'Consistent delivery and dependable outcomes you can trust.' },
-    { title: 'Impact', description: 'Meaningful results for clients, partners, and communities.' },
+    { id: 'tr', title: 'Transparency', description: 'Open communication and clear expectations in everything we do.' },
+    { id: 're', title: 'Reliability', description: 'Consistent delivery and dependable outcomes you can trust.' },
+    { id: 'im', title: 'Impact', description: 'Meaningful results for clients, partners, and communities.' },
   ]
 
-  const cards = Array.isArray(items) && items.length > 0
-    ? (items.length >= 6 ? items : [...items, ...extras.slice(0, Math.max(0, 6 - items.length))])
+  const cards = Array.isArray(list) && list.length > 0
+    ? (list.length >= 6 ? list : [...list, ...extras.slice(0, Math.max(0, 6 - list.length))])
     : extras
 
   return (

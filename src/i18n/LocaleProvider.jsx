@@ -37,13 +37,30 @@ export function LocaleProvider({ children }) {
       // Support both nested paths and dotted top-level keys (e.g., "services.faq")
       const direct = messages[key]
       if (typeof direct === 'string') return direct
-      const val = key.split('.').reduce((acc, k) => (acc && acc[k] != null ? acc[k] : undefined), messages)
-      if (typeof val === 'string') return val
-      // Fallback for objects stored under a dotted top-level key (e.g., "about.values.title")
-      const [head, ...rest] = key.split('.')
-      const dotted = messages[`${head}.${rest[0]}`]
-      if (dotted && rest.length > 1) {
-        const leaf = rest.slice(1).reduce((acc, k) => (acc && acc[k] != null ? acc[k] : undefined), dotted)
+      const segs = key.split('.')
+      // Standard nested traversal
+      let acc = messages
+      for (let i = 0; i < segs.length; i++) {
+        const s = segs[i]
+        if (acc && acc[s] != null) {
+          acc = acc[s]
+          continue
+        }
+        // Fallback: treat the remainder as a single property name containing dots
+        const remainder = segs.slice(i).join('.')
+        if (acc && acc[remainder] != null) {
+          acc = acc[remainder]
+          break
+        }
+        acc = undefined
+        break
+      }
+      if (typeof acc === 'string') return acc
+      // Fallback for objects stored under dotted top-level keys like "about.values" with nested children
+      const [head, ...rest] = segs
+      const dottedRoot = messages[`${head}.${rest[0] || ''}`]
+      if (dottedRoot) {
+        const leaf = rest.slice(1).reduce((a, k) => (a && a[k] != null ? a[k] : undefined), dottedRoot)
         if (typeof leaf === 'string') return leaf
       }
       return key

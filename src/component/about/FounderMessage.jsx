@@ -1,5 +1,6 @@
 import React from 'react'
 import team from '../../data/team.json'
+import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
 const images = import.meta.glob('../../assets/images/*', { eager: true })
 const resolveImage = (pathOrFile) => {
@@ -11,7 +12,17 @@ const resolveImage = (pathOrFile) => {
 }
 
 function FounderMessage({ title = "Founder's Message", person }) {
-  const founder = person || team.find((p) => /founder/i.test(p.position)) || team[0]
+  const { locale } = useI18n()
+  const baseFounder = person || team.find((p) => /founder/i.test(p.position)) || team[0]
+  const [founder, setFounder] = React.useState(baseFounder)
+  React.useEffect(() => {
+    import(`../../i18n/locales/${locale}/about.team.json`).then((mod) => {
+      const overrides = Array.isArray(mod.default) ? mod.default : []
+      const byId = Object.fromEntries(overrides.map((o) => [o.id, o]))
+      setFounder({ ...baseFounder, ...(byId[baseFounder?.id] || {}) })
+    }).catch(() => setFounder(baseFounder))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale])
   const photoUrl = resolveImage(founder?.photo) || resolveImage('founder.jpg')
 
   return (
