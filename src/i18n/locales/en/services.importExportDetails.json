@@ -1,0 +1,15 @@
+{
+  "title": "Import & Export Consulting",
+  "intro": "At Nadoumi Consulting, we simplify the complexities of sourcing and exporting from China. Our mission is to help businesses find verified suppliers, maintain product quality, and ensure smooth logistics from factory to destination.",
+  "steps": [
+    { "title": "Supplier Sourcing", "description": "We identify reliable suppliers through a strict verification process to ensure compliance, quality, and credibility." },
+    { "title": "Negotiation & Contracts", "description": "We support you in price negotiation, MOQ optimization, and safe contract drafting." },
+    { "title": "Inspection & Quality Control", "description": "Our team conducts in-person or third-party quality inspections before shipment." },
+    { "title": "Logistics & Customs", "description": "We manage shipment documentation, customs declarations, and final delivery coordination." }
+  ],
+  "cta": {
+    "heading": "Looking to Source from China?",
+    "text": "Get professional help in finding verified suppliers, managing shipments, and ensuring quality.",
+    "button": "Contact Us Today"
+  }
+}

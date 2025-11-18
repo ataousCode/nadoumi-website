@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "maxSizeMB": 10,
+    "allowedTypes": ["PDF"]
+  },
+  "documents": [
+    {"id":"passport","label":"Copie du passeport","required":true,"type":"file","accept": ".pdf","note":"Téléversez une copie scannée de votre passeport (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"diploma","label":"Diplôme (dernier niveau)","required":true,"type":"file","accept": ".pdf","note":"Diplôme ou certificat de diplôme (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"transcript","label":"Relevé de notes","required":true,"type":"file","accept": ".pdf","note":"Relevé de notes officiel (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"photo","label":"Photo passeport","required":true,"type":"file","accept": ".jpg,.jpeg,.png","note":"Photo au format passeport (JPG/PNG)","maxFileSizeDisplay":"10MB"},
+    {"id":"recommendationLetters","label":"Deux lettres de recommandation","required":true,"type":"file-multiple","accept": ".pdf","note":"Deux lettres en PDF séparés ou un PDF combiné","maxFileSizeDisplay":"10MB"},
+    {"id":"publication","label":"Publication (Master & Doctorat)","required":false,"type":"file","accept": ".pdf","note":"Toute publication pertinente (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"medicalReport","label":"Rapport médical / Examen physique","required":true,"type":"file","accept": ".pdf","note":"Rapport médical officiel (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"bankStatement","label":"Relevé bancaire","required":true,"type":"file","accept": ".pdf","note":"Preuve de fonds suffisants (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"personalStatementDoc","label":"Lettre de motivation (document complet)","required":true,"type":"file","accept": ".pdf","note":"Lettre de motivation complète (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"noCriminalRecord","label":"Casier judiciaire / Attestation de non‑condamnation","required":true,"type":"file","accept": ".pdf","note":"Attestation officielle (PDF)","maxFileSizeDisplay":"10MB"},
+    {"id":"englishCert","label":"Certificat d’anglais","required":false,"type":"file","accept": ".pdf","note":"TOEFL/IELTS/Duolingo (PDF) si disponible","maxFileSizeDisplay":"10MB"},
+    {"id":"cv","label":"CV / Résumé","required":true,"type":"file","accept": ".pdf","note":"Curriculum Vitae (PDF)","maxFileSizeDisplay":"10MB"}
+  ]
+}

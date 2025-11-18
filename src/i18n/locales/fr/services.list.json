@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "slug": "import-export",
+    "title": "Import & Export",
+    "shortDescription": "Sourçage, contrôle qualité et logistique de bout en bout depuis la Chine.",
+    "features": [
+      "Sourçage et vérification des fournisseurs",
+      "Contrôle qualité et rapports d’inspection",
+      "Transit et documentation douanière",
+      "Conformité réglementaire et certifications",
+      "Négociation et représentation locale"
+    ],
+    "ctaText": "Commencer le sourçage"
+  },
+  {
+    "id": 2,
+    "slug": "student-admission",
+    "title": "Admission Étudiante",
+    "shortDescription": "Admission universitaire personnalisée et support visa pour étudier en Chine.",
+    "features": [
+      "Correspondance université et programme",
+      "Revue des dossiers et des documents",
+      "Conseils visa et bourses",
+      "Support avant et après l’arrivée"
+    ],
+    "ctaText": "Postuler"
+  },
+  {
+    "id": 3,
+    "slug": "translation",
+    "title": "Service de traduction",
+    "shortDescription": "Anglais↔Chinois et Français↔Chinois, traduction de documents et interprétation sur site.",
+    "features": [
+      "Anglais↔Chinois et Français↔Chinois",
+      "Traduction et localisation de documents",
+      "Interprétation et accompagnement sur site",
+      "Conseils pour traductions certifiées"
+    ],
+    "ctaText": "Obtenir une traduction"
+  }
+]

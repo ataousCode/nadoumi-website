@@ -1,0 +1,235 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "importExport": "Import & Export",
+    "studentAdmission": "Student Admission",
+    "translation": "Translation",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "home": {
+    "subtitle": "Empowering Global",
+    "highlight": "Trade & Education",
+    "description": "We connect businesses to reliable import/export solutions and help students succeed at universities across China.",
+    "primary": "Explore Services",
+    "secondary": "Apply Now",
+    "stats": {
+      "countries": "Countries",
+      "clients": "Happy Clients",
+      "years": "Years Experience",
+      "success": "Success Rate"
+    },
+    "servicesPreviewTitle": "What We Offer",
+    "servicesPreviewSubtitle": "A quick look at our core services",
+    "viewAllServices": "View all services",
+    "valuesTitle": "Our Values",
+    "valuesSubtitle": "The principles that guide our work",
+    "processTitle": "How It Works",
+    "processSubtitle": "A simple, transparent process from start to finish",
+    "processSteps": {
+      "consultation.title": "Consultation",
+      "consultation.description": "We understand your goals and outline a clear plan.",
+      "execution.title": "Execution",
+      "execution.description": "We coordinate suppliers/universities and handle logistics or applications.",
+      "delivery.title": "Delivery",
+      "delivery.description": "We deliver outcomes and support you post-engagement."
+    },
+    "testimonialsTitle": "What Clients Say",
+    "testimonialsSubtitle": "Real stories from our partners and students",
+    "ctaTitle": "Ready to move forward?",
+    "ctaSubtitle": "Let’s talk about your goals.",
+    "ctaPrimary": "Get Started",
+    "ctaSecondary": "Contact Us"
+  },
+  "home.ctaTitle": "Ready to move forward?",
+  "home.ctaSubtitle": "Let’s talk about your goals.",
+  "home.ctaPrimary": "Get Started",
+  "home.ctaSecondary": "Contact Us",
+  "services": {
+    "heroEyebrow": "Our Services",
+    "heroTitle": "End‑to‑End Guidance for Your Success",
+    "heroSubtitle": "From global trade compliance to streamlined student admissions, we help you navigate every step with confidence.",
+    "actionsExplore": "Explore Services",
+    "actionsContact": "Talk to us",
+    "whyTitle": "Why Choose Us",
+    "whySubtitle": "Practical expertise, transparent process, and responsive support.",
+    "why": {
+      "expert": "Expert Advisors",
+      "clear": "Clear Process",
+      "fast": "Fast Response",
+      "compliance": "Compliance First",
+      "personalized": "Personalized Support",
+      "outcome": "Outcome Focused"
+    },
+    "howTitle": "How We Work",
+    "howSubtitle": "A simple, proven, four-step approach.",
+    "how": {
+      "discovery": "Discovery",
+      "plan": "Plan",
+      "execute": "Execute",
+      "support": "Support"
+    },
+    "exploreTitle": "Explore Our Services",
+    "exploreSubtitle": "Select the path that fits your needs.",
+    "contactUs": "Contact us"
+  },
+  "services.whyDesc": {
+    "expert": "Years of hands-on experience in trade and admissions.",
+    "clear": "Structured steps, templates, and checklists for zero guesswork.",
+    "fast": "Prompt communication and proactive follow-ups.",
+    "compliance": "Up-to-date policies and documentation standards.",
+    "personalized": "Tailored guidance to your goals and constraints.",
+    "outcome": "We prioritize results and long-term success."
+  },
+  "services.howDesc": {
+    "discovery": "Understand objectives, constraints, and timelines.",
+    "plan": "Define steps, documentation, and milestones.",
+    "execute": "Work through forms, compliance, and submissions.",
+    "support": "Monitor progress and handle updates."
+  },
+  "services.faq": "FAQ",
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We’re here to help with import/export and student admissions. Use the form or reach us directly — we respond within 1–2 business days.",
+    "infoTitle": "Contact Information",
+    "infoSubtitle": "Reach us directly via email or phone, or visit our office.",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "follow": "Follow us"
+  },
+  "contact.form": {
+    "title": "Let’s talk",
+    "subtitle": "Tell us about your goals and we’ll reply within 1–2 business days.",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "topic": "Topic",
+    "message": "Message",
+    "ph.name": "Your full name",
+    "ph.email": "you@company.com",
+    "ph.phone": "Optional",
+    "ph.message": "Describe how we can help",
+    "disclaimer": "By submitting, you agree to receive communications related to your inquiry.",
+    "send": "Send Message",
+    "preferEmail": "Prefer email? Contact us directly at",
+    "status": {
+      "success": "Thanks! Your message looks good. We will get back to you soon.",
+      "error": "Please fix the highlighted fields.",
+      "validating": "Validating application...",
+      "uploading": "Uploading documents...",
+      "saving": "Saving application...",
+      "submitSuccess": "Application submitted successfully. Our admin team has received it.",
+      "submitError": "Submission failed. Please try again.",
+      "missingDocs": "Please upload all required documents.",
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit Application",
+      "remove": "Remove",
+      "select": "Select...",
+      "family.add": "Add Family Member",
+      "family.name": "Name",
+      "family.nationality": "Nationality",
+      "family.relationship": "Relationship",
+      "family.email": "Email",
+      "family.phone": "Phone Number",
+      "family.job": "Job Title"
+    }
+  },
+  "admission.form": {
+    "presentSchoolChina": "Present School (if in China)",
+    "visaExpiryDate": "Visa Expiration Date"
+  },
+  "importExport": {
+    "processTitle": "Import & Export Process",
+    "processSubtitle": "A clear, sequential journey from preparation to compliance."
+  },
+  "common": {
+    "step": "Step",
+    "learnMore": "Learn more",
+    "status": {
+      "success": "Success",
+      "error": "Error",
+      "submitting": "Submitting"
+    }
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "nameMax": "Name must be ≤ {{max}} characters",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "phoneInvalid": "Enter a valid phone number",
+    "subjectMax": "Subject must be ≤ {{max}} characters",
+    "messageRequired": "Message is required",
+    "messageMin": "Message must be at least {{min}} characters",
+    "messageMax": "Message must be ≤ {{max}} characters"
+  },
+  "translation": {
+    "offerTitle": "What We Offer",
+    "offerSubtitle": "Translation, interpretation, and guidance services across China",
+    "howTitle": "How It Works",
+    "howSubtitle": "Our translation workflow from intake to delivery",
+    "processTitle": "Translation Process",
+    "processSubtitle": "A clear, sequential workflow",
+    "requiredTitle": "What We Need",
+    "requiredNote": "Sharing these helps us deliver accurate translations."
+  },
+  "admission": {
+    "requiredTitle": "Required Documents",
+    "requiredSubtitle": "Please prepare clear scans that meet the size and format guidelines.",
+    "typeLabel": "Type",
+    "required": "Required",
+    "optional": "Optional",
+    "uploadRules": "Upload Rules",
+    "maxSize": "Max size",
+    "allowedTypes": "Allowed types"
+  },
+  "footer": {
+    "description": "We bridge global opportunities through trusted trade and education consulting.",
+    "contact": "Contact",
+    "follow": "Follow",
+    "copyright": "All rights reserved.",
+    "designBy": "Design by TadalateStudio",
+    "madeWithLove": "Made with ❤️"
+  },
+  "about": {
+    "hero": {
+      "title": "About",
+      "highlight": "Our Story",
+      "description": "We’re a team dedicated to bridging global opportunities through trusted trade and education consulting."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "text": "To bridge global opportunities through trusted trade and education consulting."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "text": "A world where businesses and students thrive beyond borders with confidence."
+    },
+    "promise": {
+      "title": "Our Promise",
+      "text": "We deliver with integrity, transparency, and measurable impact for every client."
+    },
+    "team": {
+      "title": "Meet the Team",
+      "subtitle": "The people behind our work",
+      "noImage": "No image"
+    },
+    "founder": {
+      "title": "Founder's Message"
+    },
+    "recent": {
+      "title": "Recent Activity"
+    },
+    "links": {
+      "linkedin": "LinkedIn",
+      "email": "Email"
+    }
+  },
+  "about.values": {
+    "title": "Our Core Values",
+    "subtitle": "What we stand for"
+  }
+}

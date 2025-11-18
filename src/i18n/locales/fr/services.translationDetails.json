@@ -1,0 +1,15 @@
+{
+  "title": "Traduction & interprétation",
+  "intro": "Traduction professionnelle anglais↔chinois et français↔chinois en Chine. Documents, interprétation sur site pour réunions et visites d’usine, et localisation de contenu.",
+  "steps": [
+    { "title": "Cadrage", "description": "Langues, thématiques, format de livraison et délais." },
+    { "title": "Réception des documents", "description": "Partage sécurisé des fichiers; évaluation de la terminologie, de la mise en page et des certifications éventuelles." },
+    { "title": "Traduction & relecture", "description": "Traduction par des linguistes natifs; relecture; mise en page bilingue et notarisation en option." },
+    { "title": "Livraison & support", "description": "Livraison de fichiers soignés et support d’interprétation en Chine selon besoin." }
+  ],
+  "cta": {
+    "heading": "Besoin d’une traduction fiable en Chine ?",
+    "text": "Obtenez traduction de documents, interprétation et localisation par des experts.",
+    "button": "Obtenir une traduction"
+  }
+}

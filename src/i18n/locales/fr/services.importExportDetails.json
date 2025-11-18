@@ -1,0 +1,15 @@
+{
+  "title": "Conseil en import & export",
+  "intro": "Chez Nadoumi Consulting, nous simplifions le sourçage et l’export depuis la Chine. Nous aidons les entreprises à trouver des fournisseurs vérifiés, à maintenir la qualité et à assurer une logistique fluide jusqu’à destination.",
+  "steps": [
+    { "title": "Sourçage fournisseurs", "description": "Nous identifions des fournisseurs fiables via un processus de vérification strict pour garantir conformité et qualité." },
+    { "title": "Négociation & contrats", "description": "Nous vous aidons à négocier les prix, optimiser les MOQ et sécuriser les contrats." },
+    { "title": "Inspection & contrôle qualité", "description": "Notre équipe réalise des inspections qualité en personne ou via des tiers avant expédition." },
+    { "title": "Logistique & douane", "description": "Nous gérons la documentation d’expédition, les déclarations douanières et la livraison finale." }
+  ],
+  "cta": {
+    "heading": "Vous souhaitez sourcer en Chine ?",
+    "text": "Obtenez un accompagnement professionnel pour trouver des fournisseurs vérifiés, gérer les expéditions et garantir la qualité.",
+    "button": "Nous contacter"
+  }
+}

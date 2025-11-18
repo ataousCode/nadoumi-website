@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "slug": "import-export",
+    "title": "Import & Export",
+    "shortDescription": "End-to-end sourcing, quality control, and logistics from China to the world.",
+    "features": [
+      "Supplier sourcing and verification",
+      "Quality control and inspection reports",
+      "Freight forwarding and customs documentation",
+      "Regulatory compliance and certification support",
+      "Negotiation and local representation"
+    ],
+    "ctaText": "Start Sourcing"
+  },
+  {
+    "id": 2,
+    "slug": "student-admission",
+    "title": "Student Admission",
+    "shortDescription": "Personalized university admissions and visa support for studying in China.",
+    "features": [
+      "University and program matching",
+      "Application and document review",
+      "Visa and scholarship guidance",
+      "Pre-departure and post-arrival support"
+    ],
+    "ctaText": "Apply Now"
+  },
+  {
+    "id": 3,
+    "slug": "translation",
+    "title": "Translation Service",
+    "shortDescription": "English↔Chinese and French↔Chinese, document translation and on‑site interpretation.",
+    "features": [
+      "English↔Chinese and French↔Chinese",
+      "Document translation and localization",
+      "On‑site interpretation and guiding",
+      "Certified translation guidance"
+    ],
+    "ctaText": "Get Translation"
+  }
+]

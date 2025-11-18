@@ -1,0 +1,130 @@
+{
+  "generalRules": {
+    "maxFileSizeBytes": 10485760,
+    "maxFileSizeDisplay": "10MB",
+    "allowedDocumentTypes": [ "application/pdf" ],
+    "allowedImageTypes": [ "image/jpeg", "image/png" ],
+    "notes": "Required documents should be uploaded in PDF format only except photos which accept JPG/PNG. Files must be under 10MB."
+  },
+  "documents": [
+    {
+      "id": "passport",
+      "label": "Passport Copy",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Upload a scanned copy of your passport (PDF)."
+    },
+    {
+      "id": "diploma",
+      "label": "Diploma (Latest Degree)",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Upload diploma or degree certificate (PDF)."
+    },
+    {
+      "id": "transcript",
+      "label": "Latest Transcript",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Official transcript in PDF format."
+    },
+    {
+      "id": "photo",
+      "label": "Passport Photo",
+      "required": true,
+      "type": "file",
+      "accept": ".jpg,.jpeg,.png",
+      "fileMimeTypes": [ "image/jpeg", "image/png" ],
+      "note": "Passport-style photo (JPG/PNG)."
+    },
+    {
+      "id": "recommendationLetters",
+      "label": "Two Letters of Recommendation",
+      "required": true,
+      "type": "file-multiple",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "minFiles": 2,
+      "note": "Upload two recommendation letters as separate PDF files or one combined PDF. Required for Master & PhD; recommended for Bachelor."
+    },
+    {
+      "id": "publication",
+      "label": "Publication (for Master & PhD candidates)",
+      "required": false,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "conditionalRequired": {
+        "field": "desiredProgram",
+        "values": [ "master", "phd" ],
+        "message": "Publication (PDF) is required for Master and PhD applicants where applicable."
+      },
+      "note": "Upload any relevant publications (PDF)."
+    },
+    {
+      "id": "medicalReport",
+      "label": "Medical Report / Physical Examination",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Official medical/physical exam report in PDF format."
+    },
+    {
+      "id": "bankStatement",
+      "label": "Bank Statement",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Bank statement showing sufficient funds (PDF)."
+    },
+    {
+      "id": "personalStatementDoc",
+      "label": "Personal Statement (Full Document)",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Full personal statement / motivation letter (PDF)."
+    },
+    {
+      "id": "noCriminalRecord",
+      "label": "Non-Criminal Record / Police Clearance",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Police clearance certificate in PDF."
+    },
+    {
+      "id": "englishCert",
+      "label": "English Proficiency Certificate",
+      "required": false,
+      "type": "file",
+      "accept": ".pdf",
+      "conditionalRequired": {
+        "field": "desiredProgram",
+        "values": [ "bachelor", "master", "phd" ],
+        "message": "English proficiency certificate is required for Bachelor/Master/PhD applicants."
+      },
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Upload TOEFL/IELTS/Duolingo certificate (PDF) if available. Required for degree programs."
+    },
+    {
+      "id": "cv",
+      "label": "CV / Resume",
+      "required": true,
+      "type": "file",
+      "accept": ".pdf",
+      "fileMimeTypes": [ "application/pdf" ],
+      "note": "Curriculum Vitae in PDF format."
+    }
+  ]
+}

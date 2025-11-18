@@ -1,0 +1,71 @@
+[
+  {"section":"personalInformation","title":"Personal Information","fields":[
+    {"id":"firstName","label":"First Name","type":"text","required":true},
+    {"id":"lastName","label":"Last Name","type":"text","required":true},
+    {"id":"email","label":"Email","type":"email","required":true},
+    {"id":"phone","label":"Phone Number","type":"tel","required":true},
+    {"id":"dateOfBirth","label":"Date of Birth","type":"date","required":true},
+    {"id":"nationality","label":"Nationality","type":"text","required":true},
+    {"id":"passportNumber","label":"Passport Number","type":"text","required":true},
+    {"id":"passportIssueDate","label":"Passport Issue Date","type":"date","required":true},
+    {"id":"passportExpiryDate","label":"Passport Expiration Date","type":"date","required":true}
+  ]},
+  {"section":"addressInformation","title":"Address Information","fields":[
+    {"id":"currentAddress","label":"Current Address","type":"text","required":true},
+    {"id":"city","label":"City","type":"text","required":true},
+    {"id":"country","label":"Country","type":"text","required":true},
+    {"id":"postalCode","label":"Postal Code","type":"text","required":false}
+  ]},
+  {"section":"academicInformation","title":"Academic Information","fields":[
+    {"id":"desiredProgram","label":"Desired Program","type":"select","required":true,
+      "options":[
+        {"value":"non-degree","label":"Non-degree"},
+        {"value":"bachelor","label":"Bachelor"},
+        {"value":"master","label":"Master"},
+        {"value":"phd","label":"PhD"}
+      ]
+    },
+    {"id":"previousEducation","label":"Previous Education (Institution)","type":"text","required":true},
+    {"id":"gpa","label":"GPA / Grade","type":"text","required":true},
+    {"id":"englishProficiency","label":"English Proficiency","type":"select","required":true,
+      "options":[
+        {"value":"none","label":"None"},
+        {"value":"basic","label":"Basic"},
+        {"value":"intermediate","label":"Intermediate"},
+        {"value":"advanced","label":"Advanced"},
+        {"value":"fluent","label":"Fluent"}
+      ]
+    },
+    {"id":"englishCertificateType","label":"English Proficiency Certificate Type (if any)","type":"select","required":false,
+      "options":[
+        {"value":"toefl","label":"TOEFL"},
+        {"value":"ielts","label":"IELTS"},
+        {"value":"duolingo","label":"Duolingo"},
+        {"value":"other","label":"Other / None"}
+      ]
+    }
+  ]},
+  {"section":"additionalInformation","title":"Additional Information","fields":[
+    {"id":"workExperience","label":"Work Experience (Short summary)","type":"textarea","required":false},
+    {"id":"personalStatement","label":"Personal Statement (Short)","type":"textarea","required":false},
+    {"id":"specialRequirements","label":"Special Requirements / Accessibility","type":"textarea","required":false},
+    {"id":"emergencyContactName","label":"Emergency Contact Name","type":"text","required":true},
+    {"id":"emergencyContactPhone","label":"Emergency Contact Phone","type":"tel","required":true},
+    {"id":"currentlyInChina","label":"Currently in China","type":"checkbox","required":false}
+  ]},
+  {"section":"familyInformation","title":"Family Information","fields":[]},
+  {"section":"educationBackground","title":"Education Background","fields":[
+    {"id":"highSchoolName","label":"High School Name","type":"text","required":true},
+    {"id":"highSchoolStartDate","label":"High School Start Date","type":"date","required":true},
+    {"id":"highSchoolEndDate","label":"High School End Date","type":"date","required":true},
+    {"id":"collegeName","label":"College / University (optional)","type":"text","required":false},
+    {"id":"collegeStartDate","label":"College Start Date (optional)","type":"date","required":false},
+    {"id":"collegeEndDate","label":"College End Date (optional)","type":"date","required":false}
+  ]},
+  {"section":"workExperienceDetails","title":"Work Experience (Optional)","fields":[
+    {"id":"workCompany","label":"Company","type":"text","required":false},
+    {"id":"workRole","label":"Role / Position","type":"text","required":false},
+    {"id":"workStartDate","label":"Start Date","type":"date","required":false},
+    {"id":"workEndDate","label":"End Date","type":"date","required":false}
+  ]}
+]

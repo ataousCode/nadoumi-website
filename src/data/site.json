@@ -1,0 +1,25 @@
+{
+  "companyName": "Nadoumi Consulting",
+  "tagline": "Bridging global opportunities through trade and education",
+  "founded": "2015",
+  "description": "Nadoumi Consulting helps businesses source from China and supports international students in gaining admission to top Chinese universities. We specialize in global trade, education consulting, and seamless cross-border collaboration.",
+  "address": "MianYang, China",
+  "email": "info@nadoumiconsulting.com",
+  "phone": "+86 159 0823 7607",
+  "whatsapp": "+86 159 0823 7607",
+  "social": {
+    "facebook": "https://facebook.com/nadoumiconsulting",
+    "linkedin": "https://linkedin.com/company/nadoumiconsulting",
+    "twitter": "https://twitter.com/nadoumiconsult",
+    "instagram": "https://instagram.com/nadoumiconsulting"
+  },
+  "cta": {
+    "primary": "Book a Free Consultation",
+    "secondary": "Contact Us Today"
+  },
+  "seo": {
+    "metaTitle": "Nadoumi Consulting — China Sourcing & Student Admission Experts",
+    "metaDescription": "Helping businesses worldwide source from China and assisting international students to study at top Chinese universities. Trusted consulting since 2015.",
+    "keywords": "China sourcing, international trade, study in China, education consulting, import export, student visa, Nadoumi Consulting"
+  }
+}

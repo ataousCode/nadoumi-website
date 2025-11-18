@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "maxSizeMB": 10,
+    "allowedTypes": ["PDF"]
+  },
+  "documents": [
+    {"id":"passport","label":"Passport Copy","required":true,"type":"file","accept": ".pdf","note":"Upload a scanned copy of your passport (PDF).","maxFileSizeDisplay":"10MB"},
+    {"id":"diploma","label":"Diploma (Latest Degree)","required":true,"type":"file","accept": ".pdf","note":"Upload diploma or degree certificate (PDF).","maxFileSizeDisplay":"10MB"},
+    {"id":"transcript","label":"Latest Transcript","required":true,"type":"file","accept": ".pdf","note":"Official transcript in PDF format.","maxFileSizeDisplay":"10MB"},
+    {"id":"photo","label":"Passport Photo","required":true,"type":"file","accept": ".jpg,.jpeg,.png","note":"Passport-style photo (JPG/PNG).","maxFileSizeDisplay":"10MB"},
+    {"id":"recommendationLetters","label":"Two Letters of Recommendation","required":true,"type":"file-multiple","accept": ".pdf","note":"Upload two recommendation letters as separate PDF files or one combined PDF.","maxFileSizeDisplay":"10MB"},
+    {"id":"publication","label":"Publication (for Master & PhD candidates)","required":false,"type":"file","accept": ".pdf","note":"Upload any relevant publications (PDF).","maxFileSizeDisplay":"10MB"},
+    {"id":"medicalReport","label":"Medical Report / Physical Examination","required":true,"type":"file","accept": ".pdf","note":"Official medical/physical exam report in PDF format.","maxFileSizeDisplay":"10MB"},
+    {"id":"bankStatement","label":"Bank Statement","required":true,"type":"file","accept": ".pdf","note":"Bank statement showing sufficient funds (PDF).","maxFileSizeDisplay":"10MB"},
+    {"id":"personalStatementDoc","label":"Personal Statement (Full Document)","required":true,"type":"file","accept": ".pdf","note":"Full personal statement / motivation letter (PDF).","maxFileSizeDisplay":"10MB"},
+    {"id":"noCriminalRecord","label":"Non-Criminal Record / Police Clearance","required":true,"type":"file","accept": ".pdf","note":"Police clearance certificate in PDF.","maxFileSizeDisplay":"10MB"},
+    {"id":"englishCert","label":"English Proficiency Certificate","required":false,"type":"file","accept": ".pdf","note":"Upload TOEFL/IELTS/Duolingo certificate (PDF) if available.","maxFileSizeDisplay":"10MB"},
+    {"id":"cv","label":"CV / Resume","required":true,"type":"file","accept": ".pdf","note":"Curriculum Vitae in PDF format.","maxFileSizeDisplay":"10MB"}
+  ]
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Grace Johnson",
+    "country": "United States",
+    "role": "CEO, Horizon Imports",
+    "feedback": "Nadoumi Consulting made sourcing from China simple and trustworthy. Their on-the-ground inspections and communication saved us months of effort. We now rely on them as our permanent China sourcing partner."
+  },
+  {
+    "id": 2,
+    "name": "Ahmed Musa",
+    "country": "Nigeria",
+    "role": "Student, Zhejiang University",
+    "feedback": "I always dreamed of studying in China, but I had no idea where to start. Nadoumi’s team handled my entire admission and visa process smoothly. I’m now in my second year at Zhejiang University, all thanks to them!"
+  },
+  {
+    "id": 3,
+    "name": "Sarah Wong",
+    "country": "Singapore",
+    "role": "Operations Manager, Global Source Asia",
+    "feedback": "Their trade consulting services are top-notch. From supplier verification to export logistics, everything was transparent and efficient. Nadoumi truly delivers excellence."
+  }
+]

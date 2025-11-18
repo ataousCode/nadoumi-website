@@ -1,0 +1,15 @@
+{
+  "title": "Conseil en admission étudiante",
+  "intro": "Nous aidons les étudiants internationaux à intégrer des universités en Chine. Du choix du programme au dépôt du dossier et au visa, nous vous accompagnons à chaque étape.",
+  "steps": [
+    { "title": "Sélection du programme", "description": "Nous évaluons votre parcours et recommandons les meilleures universités et programmes en Chine." },
+    { "title": "Préparation des documents", "description": "Nous vous guidons pour préparer et déposer les documents requis, dont relevés, lettres de recommandation et passeport." },
+    { "title": "Dépôt de candidature", "description": "Nous gérons le dépôt de la candidature et suivons l’avancement auprès des bureaux d’admission." },
+    { "title": "Visa & pré-départ", "description": "Nous aidons pour les démarches de visa étudiant, les conseils pré-départ et l’enregistrement post-arrivée." }
+  ],
+  "cta": {
+    "heading": "Prêt à étudier en Chine ?",
+    "text": "Soumettez votre candidature en ligne et laissez nos experts vous guider.",
+    "button": "Commencer la candidature"
+  }
+}

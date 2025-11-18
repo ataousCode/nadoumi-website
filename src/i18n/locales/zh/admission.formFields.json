@@ -1,0 +1,71 @@
+[
+  {"section":"personalInformation","title":"个人信息","fields":[
+    {"id":"firstName","label":"名","type":"text","required":true},
+    {"id":"lastName","label":"姓","type":"text","required":true},
+    {"id":"email","label":"邮箱","type":"email","required":true},
+    {"id":"phone","label":"电话","type":"tel","required":true},
+    {"id":"dateOfBirth","label":"出生日期","type":"date","required":true},
+    {"id":"nationality","label":"国籍","type":"text","required":true},
+    {"id":"passportNumber","label":"护照号码","type":"text","required":true},
+    {"id":"passportIssueDate","label":"护照签发日期","type":"date","required":true},
+    {"id":"passportExpiryDate","label":"护照到期日期","type":"date","required":true}
+  ]},
+  {"section":"addressInformation","title":"地址信息","fields":[
+    {"id":"currentAddress","label":"现居地址","type":"text","required":true},
+    {"id":"city","label":"城市","type":"text","required":true},
+    {"id":"country","label":"国家","type":"text","required":true},
+    {"id":"postalCode","label":"邮编","type":"text","required":false}
+  ]},
+  {"section":"academicInformation","title":"学业信息","fields":[
+    {"id":"desiredProgram","label":"意向项目","type":"select","required":true,
+      "options":[
+        {"value":"non-degree","label":"非学位"},
+        {"value":"bachelor","label":"本科"},
+        {"value":"master","label":"硕士"},
+        {"value":"phd","label":"博士"}
+      ]
+    },
+    {"id":"previousEducation","label":"以往教育（院校）","type":"text","required":true},
+    {"id":"gpa","label":"成绩 / GPA","type":"text","required":true},
+    {"id":"englishProficiency","label":"英语水平","type":"select","required":true,
+      "options":[
+        {"value":"none","label":"无"},
+        {"value":"basic","label":"基础"},
+        {"value":"intermediate","label":"中级"},
+        {"value":"advanced","label":"高级"},
+        {"value":"fluent","label":"流利"}
+      ]
+    },
+    {"id":"englishCertificateType","label":"英语证明类型（如有）","type":"select","required":false,
+      "options":[
+        {"value":"toefl","label":"托福"},
+        {"value":"ielts","label":"雅思"},
+        {"value":"duolingo","label":"多邻国"},
+        {"value":"other","label":"其他 / 无"}
+      ]
+    }
+  ]},
+  {"section":"additionalInformation","title":"补充信息","fields":[
+    {"id":"workExperience","label":"工作经历（简述）","type":"textarea","required":false},
+    {"id":"personalStatement","label":"个人陈述（简短）","type":"textarea","required":false},
+    {"id":"specialRequirements","label":"特殊需求 / 无障碍","type":"textarea","required":false},
+    {"id":"emergencyContactName","label":"紧急联系人姓名","type":"text","required":true},
+    {"id":"emergencyContactPhone","label":"紧急联系人电话","type":"tel","required":true},
+    {"id":"currentlyInChina","label":"目前在中国","type":"checkbox","required":false}
+  ]},
+  {"section":"familyInformation","title":"家庭信息","fields":[]},
+  {"section":"educationBackground","title":"教育背景","fields":[
+    {"id":"highSchoolName","label":"高中名称","type":"text","required":true},
+    {"id":"highSchoolStartDate","label":"高中开始日期","type":"date","required":true},
+    {"id":"highSchoolEndDate","label":"高中结束日期","type":"date","required":true},
+    {"id":"collegeName","label":"大学 / 院校（可选）","type":"text","required":false},
+    {"id":"collegeStartDate","label":"大学开始日期（可选）","type":"date","required":false},
+    {"id":"collegeEndDate","label":"大学结束日期（可选）","type":"date","required":false}
+  ]},
+  {"section":"workExperienceDetails","title":"工作经历（可选）","fields":[
+    {"id":"workCompany","label":"公司","type":"text","required":false},
+    {"id":"workRole","label":"职位","type":"text","required":false},
+    {"id":"workStartDate","label":"开始日期","type":"date","required":false},
+    {"id":"workEndDate","label":"结束日期","type":"date","required":false}
+  ]}
+]

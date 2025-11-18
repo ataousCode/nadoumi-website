@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "question": "Do you work only with Chinese companies?",
+    "answer": "No. While we specialize in sourcing and education in China, we work with clients worldwide — including Africa, Europe, and North America — to connect them with reliable Chinese partners and institutions."
+  },
+  {
+    "id": 2,
+    "question": "Can you guarantee university admission?",
+    "answer": "No consulting firm can guarantee admission, but our expertise significantly increases success rates. We help align student profiles with the best-fit universities and guide them throughout the application and visa process."
+  },
+  {
+    "id": 3,
+    "question": "How long does supplier verification take?",
+    "answer": "It depends on the product and region. Generally, supplier vetting and quality inspection take 5–10 business days before shipment coordination begins."
+  },
+  {
+    "id": 4,
+    "question": "Do you offer scholarships or financial aid?",
+    "answer": "We help students identify available scholarships and assist in application preparation, but the final decision lies with universities or funding institutions."
+  },
+  {
+    "id": 5,
+    "question": "What industries do you source products from?",
+    "answer": "We cover a broad range — from electronics and machinery to fashion, furniture, and agricultural products. We can tailor sourcing to your specific business needs."
+  }
+]

@@ -1,0 +1,231 @@
+{
+  "navbar": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "importExport": "Import & Export",
+    "studentAdmission": "Admission Étudiante",
+    "translation": "Traduction",
+    "contact": "Contact",
+    "language": "Langue"
+  },
+  "home": {
+    "subtitle": "Nous favorisons le",
+    "highlight": "commerce et l’éducation",
+    "description": "Nous connectons les entreprises à des solutions fiables d’import/export et aidons les étudiants à réussir dans les universités en Chine.",
+    "primary": "Découvrir les services",
+    "secondary": "Postuler",
+    "stats": {
+      "countries": "Pays",
+      "clients": "Clients satisfaits",
+      "years": "Années d’expérience",
+      "success": "Taux de réussite"
+    },
+    "servicesPreviewTitle": "Nos offres",
+    "servicesPreviewSubtitle": "Un aperçu de nos services clés",
+    "viewAllServices": "Voir tous les services",
+    "valuesTitle": "Nos valeurs",
+    "valuesSubtitle": "Les principes qui guident notre travail",
+    "processTitle": "Comment ça marche",
+    "processSubtitle": "Un processus simple et transparent de bout en bout",
+    "processSteps": {
+      "consultation.title": "Consultation",
+      "consultation.description": "Nous comprenons vos objectifs et définissons un plan clair.",
+      "execution.title": "Exécution",
+      "execution.description": "Nous coordonnons les fournisseurs/universités et gérons la logistique ou les dossiers.",
+      "delivery.title": "Livraison",
+      "delivery.description": "Nous livrons les résultats et vous accompagnons après la mission."
+    },
+    "testimonialsTitle": "Ce que disent nos clients",
+    "testimonialsSubtitle": "Témoignages d’entreprises et d’étudiants",
+    "ctaTitle": "Prêt à avancer ?",
+    "ctaSubtitle": "Parlons de vos objectifs.",
+    "ctaPrimary": "Commencer",
+    "ctaSecondary": "Nous contacter"
+  },
+  "services": {
+    "heroEyebrow": "Nos services",
+    "heroTitle": "Accompagnement complet pour votre réussite",
+    "heroSubtitle": "De la conformité commerciale mondiale aux admissions d’étudiants, nous vous guidons à chaque étape.",
+    "actionsExplore": "Découvrir les services",
+    "actionsContact": "Nous contacter",
+    "whyTitle": "Pourquoi nous choisir",
+    "whySubtitle": "Expertise pratique, processus transparent et support réactif.",
+    "why": {
+      "expert": "Conseillers experts",
+      "clear": "Processus clair",
+      "fast": "Réponse rapide",
+      "compliance": "Conformité avant tout",
+      "personalized": "Support personnalisé",
+      "outcome": "Orienté résultats"
+    },
+    "howTitle": "Notre méthode",
+    "howSubtitle": "Une approche simple et éprouvée en quatre étapes.",
+    "how": {
+      "discovery": "Découverte",
+      "plan": "Plan",
+      "execute": "Exécution",
+      "support": "Support"
+    },
+    "exploreTitle": "Explorez nos services",
+    "exploreSubtitle": "Choisissez le parcours qui vous convient.",
+    "contactUs": "Nous contacter"
+  },
+  "services.whyDesc": {
+    "expert": "Années d’expérience pratique en commerce et admissions.",
+    "clear": "Étapes structurées, modèles et checklists : zéro incertitude.",
+    "fast": "Communication rapide et suivi proactif.",
+    "compliance": "Politiques et standards documentaires à jour.",
+    "personalized": "Accompagnement adapté à vos objectifs et contraintes.",
+    "outcome": "Priorité aux résultats et au succès durable."
+  },
+  "services.howDesc": {
+    "discovery": "Comprendre objectifs, contraintes et calendrier.",
+    "plan": "Définir étapes, documents et jalons.",
+    "execute": "Gérer formulaires, conformité et soumissions.",
+    "support": "Suivre l’avancement et traiter les mises à jour."
+  },
+  "services.faq": "FAQ",
+  "contact": {
+    "title": "Nous contacter",
+    "subtitle": "Nous vous aidons pour l’import/export et les admissions. Utilisez le formulaire ou contactez‑nous directement — réponse sous 1–2 jours ouvrables.",
+    "infoTitle": "Informations de contact",
+    "infoSubtitle": "Contactez‑nous par email ou téléphone, ou visitez notre bureau.",
+    "email": "Email",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "follow": "Suivez‑nous"
+  },
+  "contact.form": {
+    "title": "Discutons",
+    "subtitle": "Parlez‑nous de vos objectifs. Réponse sous 1–2 jours ouvrables.",
+    "name": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone",
+    "topic": "Sujet",
+    "message": "Message",
+    "ph.name": "Votre nom complet",
+    "ph.email": "vous@entreprise.com",
+    "ph.phone": "Optionnel",
+    "ph.message": "Décrivez votre besoin",
+    "disclaimer": "En soumettant, vous acceptez de recevoir des communications liées à votre demande.",
+    "send": "Envoyer le message",
+    "preferEmail": "Plutôt email ? Contactez‑nous à",
+    "status": {
+      "success": "Merci ! Votre message est correct. Nous revenons vers vous bientôt.",
+      "error": "Veuillez corriger les champs indiqués.",
+      "validating": "Validation de la demande...",
+      "uploading": "Téléversement des documents...",
+      "saving": "Enregistrement de la demande...",
+      "submitSuccess": "Demande soumise. Notre équipe l’a bien reçue.",
+      "submitError": "Échec de soumission. Réessayez.",
+      "missingDocs": "Veuillez téléverser tous les documents requis.",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "submit": "Soumettre la candidature",
+      "remove": "Supprimer",
+      "select": "Sélectionner...",
+      "family.add": "Ajouter un membre de la famille",
+      "family.name": "Nom",
+      "family.nationality": "Nationalité",
+      "family.relationship": "Lien",
+      "family.email": "Email",
+      "family.phone": "Téléphone",
+      "family.job": "Intitulé du poste"
+    }
+  },
+  "admission.form": {
+    "presentSchoolChina": "Établissement actuel (si en Chine)",
+    "visaExpiryDate": "Date d’expiration du visa"
+  },
+  "importExport": {
+    "processTitle": "Processus d’import & export",
+    "processSubtitle": "Un parcours clair et séquentiel, de la préparation à la conformité."
+  },
+  "common": {
+    "step": "Étape",
+    "learnMore": "En savoir plus",
+    "status": {
+      "success": "Succès",
+      "error": "Erreur",
+      "submitting": "En cours"
+    }
+  },
+  "validation": {
+    "nameRequired": "Le nom est requis",
+    "nameMax": "Le nom doit comporter ≤ {{max}} caractères",
+    "emailRequired": "L’email est requis",
+    "emailInvalid": "Entrez une adresse email valide",
+    "phoneInvalid": "Entrez un numéro de téléphone valide",
+    "subjectMax": "L’objet doit comporter ≤ {{max}} caractères",
+    "messageRequired": "Le message est requis",
+    "messageMin": "Le message doit comporter au moins {{min}} caractères",
+    "messageMax": "Le message doit comporter ≤ {{max}} caractères"
+  },
+  "translation": {
+    "offerTitle": "Nos prestations",
+    "offerSubtitle": "Traduction, interprétation et accompagnement à travers la Chine",
+    "howTitle": "Processus",
+    "howSubtitle": "De la prise en charge à la livraison",
+    "processTitle": "Processus de traduction",
+    "processSubtitle": "Un déroulé clair et séquentiel",
+    "requiredTitle": "Ce dont nous avons besoin",
+    "requiredNote": "Ces éléments nous aident à assurer une traduction précise."
+  },
+  "admission": {
+    "requiredTitle": "Documents requis",
+    "requiredSubtitle": "Veuillez préparer des scans nets conformes aux exigences de taille et format.",
+    "typeLabel": "Type",
+    "required": "Obligatoire",
+    "optional": "Facultatif",
+    "uploadRules": "Règles de dépôt",
+    "maxSize": "Taille max",
+    "allowedTypes": "Types autorisés"
+  },
+  "footer": {
+    "description": "Nous rapprochons les opportunités mondiales via un conseil fiable en commerce et éducation.",
+    "contact": "Contact",
+    "follow": "Suivre",
+    "copyright": "Tous droits réservés.",
+    "designBy": "Design par TadalateStudio",
+    "madeWithLove": "Créé avec ❤️"
+  },
+  "about": {
+    "hero": {
+      "title": "À propos",
+      "highlight": "Notre histoire",
+      "description": "Une équipe dédiée à relier les opportunités mondiales grâce à un conseil de confiance."
+    },
+    "mission": {
+      "title": "Notre mission",
+      "text": "Relier les opportunités mondiales via un conseil fiable en commerce et éducation."
+    },
+    "vision": {
+      "title": "Notre vision",
+      "text": "Un monde où entreprises et étudiants prospèrent au‑delà des frontières."
+    },
+    "promise": {
+      "title": "Notre engagement",
+      "text": "Intégrité, transparence et impact mesurable pour chaque client."
+    },
+    "team": {
+      "title": "L’équipe",
+      "subtitle": "Les personnes derrière notre travail",
+      "noImage": "Pas d’image"
+    },
+    "founder": {
+      "title": "Message du fondateur"
+    },
+    "recent": {
+      "title": "Activités récentes"
+    },
+    "links": {
+      "linkedin": "LinkedIn",
+      "email": "Email"
+    }
+  },
+  "about.values": {
+    "title": "Nos valeurs fondamentales",
+    "subtitle": "Ce que nous défendons"
+  }
+}

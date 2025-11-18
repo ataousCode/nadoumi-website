@@ -1,0 +1,231 @@
+{
+  "navbar": {
+    "home": "首页",
+    "about": "关于我们",
+    "services": "服务",
+    "importExport": "进出口",
+    "studentAdmission": "留学申请",
+    "translation": "翻译",
+    "contact": "联系我们",
+    "language": "语言"
+  },
+  "home": {
+    "subtitle": "赋能全球",
+    "highlight": "贸易与教育",
+    "description": "我们连接企业与可靠的进出口解决方案，并帮助学生在中国高校取得成功。",
+    "primary": "查看服务",
+    "secondary": "立即申请",
+    "stats": {
+      "countries": "国家",
+      "clients": "满意客户",
+      "years": "年经验",
+      "success": "成功率"
+    },
+    "servicesPreviewTitle": "我们的服务",
+    "servicesPreviewSubtitle": "快速了解核心服务",
+    "viewAllServices": "查看全部服务",
+    "valuesTitle": "我们的价值观",
+    "valuesSubtitle": "指导我们工作的原则",
+    "processTitle": "流程简介",
+    "processSubtitle": "从开始到结束的简单透明流程",
+    "processSteps": {
+      "consultation.title": "沟通咨询",
+      "consultation.description": "了解您的目标并制定清晰方案。",
+      "execution.title": "执行推进",
+      "execution.description": "协同供应商/院校，负责物流或申请事宜。",
+      "delivery.title": "成果交付",
+      "delivery.description": "交付结果并提供后续支持。"
+    },
+    "testimonialsTitle": "客户评价",
+    "testimonialsSubtitle": "来自合作伙伴与学生的真实反馈",
+    "ctaTitle": "准备好迈出下一步？",
+    "ctaSubtitle": "聊聊您的目标。",
+    "ctaPrimary": "开始咨询",
+    "ctaSecondary": "联系我们"
+  },
+  "services": {
+    "heroEyebrow": "我们的服务",
+    "heroTitle": "端到端助力您的成功",
+    "heroSubtitle": "从全球贸易合规到学生入学，我们为您提供每一步的指导。",
+    "actionsExplore": "查看服务",
+    "actionsContact": "联系我们",
+    "whyTitle": "为什么选择我们",
+    "whySubtitle": "务实经验、透明流程和快速响应。",
+    "why": {
+      "expert": "资深顾问",
+      "clear": "清晰流程",
+      "fast": "快速响应",
+      "compliance": "合规优先",
+      "personalized": "个性化支持",
+      "outcome": "结果导向"
+    },
+    "howTitle": "我们的方式",
+    "howSubtitle": "四步简洁、行之有效的流程。",
+    "how": {
+      "discovery": "需求沟通",
+      "plan": "制定方案",
+      "execute": "执行推进",
+      "support": "持续支持"
+    },
+    "exploreTitle": "探索我们的服务",
+    "exploreSubtitle": "选择最适合您的路径。",
+    "contactUs": "联系我们"
+  },
+  "services.whyDesc": {
+    "expert": "多年贸易与招生的实战经验。",
+    "clear": "结构清晰的步骤、模板与清单，避免猜测。",
+    "fast": "及时沟通并主动跟进。",
+    "compliance": "最新政策与文档标准。",
+    "personalized": "围绕您的目标与限制提供定制化指导。",
+    "outcome": "以结果与长期成功为优先。"
+  },
+  "services.howDesc": {
+    "discovery": "理解目标、约束与时间安排。",
+    "plan": "明确步骤、材料与里程碑。",
+    "execute": "推进表格、合规与提交。",
+    "support": "跟踪进度并处理更新。"
+  },
+  "services.faq": "常见问题",
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "我们随时为进出口和留学申请提供支持。使用表单或直接联系——一般在1–2个工作日内回复。",
+    "infoTitle": "联系信息",
+    "infoSubtitle": "通过邮箱或电话联系我们，或来访我们的办公室。",
+    "email": "邮箱",
+    "phone": "电话",
+    "address": "地址",
+    "follow": "关注我们"
+  },
+  "contact.form": {
+    "title": "联系我们",
+    "subtitle": "告诉我们您的目标，我们通常在1–2个工作日内回复。",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "电话",
+    "topic": "主题",
+    "message": "留言",
+    "ph.name": "您的姓名",
+    "ph.email": "you@company.com",
+    "ph.phone": "可选",
+    "ph.message": "描述我们如何帮助您",
+    "disclaimer": "提交即表示您同意接收与咨询相关的沟通。",
+    "send": "发送消息",
+    "preferEmail": "更喜欢邮箱？请直接联系",
+    "status": {
+      "success": "谢谢！信息已准备妥当，我们会尽快联系您。",
+      "error": "请修正标出的字段。",
+      "validating": "正在验证申请...",
+      "uploading": "正在上传文件...",
+      "saving": "正在保存申请...",
+      "submitSuccess": "申请已提交，我们的管理员已收到。",
+      "submitError": "提交失败，请重试。",
+      "missingDocs": "请上传所有必需文件。",
+      "previous": "上一步",
+      "next": "下一步",
+      "submit": "提交申请",
+      "remove": "移除",
+      "select": "请选择...",
+      "family.add": "添加家庭成员",
+      "family.name": "姓名",
+      "family.nationality": "国籍",
+      "family.relationship": "关系",
+      "family.email": "邮箱",
+      "family.phone": "电话",
+      "family.job": "职位"
+    }
+  },
+  "admission.form": {
+    "presentSchoolChina": "当前学校（如在中国）",
+    "visaExpiryDate": "签证到期日期"
+  },
+  "importExport": {
+    "processTitle": "进出口流程",
+    "processSubtitle": "从准备到合规的清晰、按序流程。"
+  },
+  "common": {
+    "step": "步骤",
+    "learnMore": "了解更多",
+    "status": {
+      "success": "成功",
+      "error": "错误",
+      "submitting": "提交中"
+    }
+  },
+  "validation": {
+    "nameRequired": "姓名为必填项",
+    "nameMax": "姓名长度需 ≤ {{max}} 字符",
+    "emailRequired": "邮箱为必填项",
+    "emailInvalid": "请输入有效的邮箱地址",
+    "phoneInvalid": "请输入有效的电话号码",
+    "subjectMax": "主题长度需 ≤ {{max}} 字符",
+    "messageRequired": "留言为必填项",
+    "messageMin": "留言长度至少为 {{min}} 字符",
+    "messageMax": "留言长度需 ≤ {{max}} 字符"
+  },
+  "translation": {
+    "offerTitle": "我们的服务",
+    "offerSubtitle": "覆盖中国各地的翻译、口译与陪同服务",
+    "howTitle": "如何合作",
+    "howSubtitle": "从接单到交付的翻译流程",
+    "processTitle": "翻译流程",
+    "processSubtitle": "清晰、按序的步骤",
+    "requiredTitle": "所需材料",
+    "requiredNote": "这些材料有助于我们提供准确的翻译。"
+  },
+  "admission": {
+    "requiredTitle": "必备材料",
+    "requiredSubtitle": "请准备清晰的扫描件并符合大小与格式要求。",
+    "typeLabel": "类型",
+    "required": "必填",
+    "optional": "选填",
+    "uploadRules": "上传规则",
+    "maxSize": "最大大小",
+    "allowedTypes": "允许类型"
+  },
+  "footer": {
+    "description": "我们通过可靠的贸易与教育咨询连接全球机遇。",
+    "contact": "联系",
+    "follow": "关注",
+    "copyright": "版权所有。",
+    "designBy": "设计：TadalateStudio",
+    "madeWithLove": "用 ❤️ 制作"
+  },
+  "about": {
+    "hero": {
+      "title": "关于我们",
+      "highlight": "我们的故事",
+      "description": "我们致力于通过可信赖的贸易与教育咨询连接全球机遇。"
+    },
+    "mission": {
+      "title": "我们的使命",
+      "text": "通过可信赖的咨询连接全球机遇。"
+    },
+    "vision": {
+      "title": "我们的愿景",
+      "text": "让企业与学生跨越边界，自信发展。"
+    },
+    "promise": {
+      "title": "我们的承诺",
+      "text": "以诚信、透明与可衡量的成效交付。"
+    },
+    "team": {
+      "title": "团队介绍",
+      "subtitle": "推动我们工作的伙伴们",
+      "noImage": "暂无图片"
+    },
+    "founder": {
+      "title": "创始人寄语"
+    },
+    "recent": {
+      "title": "近期活动"
+    },
+    "links": {
+      "linkedin": "LinkedIn",
+      "email": "邮箱"
+    }
+  },
+  "about.values": {
+    "title": "核心价值观",
+    "subtitle": "我们的坚持"
+  }
+}

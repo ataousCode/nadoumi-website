@@ -1,0 +1,27 @@
+{
+  "title": "Translation & Interpretation",
+  "intro": "Professional English↔Chinese and French↔Chinese translation based in China. We translate documents, provide on‑site interpretation for meetings and factory visits, and localize your content for the Chinese market.",
+  "steps": [
+    {
+      "title": "Discovery & Scope",
+      "description": "We clarify languages, subject matter, delivery format, and deadlines (legal, business, technical, academic)."
+    },
+    {
+      "title": "Document Intake",
+      "description": "You share files securely; we assess terminology, layout, and any certification requirements."
+    },
+    {
+      "title": "Translation & Review",
+      "description": "Native linguists translate and proofread; optional bilingual layout and notarization guidance available."
+    },
+    {
+      "title": "Delivery & Support",
+      "description": "We deliver polished files and support in‑person or remote interpretation around China as needed."
+    }
+  ],
+  "cta": {
+    "heading": "Need reliable translation in China?",
+    "text": "Get document translation, interpretation, and localization by trusted experts.",
+    "button": "Get Translation"
+  }
+}

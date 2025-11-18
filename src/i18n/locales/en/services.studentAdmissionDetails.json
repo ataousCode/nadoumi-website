@@ -1,0 +1,15 @@
+{
+  "title": "Student Admission Consulting",
+  "intro": "We help international students gain admission to top Chinese universities. From selecting the right program to submitting applications and obtaining student visas, Nadoumi Consulting supports every step of your academic journey.",
+  "steps": [
+    { "title": "Program Selection", "description": "We assess your academic background and recommend the best universities and programs in China." },
+    { "title": "Document Preparation", "description": "We guide you in preparing and uploading all required documents including transcripts, recommendation letters, and passport copies." },
+    { "title": "Application Submission", "description": "We handle the application submission process and track your progress with university admissions offices." },
+    { "title": "Visa & Pre-departure", "description": "We assist with student visa procedures, pre-departure guidance, and post-arrival registration." }
+  ],
+  "cta": {
+    "heading": "Ready to Study in China?",
+    "text": "Submit your application online and let our experts guide you through admission and visa processing.",
+    "button": "Start Application"
+  }
+}

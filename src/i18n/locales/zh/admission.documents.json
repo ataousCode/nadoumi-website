@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "maxSizeMB": 10,
+    "allowedTypes": ["PDF"]
+  },
+  "documents": [
+    {"id":"passport","label":"护照复印件","required":true,"type":"file","accept": ".pdf","note":"上传护照扫描件（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"diploma","label":"学历证书（最高学历）","required":true,"type":"file","accept": ".pdf","note":"上传毕业证或学位证（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"transcript","label":"最新成绩单","required":true,"type":"file","accept": ".pdf","note":"官方成绩单（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"photo","label":"护照照片","required":true,"type":"file","accept": ".jpg,.jpeg,.png","note":"护照规格照片（JPG/PNG）","maxFileSizeDisplay":"10MB"},
+    {"id":"recommendationLetters","label":"两封推荐信","required":true,"type":"file-multiple","accept": ".pdf","note":"两封独立PDF或合并为一个PDF","maxFileSizeDisplay":"10MB"},
+    {"id":"publication","label":"论文/发表（硕士与博士）","required":false,"type":"file","accept": ".pdf","note":"上传相关发表（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"medicalReport","label":"体检报告","required":true,"type":"file","accept": ".pdf","note":"官方体检/健康报告（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"bankStatement","label":"银行流水","required":true,"type":"file","accept": ".pdf","note":"资金证明（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"personalStatementDoc","label":"个人陈述（完整文档）","required":true,"type":"file","accept": ".pdf","note":"完整的个人陈述/动机信（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"noCriminalRecord","label":"无犯罪记录证明","required":true,"type":"file","accept": ".pdf","note":"警方开具的证明（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"englishCert","label":"英语水平证明","required":false,"type":"file","accept": ".pdf","note":"托福/雅思/多邻国（PDF）","maxFileSizeDisplay":"10MB"},
+    {"id":"cv","label":"简历","required":true,"type":"file","accept": ".pdf","note":"简历（PDF）","maxFileSizeDisplay":"10MB"}
+  ]
+}
