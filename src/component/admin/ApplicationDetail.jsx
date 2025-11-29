@@ -69,6 +69,46 @@ export default function ApplicationDetail({ application, className = '' }) {
         const entries = Object.entries(section.data || {}).filter(([k, v]) => v !== null && v !== undefined && v !== '')
         if (entries.length === 0) return null
         
+        // Special handling for Family Information
+        if (section.title === 'Family Information') {
+          const familyMembers = section.data.familyMembers
+          if (Array.isArray(familyMembers) && familyMembers.length > 0) {
+            return (
+              <section key={section.title}>
+                <h2 className="text-lg font-semibold text-gray-900 mb-3">{section.title}</h2>
+                <div className="overflow-hidden rounded-xl border border-gray-200">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nationality</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Relationship</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Title</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {familyMembers.map((member, index) => (
+                          <tr key={index}>
+                            <td className="px-4 py-3 text-gray-900">{member.name || 'N/A'}</td>
+                            <td className="px-4 py-3 text-gray-900">{member.nationality || 'N/A'}</td>
+                            <td className="px-4 py-3 text-gray-900">{member.relationship || 'N/A'}</td>
+                            <td className="px-4 py-3 text-gray-900">{member.email || 'N/A'}</td>
+                            <td className="px-4 py-3 text-gray-900">{member.phone || 'N/A'}</td>
+                            <td className="px-4 py-3 text-gray-900">{member.jobTitle || 'N/A'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            )
+          }
+        }
+        
         return (
           <section key={section.title}>
             <h2 className="text-lg font-semibold text-gray-900 mb-3">{section.title}</h2>
@@ -76,6 +116,9 @@ export default function ApplicationDetail({ application, className = '' }) {
               <table className="min-w-full divide-y divide-gray-200 text-sm">
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {entries.map(([key, value]) => {
+                    // Skip familyMembers as it's handled separately
+                    if (key === 'familyMembers') return null
+                    
                     // Format the key to be more readable
                     const formattedKey = key
                       .replace(/([A-Z])/g, ' $1')

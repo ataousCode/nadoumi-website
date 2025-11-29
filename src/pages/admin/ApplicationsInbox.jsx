@@ -157,6 +157,9 @@ export default function ApplicationsInbox() {
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t('common.name')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -174,53 +177,61 @@ export default function ApplicationsInbox() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {paginatedApplications.map((app) => (
-                  <tr key={app.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {app.personalInfo?.firstName} {app.personalInfo?.lastName}
-                      </div>
-                      <div className="text-xs text-gray-500">{app.id}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {app.contactInfo?.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <StatusBadge status={app.status} size="sm" />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {formatDate(app.submittedAt)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => navigate(`/admin/applications/${app.id}`)}
-                        className="text-orange-600 hover:text-orange-700"
-                      >
-                        {t('admin.applications.actions.view')}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedApp(app)
-                          setShowStatusModal(true)
-                        }}
-                        className="text-blue-600 hover:text-blue-700"
-                      >
-                        {t('admin.applications.actions.changeStatus')}
-                      </button>
-                      {canDeleteApplication(app.status) && (
+                {paginatedApplications.map((app) => {
+                  // Extract name and email from actual application structure
+                  const applicant = app.applicant || {}
+                  const fields = app.fields || {}
+                  const fullName = `${applicant.firstName || fields.firstName || ''} ${applicant.lastName || fields.lastName || ''}`.trim() || 'N/A'
+                  const email = applicant.email || fields.email || 'N/A'
+                  
+                  return (
+                    <tr key={app.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-mono text-gray-900">{app.id}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{fullName}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {email}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <StatusBadge status={app.status} size="sm" />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {formatDate(app.submittedAt)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button
+                          onClick={() => navigate(`/admin/applications/${app.id}`)}
+                          className="text-orange-600 hover:text-orange-700"
+                        >
+                          {t('admin.applications.actions.view')}
+                        </button>
                         <button
                           onClick={() => {
                             setSelectedApp(app)
-                            setShowDeleteModal(true)
+                            setShowStatusModal(true)
                           }}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-blue-600 hover:text-blue-700"
                         >
-                          {t('admin.applications.actions.delete')}
+                          {t('admin.applications.actions.changeStatus')}
                         </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                        {canDeleteApplication(app.status) && (
+                          <button
+                            onClick={() => {
+                              setSelectedApp(app)
+                              setShowDeleteModal(true)
+                            }}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            {t('admin.applications.actions.delete')}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

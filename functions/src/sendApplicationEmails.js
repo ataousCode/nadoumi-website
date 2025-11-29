@@ -249,8 +249,16 @@ exports.onApplicationStatusChange = onDocumentUpdated("applications/{application
     
     const applicationId = context.applicationId
     const newStatus = after.status
-    const studentEmail = after.contactInfo?.email
-    const studentName = `${after.personalInfo?.firstName || ''} ${after.personalInfo?.lastName || ''}`.trim() || 'Student'
+    
+    // Extract student information from the actual application structure
+    // Application structure: { applicant: { firstName, lastName, email, phone }, fields: { ... }, desiredProgram }
+    const applicant = after.applicant || {}
+    const fields = after.fields || {}
+    
+    const firstName = applicant.firstName || fields.firstName || ''
+    const lastName = applicant.lastName || fields.lastName || ''
+    const studentName = `${firstName} ${lastName}`.trim() || 'Student'
+    const studentEmail = applicant.email || fields.email || null
     
     if (!studentEmail) {
       console.log(`No email found for application ${applicationId}`)
@@ -259,11 +267,42 @@ exports.onApplicationStatusChange = onDocumentUpdated("applications/{application
     
     console.log(`Status changed from ${before.status} to ${newStatus} for application ${applicationId}`)
     
+    // Handle submittedAt - can be Timestamp, number (milliseconds), or Date
+    let submittedAt = new Date().toLocaleDateString()
+    if (after.submittedAt) {
+      if (after.submittedAt.seconds) {
+        // Firestore Timestamp
+        submittedAt = new Date(after.submittedAt.seconds * 1000).toLocaleDateString()
+      } else if (typeof after.submittedAt === 'number') {
+        // Milliseconds timestamp
+        submittedAt = new Date(after.submittedAt).toLocaleDateString()
+      } else if (after.submittedAt.toDate) {
+        // Timestamp object with toDate method
+        submittedAt = after.submittedAt.toDate().toLocaleDateString()
+      } else {
+        submittedAt = new Date(after.submittedAt).toLocaleDateString()
+      }
+    }
+    
+    // Handle acceptedAt
+    let acceptedAt = new Date().toLocaleDateString()
+    if (after.acceptedAt) {
+      if (after.acceptedAt.seconds) {
+        acceptedAt = new Date(after.acceptedAt.seconds * 1000).toLocaleDateString()
+      } else if (typeof after.acceptedAt === 'number') {
+        acceptedAt = new Date(after.acceptedAt).toLocaleDateString()
+      } else if (after.acceptedAt.toDate) {
+        acceptedAt = after.acceptedAt.toDate().toLocaleDateString()
+      } else {
+        acceptedAt = new Date(after.acceptedAt).toLocaleDateString()
+      }
+    }
+    
     // Prepare email data
     const emailData = {
       applicationId,
       studentName,
-      submittedAt: after.submittedAt ? new Date(after.submittedAt.seconds * 1000).toLocaleDateString() : new Date().toLocaleDateString(),
+      submittedAt,
       interviewDate: after.interviewDetails?.date || '',
       interviewTime: after.interviewDetails?.time || '',
       interviewLocation: after.interviewDetails?.location || '',
@@ -271,7 +310,7 @@ exports.onApplicationStatusChange = onDocumentUpdated("applications/{application
       interviewNotes: after.interviewDetails?.notes || '',
       rejectionReason: after.rejectionDetails?.reason || '',
       rejectionFeedback: after.rejectionDetails?.feedback || '',
-      acceptedAt: after.acceptedAt ? new Date(after.acceptedAt.seconds * 1000).toLocaleDateString() : new Date().toLocaleDateString(),
+      acceptedAt,
     }
     
     const template = getEmailTemplate(newStatus, emailData)
@@ -315,10 +354,35 @@ exports.onNewApplication = onDocumentCreated("applications/{applicationId}", asy
     const context = event.params;
     const application = snapshot.data()
     const applicationId = context.applicationId
-    const studentName = `${application.personalInfo?.firstName || ''} ${application.personalInfo?.lastName || ''}`.trim() || 'Unknown'
-    const studentEmail = application.contactInfo?.email || 'N/A'
-    const country = application.personalInfo?.nationality || 'N/A'
-    const submittedAt = application.submittedAt ? new Date(application.submittedAt.seconds * 1000).toLocaleString() : new Date().toLocaleString()
+    
+    // Extract student information from the actual application structure
+    // Application structure: { applicant: { firstName, lastName, email, phone }, fields: { ... }, desiredProgram }
+    const applicant = application.applicant || {}
+    const fields = application.fields || {}
+    
+    const firstName = applicant.firstName || fields.firstName || ''
+    const lastName = applicant.lastName || fields.lastName || ''
+    const studentName = `${firstName} ${lastName}`.trim() || 'Unknown'
+    const studentEmail = applicant.email || fields.email || 'N/A'
+    const studentPhone = applicant.phone || fields.phone || 'N/A'
+    const country = fields.nationality || applicant.nationality || 'N/A'
+    
+    // Handle submittedAt - can be Timestamp, number (milliseconds), or Date
+    let submittedAt = 'N/A'
+    if (application.submittedAt) {
+      if (application.submittedAt.seconds) {
+        // Firestore Timestamp
+        submittedAt = new Date(application.submittedAt.seconds * 1000).toLocaleString()
+      } else if (typeof application.submittedAt === 'number') {
+        // Milliseconds timestamp
+        submittedAt = new Date(application.submittedAt).toLocaleString()
+      } else if (application.submittedAt.toDate) {
+        // Timestamp object with toDate method
+        submittedAt = application.submittedAt.toDate().toLocaleString()
+      } else {
+        submittedAt = new Date(application.submittedAt).toLocaleString()
+      }
+    }
     
     // Get admin emails from config
     const adminEmailsString = process.env.ADMIN_EMAILS || "";
@@ -339,7 +403,9 @@ Student Information:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Name:       ${studentName}
 Email:      ${studentEmail}
+Phone:      ${studentPhone}
 Country:    ${country}
+Program:    ${application.desiredProgram || fields.desiredProgram || 'N/A'}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Application ID:  ${applicationId}
@@ -358,7 +424,7 @@ Please review and process this application as soon as possible.
       const info = await transporter.sendMail({
         from: '"Nadoumi Admin System" <noreply@nadoumi.com>',
         to: adminEmails,
-        subject: `🔔 New Application - ${studentName} (${applicationId})`,
+        subject: `🔔 New Application - ${studentName || 'Unknown'} (${applicationId})`,
         text: emailBody,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb;">
@@ -367,7 +433,43 @@ Please review and process this application as soon as possible.
                 <h1 style="color: white; margin: 0; font-size: 20px;">🔔 New Application Received</h1>
               </div>
               <div style="padding: 30px;">
-                <pre style="font-family: Arial, sans-serif; white-space: pre-wrap; line-height: 1.8; color: #374151; background: #f9fafb; padding: 20px; border-radius: 8px;">${emailBody}</pre>
+                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                  <h2 style="color: #374151; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Student Information:</h2>
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold; width: 120px;">Name:</td>
+                      <td style="padding: 8px 0; color: #374151;">${studentName}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Email:</td>
+                      <td style="padding: 8px 0; color: #374151;">${studentEmail}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Phone:</td>
+                      <td style="padding: 8px 0; color: #374151;">${studentPhone}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Country:</td>
+                      <td style="padding: 8px 0; color: #374151;">${country}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Program:</td>
+                      <td style="padding: 8px 0; color: #374151;">${application.desiredProgram || fields.desiredProgram || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Application ID:</td>
+                      <td style="padding: 8px 0; color: #374151; font-family: monospace;">${applicationId}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Submitted:</td>
+                      <td style="padding: 8px 0; color: #374151;">${submittedAt}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Status:</td>
+                      <td style="padding: 8px 0; color: #374151;"><span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-weight: bold;">PENDING</span></td>
+                    </tr>
+                  </table>
+                </div>
                 <div style="text-align: center; margin-top: 30px;">
                   <a href="${reviewLink}" style="display: inline-block; background: #ea580c; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">Review Application</a>
                 </div>

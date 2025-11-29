@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import logo from '../../assets/icons/logo.jpg'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
+import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
 
 function Navbar() {
   const [open, setOpen] = useState(false)
@@ -10,6 +11,7 @@ function Navbar() {
   const [visible, setVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const { t } = useI18n()
+  const { isAuthenticated } = useAdminAuth()
 
   const services = [
     { href: '/services/import-export', label: t('navbar.importExport') },
@@ -81,6 +83,9 @@ function Navbar() {
               </div>
             </div>
             <NavLink to="/contact" className={linkBase}>{t('navbar.contact')}</NavLink>
+            {isAuthenticated && (
+              <NavLink to="/admin" className={linkBase}>{t('navbar.dashboard', 'Dashboard')}</NavLink>
+            )}
             <LanguageSwitcher className="ml-2" />
           </div>
 
@@ -128,6 +133,9 @@ function Navbar() {
             </div>
 
             <NavLink to="/contact" className={mobileLinkBase} onClick={() => setOpen(false)}>{t('navbar.contact')}</NavLink>
+            {isAuthenticated && (
+              <NavLink to="/admin" className={mobileLinkBase} onClick={() => setOpen(false)}>{t('navbar.dashboard', 'Dashboard')}</NavLink>
+            )}
 
             <div className="pt-4 pb-2 border-t border-gray-100">
               <div className="px-3">
