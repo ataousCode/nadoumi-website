@@ -8,7 +8,8 @@
     "studentAdmission": "Admission Étudiante",
     "translation": "Traduction",
     "contact": "Contact",
-    "language": "Langue"
+    "language": "Langue",
+    "dashboard": "Tableau de bord"
   },
   "home": {
     "subtitle": "Nous favorisons le",
@@ -210,12 +211,13 @@
     }
   },
   "validation": {
+    "required": "{{field}} est requis",
     "nameRequired": "Le nom est requis",
     "nameMax": "Le nom doit comporter ≤ {{max}} caractères",
-    "emailRequired": "L’email est requis",
+    "emailRequired": "L'email est requis",
     "emailInvalid": "Entrez une adresse email valide",
     "phoneInvalid": "Entrez un numéro de téléphone valide",
-    "subjectMax": "L’objet doit comporter ≤ {{max}} caractères",
+    "subjectMax": "L'objet doit comporter ≤ {{max}} caractères",
     "messageRequired": "Le message est requis",
     "messageMin": "Le message doit comporter au moins {{min}} caractères",
     "messageMax": "Le message doit comporter ≤ {{max}} caractères"

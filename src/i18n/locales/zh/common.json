@@ -2,12 +2,14 @@
   "navbar": {
     "home": "首页",
     "about": "关于我们",
+    "products": "产品",
     "services": "服务",
     "importExport": "进出口",
     "studentAdmission": "留学申请",
     "translation": "翻译",
     "contact": "联系我们",
-    "language": "语言"
+    "language": "语言",
+    "dashboard": "仪表板"
   },
   "home": {
     "subtitle": "赋能全球",
@@ -209,6 +211,7 @@
     }
   },
   "validation": {
+    "required": "{{field}} 为必填项",
     "nameRequired": "姓名为必填项",
     "nameMax": "姓名长度需 ≤ {{max}} 字符",
     "emailRequired": "邮箱为必填项",
