@@ -8,8 +8,6 @@
  */
 
 const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
-const logger = require("firebase-functions/logger");
 
 // For cost control, you can set the maximum number of containers that can be
 // running at the same time. This helps mitigate the impact of unexpected
@@ -30,3 +28,8 @@ setGlobalOptions({ maxInstances: 10 });
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+// Export email notification functions
+const emailFunctions = require('./src/sendApplicationEmails');
+exports.onApplicationStatusChange = emailFunctions.onApplicationStatusChange;
+exports.onNewApplication = emailFunctions.onNewApplication;

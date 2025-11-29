@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
+import { useI18n } from '../../i18n/LocaleProvider.jsx'
+import ConfirmDialog from '../common/ConfirmDialog.jsx'
+import { useToast } from '../../context/ToastContext.jsx'
 
 export default function AdminLayout({ title, children, className = '' }) {
+  const { t } = useI18n()
   const navigate = useNavigate()
   const { isAuthenticated, logout, loading } = useAdminAuth()
-  const onLogout = async () => {
+  const { success, error } = useToast()
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  
+  const handleLogout = async () => {
     try {
       await logout()
+      success(t('common.toast.logoutSuccess'))
       navigate('/admin/login')
-    } catch (_) {}
+    } catch (err) {
+      error(t('common.toast.logoutError'))
+    }
   }
+  
   return (
     <div className={`container mx-auto px-4 py-8 ${className}`}>
       {title ? (
@@ -19,16 +30,28 @@ export default function AdminLayout({ title, children, className = '' }) {
           {isAuthenticated && (
             <button
               type="button"
-              className="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-              onClick={onLogout}
+              className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+              onClick={() => setShowLogoutConfirm(true)}
               disabled={loading}
             >
-              {loading ? 'Signing out…' : 'Logout'}
+              {t('common.logout')}
             </button>
           )}
         </header>
       ) : null}
       <main>{children}</main>
+      
+      {/* Logout Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title={t('common.logout')}
+        message={t('common.logoutConfirm')}
+        variant="warning"
+        isLoading={loading}
+        confirmText={t('common.logout')}
+      />
     </div>
   )
 }

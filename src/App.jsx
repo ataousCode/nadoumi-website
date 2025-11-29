@@ -12,25 +12,33 @@ import ApplicationFormPage from './pages/services/ApplicationFormPage.jsx'
 import TranslationPage from './pages/services/TranslationPage.jsx'
 import AdminLogin from './pages/admin/AdminLogin.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
-import Products from './pages/admin/Products.jsx'
+import AdminProducts from './pages/admin/Products.jsx'
 import Categories from './pages/admin/Categories.jsx'
 import ApplicationsInbox from './pages/admin/ApplicationsInbox.jsx'
 import ApplicationDetailPage from './pages/admin/ApplicationDetailPage.jsx'
 import ProtectedRoute from './component/admin/ProtectedRoute.jsx'
+import { ToastProvider } from './context/ToastContext.jsx'
+import ToastContainer from './component/common/ToastContainer.jsx'
+import Products from './pages/Products.jsx'
+import ProductDetail from './pages/ProductDetail.jsx'
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-white font-sans text-black">
-      <header>
-        <Navbar />
-      </header>
-      <main className="flex-1">
-        {/* Scroll to top on route changes */}
-        <ScrollToTop />
-        <Routes>
+    <ToastProvider>
+      <div className="min-h-screen flex flex-col bg-white font-sans text-black">
+        <header>
+          <Navbar />
+        </header>
+        <main className="flex-1 pt-14">
+          {/* Scroll to top on route changes */}
+          <ScrollToTop />
+          <ToastContainer />
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/import-export" element={<ImportExportPage />} />
           <Route path="/services/student-admission" element={<StudentAdmissionPage />} />
@@ -49,7 +57,7 @@ function App() {
             path="/admin/products"
             element={
               <ProtectedRoute fallback={<AdminLogin />}>
-                <Products />
+                <AdminProducts />
               </ProtectedRoute>
             }
           />
@@ -77,12 +85,13 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
-      </main>
-      <footer>
-        <Footer />
-      </footer>
-    </div>
+          </Routes>
+        </main>
+        <footer>
+          <Footer />
+        </footer>
+      </div>
+    </ToastProvider>
   )
 }
 

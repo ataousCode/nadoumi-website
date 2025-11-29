@@ -1,24 +1,33 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow admins (authenticated users) to read/write application documents
+    // Application documents - allow public uploads and authenticated reads
     match /applications/{applicationId}/{allPaths=**} {
-      // Admins (authenticated users) can read and list application documents
-      allow read: if request.auth != null;
-      allow list: if request.auth != null;
-      // Allow public uploads for application submissions
-      allow write: if true;
+      // Anyone can upload (for application form submissions)
+      allow create, write: if true;
+      // Authenticated users (admins) can read and list
+      allow read, list: if request.auth != null;
+      // Allow public read for the submitter temporarily (optional)
+      allow get: if true;
     }
 
-    // Allow admins to read and list all other storage paths to support legacy uploads
+    // Categories icons - public read, admin write
+    match /categories/{allPaths=**} {
+      allow read, list: if true;
+      allow write, create: if request.auth != null;
+    }
+
+    // Products images - public read, admin write
+    match /products/{allPaths=**} {
+      allow read, list: if true;
+      allow write, create: if request.auth != null;
+    }
+
+    // All other paths - admin only
     match /{allPaths=**} {
-      allow read: if request.auth != null;
-      allow list: if request.auth != null;
-      allow write: if false;
+      allow read, list: if request.auth != null;
+      allow write, create: if request.auth != null;
     }
   }
 }

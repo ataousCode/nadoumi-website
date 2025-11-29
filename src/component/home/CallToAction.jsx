@@ -1,4 +1,5 @@
 import React from 'react'
+import Container from '../common/Container.jsx'
 import Button from '../common/Button.jsx'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
@@ -20,7 +21,7 @@ function CallToAction({
 
   return (
     <section className={`bg-orange-50 ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
+      <Container size="md" className="text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{resolvedTitle}</h2>
         {resolvedSubtitle && <p className="mt-2 text-gray-700">{resolvedSubtitle}</p>}
         <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -31,7 +32,7 @@ function CallToAction({
             {resolvedSecondaryText}
           </Button>
         </div>
-      </div>
+      </Container>
     </section>
   )
 }

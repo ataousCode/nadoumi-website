@@ -1,16 +1,20 @@
 import React from 'react'
+import ServiceSteps from '../../common/ServiceSteps.jsx'
 
+/**
+ * Import/Export details component
+ * Wrapper around ServiceSteps for backward compatibility
+ */
 function ImportExportDetails({ steps = [], className = '', stepLabel = 'Step' }) {
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${className}`} aria-label="Import & Export steps">
-      {steps.map((s, i) => (
-        <div key={i} className="rounded-xl border border-orange-100 p-6 bg-white shadow-sm">
-          <div className="text-sm uppercase tracking-wider text-orange-600">{stepLabel} {i + 1}</div>
-          <h3 className="mt-2 text-lg font-semibold text-gray-900">{s.title}</h3>
-          <p className="mt-2 text-gray-700">{s.description}</p>
-        </div>
-      ))}
-    </div>
+    <ServiceSteps
+      steps={steps}
+      stepLabel={stepLabel}
+      variant="compact"
+      gridCols="md:grid-cols-2"
+      ariaLabel="Import & Export steps"
+      className={className}
+    />
   )
 }
 

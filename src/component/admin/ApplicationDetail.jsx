@@ -1,55 +1,118 @@
 import React from 'react'
+import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
 export default function ApplicationDetail({ application, className = '' }) {
+  const { t } = useI18n()
+  
   if (!application) return <div className="text-gray-500">No application selected.</div>
-  const { display = {}, data = {} } = application
-  const submitted = application.submittedAt ? new Date(application.submittedAt).toLocaleString() : ''
-  const detailRows = Object.entries(data || {})
-    .filter(([k]) => !['documents'].includes(k))
-    .map(([k, v]) => [k, typeof v === 'object' ? JSON.stringify(v) : String(v)])
+  
+  // Extract data from ACTUAL structure (applicant, fields, desiredProgram)
+  const applicant = application.applicant || {}
+  const fields = application.fields || {}
+  
+  const fullName = `${applicant.firstName || ''} ${applicant.lastName || ''}`.trim() || 'N/A'
+  const email = applicant.email || fields.email || 'N/A'
+  const phone = applicant.phone || fields.phone || 'N/A'
+  const program = application.desiredProgram || fields.desiredProgram || 'N/A'
+  
+  const formatDate = (timestamp) => {
+    try {
+      if (!timestamp) return 'N/A'
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
+      return date.toLocaleString()
+    } catch {
+      return 'N/A'
+    }
+  }
+  
+  const submitted = formatDate(application.submittedAt)
+  
+  // Build comprehensive details from fields object (contains all form data)
+  const groupedFields = {}
+  Object.entries(fields).forEach(([key, value]) => {
+    // Group fields by section or use a default 'Other Details' section
+    const section = key.includes('education') ? 'Education Information' :
+                    key.includes('work') ? 'Work Experience' :
+                    key.includes('family') ? 'Family Information' :
+                    key.includes('address') ? 'Address Information' :
+                    key.includes('academic') ? 'Academic Information' :
+                    'Additional Information'
+    
+    if (!groupedFields[section]) {
+      groupedFields[section] = {}
+    }
+    groupedFields[section][key] = value
+  })
+  
+  const detailSections = Object.entries(groupedFields).map(([title, data]) => ({ title, data }))
 
   return (
     <div className={`space-y-6 ${className}`}>
+      {/* Summary Section */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900">Applicant</h2>
-        <div className="mt-2 overflow-hidden rounded-md border">
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">Student Summary</h2>
+        <div className="overflow-hidden rounded-xl border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <tbody className="divide-y divide-gray-200">
-              <tr><th className="w-40 px-3 py-2 text-left font-medium text-gray-700">Name</th><td className="px-3 py-2 text-gray-900">{display.name || ''}</td></tr>
-              <tr><th className="w-40 px-3 py-2 text-left font-medium text-gray-700">Email</th><td className="px-3 py-2 text-gray-900">{display.email || ''}</td></tr>
-              <tr><th className="w-40 px-3 py-2 text-left font-medium text-gray-700">Phone</th><td className="px-3 py-2 text-gray-900">{display.phone || ''}</td></tr>
-              <tr><th className="w-40 px-3 py-2 text-left font-medium text-gray-700">Program</th><td className="px-3 py-2 text-gray-900">{display.program || ''}</td></tr>
-              <tr><th className="w-40 px-3 py-2 text-left font-medium text-gray-700">Submitted</th><td className="px-3 py-2 text-gray-900">{submitted}</td></tr>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              <tr><th className="w-40 px-4 py-3 text-left font-medium text-gray-700 bg-gray-50">Name</th><td className="px-4 py-3 text-gray-900">{fullName}</td></tr>
+              <tr><th className="w-40 px-4 py-3 text-left font-medium text-gray-700 bg-gray-50">Email</th><td className="px-4 py-3 text-gray-900">{email}</td></tr>
+              <tr><th className="w-40 px-4 py-3 text-left font-medium text-gray-700 bg-gray-50">Phone</th><td className="px-4 py-3 text-gray-900">{phone}</td></tr>
+              <tr><th className="w-40 px-4 py-3 text-left font-medium text-gray-700 bg-gray-50">Program</th><td className="px-4 py-3 text-gray-900">{program}</td></tr>
+              <tr><th className="w-40 px-4 py-3 text-left font-medium text-gray-700 bg-gray-50">Submitted</th><td className="px-4 py-3 text-gray-900">{submitted}</td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <section>
-        <h2 className="text-lg font-semibold text-gray-900">Details</h2>
-        <div className="mt-2 overflow-hidden rounded-md border">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-3 py-2 text-left font-medium text-gray-700">Field</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-700">Value</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {detailRows.length === 0 ? (
-                <tr><td colSpan={2} className="px-3 py-2 text-gray-500">No details</td></tr>
-              ) : (
-                detailRows.map(([k, v]) => (
-                  <tr key={k}>
-                    <td className="px-3 py-2 text-gray-700">{k}</td>
-                    <td className="px-3 py-2 text-gray-900 break-words">{v}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      {/* Detailed Sections */}
+      {detailSections.map((section) => {
+        const entries = Object.entries(section.data || {}).filter(([k, v]) => v !== null && v !== undefined && v !== '')
+        if (entries.length === 0) return null
+        
+        return (
+          <section key={section.title}>
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">{section.title}</h2>
+            <div className="overflow-hidden rounded-xl border border-gray-200">
+              <table className="min-w-full divide-y divide-gray-200 text-sm">
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {entries.map(([key, value]) => {
+                    // Format the key to be more readable
+                    const formattedKey = key
+                      .replace(/([A-Z])/g, ' $1')
+                      .replace(/^./, (str) => str.toUpperCase())
+                      .trim()
+                    
+                    // Format the value
+                    let formattedValue = value
+                    if (typeof value === 'object' && value !== null) {
+                      if (Array.isArray(value)) {
+                        formattedValue = value.length > 0 ? JSON.stringify(value, null, 2) : 'Empty'
+                      } else if (value.toDate) {
+                        formattedValue = formatDate(value)
+                      } else {
+                        formattedValue = JSON.stringify(value, null, 2)
+                      }
+                    } else if (typeof value === 'boolean') {
+                      formattedValue = value ? 'Yes' : 'No'
+                    }
+                    
+                    return (
+                      <tr key={key}>
+                        <th className="w-48 px-4 py-3 text-left font-medium text-gray-700 bg-gray-50 align-top">
+                          {formattedKey}
+                        </th>
+                        <td className="px-4 py-3 text-gray-900 break-words whitespace-pre-wrap">
+                          {String(formattedValue)}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )
+      })}
     </div>
   )
 }

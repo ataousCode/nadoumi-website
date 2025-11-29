@@ -2,6 +2,7 @@ module.exports = {
   env: {
     es6: true,
     node: true,
+    commonjs: true,
   },
   parserOptions: {
     "ecmaVersion": 2018,
@@ -14,6 +15,8 @@ module.exports = {
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",
     "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+    "no-unused-vars": ["error", {"argsIgnorePattern": "^_", "varsIgnorePattern": "^_"}],
+    "max-len": ["error", {"code": 120}],
   },
   overrides: [
     {

@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ServiceLayout from '../common/ServiceLayout.jsx'
 import ServiceHeader from '../common/ServiceHeader.jsx'
 import ServiceHero from '../common/ServiceHero.jsx'
 import ServiceCard from '../common/ServiceCard.jsx'
 import ServiceCTA from '../common/ServiceCTA.jsx'
 import Modal from '../common/Modal.jsx'
-import FAQ from '../faq/FAQ.jsx'
 import useTranslation from '../../../hooks/service/useTranslation.js'
 import { useI18n } from '../../../i18n/LocaleProvider.jsx'
 
 export default function TranslationOverview() {
-  const { details, faq } = useTranslation()
+  const { details, features } = useTranslation()
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(null)
-  const { locale, t } = useI18n()
-
-  const [features, setFeatures] = useState([])
-
-  useEffect(() => {
-    import(`../../../i18n/locales/${locale}/translation.features.json`).then((mod) => {
-      setFeatures(Array.isArray(mod.default) ? mod.default : [])
-    }).catch(() => {
-      setFeatures([])
-    })
-  }, [locale])
+  const { t } = useI18n()
 
   return (
     <ServiceLayout>

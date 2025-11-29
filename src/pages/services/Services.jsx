@@ -1,5 +1,7 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import Card from '../../component/common/Card.jsx'
+import Link from '../../component/common/Link.jsx'
 import ServiceLayout from '../../component/services/common/ServiceLayout.jsx'
 import ServiceHeader from '../../component/services/common/ServiceHeader.jsx'
 import ServiceHero from '../../component/services/common/ServiceHero.jsx'
@@ -45,10 +47,10 @@ function Services() {
               { t: t('services.why.personalized'), d: t('services.whyDesc.personalized') },
               { t: t('services.why.outcome'), d: t('services.whyDesc.outcome') },
             ].map((b, i) => (
-              <div key={i} className="rounded-xl border border-orange-100 p-6 bg-white">
+              <Card key={i}>
                 <h3 className="text-lg font-semibold text-gray-900">{b.t}</h3>
                 <p className="mt-2 text-gray-700">{b.d}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </section>
@@ -62,11 +64,11 @@ function Services() {
               { t: t('services.how.execute'), d: t('services.howDesc.execute') },
               { t: t('services.how.support'), d: t('services.howDesc.support') },
             ].map((s, i) => (
-              <div key={i} className="rounded-xl border border-orange-100 p-6 bg-white">
+              <Card key={i}>
                 <div className="text-orange-600 font-bold">{t('common.step')} {i + 1}</div>
                 <h3 className="mt-1 text-lg font-semibold text-gray-900">{s.t}</h3>
                 <p className="mt-2 text-gray-700">{s.d}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </section>
@@ -88,7 +90,7 @@ function Services() {
         </section>
 
         <div className="mt-12 text-center">
-          <Link to="/contact" className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-md shadow hover:bg-orange-700">{t('services.contactUs')}</Link>
+          <Link to="/contact" variant="button">{t('services.contactUs')}</Link>
         </div>
       </ServiceLayout>
     </>

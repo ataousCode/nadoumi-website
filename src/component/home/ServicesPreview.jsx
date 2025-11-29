@@ -1,6 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import useServicesData from '../../hooks/service/useServicesData.js'
+import Container from '../common/Container.jsx'
+import Card from '../common/Card.jsx'
 import Button from '../common/Button.jsx'
+import Link from '../common/Link.jsx'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
 function ServicesPreview({
@@ -17,14 +20,14 @@ function ServicesPreview({
 
   return (
     <section className={`bg-white ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <Container size="md">
         <div className="text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{title || t('home.servicesPreviewTitle')}</h2>
           {(subtitle || t('home.servicesPreviewSubtitle')) && <p className="mt-2 text-gray-700">{subtitle || t('home.servicesPreviewSubtitle')}</p>}
         </div>
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
           {shown.map((svc) => (
-            <div key={svc.id || svc.title} className="rounded-xl border border-orange-100 p-6 flex flex-col">
+            <Card key={svc.id || svc.title} className="flex flex-col">
               <h3 className="text-lg font-semibold text-gray-900">{svc.title}</h3>
               {svc.shortDescription && <p className="mt-2 text-gray-700">{svc.shortDescription}</p>}
               {svc.features && (
@@ -39,13 +42,13 @@ function ServicesPreview({
                   {svc.ctaText || t('services.actionsExplore')}
                 </Button>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
         <div className="mt-8 text-center">
-          <Link to="/services" className="text-orange-600 font-semibold hover:underline">{t('home.viewAllServices')}</Link>
+          <Link to="/services" variant="default">{t('home.viewAllServices')}</Link>
         </div>
-      </div>
+      </Container>
     </section>
   )
 }

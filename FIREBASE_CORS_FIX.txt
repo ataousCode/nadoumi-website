@@ -1,0 +1,47 @@
+# Firebase Storage CORS Fix
+
+## The CORS error you're seeing requires setting CORS configuration on your Firebase Storage bucket.
+
+### Option 1: Using Google Cloud Console (RECOMMENDED)
+
+1. Go to: https://console.cloud.google.com/storage/browser
+2. Select your project: nadoumi-b184b
+3. Find your bucket: nadoumi-b184b.appspot.com
+4. Click on the bucket name
+5. Click on the "Permissions" tab
+6. Click "ADD PRINCIPAL"
+7. Add "allUsers" with role "Storage Object Viewer" (for public read)
+
+Then set CORS:
+1. Click on the bucket
+2. Go to "Configuration" tab
+3. Click "Edit" under CORS
+4. Add this configuration:
+
+[
+  {
+    "origin": ["http://localhost:5173", "http://localhost:3000", "https://your-production-domain.com"],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Authorization"]
+  }
+]
+
+### Option 2: Using Firebase Console
+
+1. Go to: https://console.firebase.google.com/project/nadoumi-b184b/storage
+2. Click on "Rules" tab
+3. Make sure rules allow write access for applications path
+4. Go to Google Cloud Console for CORS (as above)
+
+### Option 3: Install gsutil and run command
+
+brew install google-cloud-sdk
+gsutil cors set cors.json gs://nadoumi-b184b.appspot.com
+
+### After fixing CORS:
+
+The application should work! You'll see:
+- Loading spinner on Submit button
+- Progress: "Uploading file.pdf (45%)"
+- Success message when complete

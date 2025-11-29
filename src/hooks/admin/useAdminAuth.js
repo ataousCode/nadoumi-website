@@ -9,14 +9,19 @@ import { onAuthStateChanged } from 'firebase/auth'
  */
 export default function useAdminAuth() {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true) // Start as loading
   const [error, setError] = useState('')
 
   useEffect(() => {
+    setLoading(true)
     const current = authApi.getCurrentUser?.()
-    if (current) setUser(current)
+    if (current) {
+      setUser(current)
+      setLoading(false)
+    }
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u || null)
+      setLoading(false)
     })
     return () => { try { unsub && unsub() } catch (_) { /* noop */ } }
   }, [])

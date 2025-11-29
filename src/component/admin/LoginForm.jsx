@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
+import { useToast } from '../../context/ToastContext.jsx'
+import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
 export default function LoginForm({ onSuccess }) {
-  const { login, loading, error } = useAdminAuth()
+  const { login, loading, error: authError } = useAdminAuth()
+  const { success, error: showError } = useToast()
+  const { t } = useI18n()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -10,17 +14,22 @@ export default function LoginForm({ onSuccess }) {
     e.preventDefault()
     try {
       const u = await login(email, password)
-      if (onSuccess && u) onSuccess(u)
-    } catch (_) { /* noop */ }
+      if (onSuccess && u) {
+        success(t('common.toast.loginSuccess'))
+        onSuccess(u)
+      }
+    } catch (err) {
+      showError(t('common.toast.loginError'))
+    }
   }
 
   const usingEmulators = String(import.meta.env.VITE_USE_EMULATORS || '').toLowerCase() === 'true'
 
   return (
     <form onSubmit={onSubmit} className="max-w-sm space-y-4">
-      {error && (
+      {authError && (
         <div role="alert" className="rounded-md border border-red-200 bg-red-50 text-red-700 px-3 py-2 text-sm">
-          {error}
+          {authError}
         </div>
       )}
       {usingEmulators && (
