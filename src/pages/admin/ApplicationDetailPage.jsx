@@ -13,11 +13,13 @@ import useApplicationDelete from '../../hooks/admin/useApplicationDelete.js'
 import { getApplication } from '../../api/applications.js'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 import { auth } from '../../api/admissionFirebase.js'
+import { useToast } from '../../context/ToastContext.jsx'
 
 export default function ApplicationDetailPage() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const { id } = useParams()
+  const { success, error: showError } = useToast()
   
   const [item, setItem] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -49,16 +51,23 @@ export default function ApplicationDetailPage() {
   const handleStatusChange = async (statusUpdate) => {
     if (!item) return
     
-    const updated = await updateStatus(item.id, {
-      ...statusUpdate,
-      adminEmail: auth.currentUser?.email || 'admin',
-    })
-    
-    if (updated) {
-      setItem(updated)
-      setShowStatusModal(false)
-      resetUpdate()
-      alert(t('admin.applications.statusUpdated'))
+    try {
+      const updated = await updateStatus(item.id, {
+        ...statusUpdate,
+        adminEmail: auth.currentUser?.email || 'admin',
+      })
+      
+      if (updated) {
+        setItem(updated)
+        setShowStatusModal(false)
+        resetUpdate()
+        success(t('admin.applications.statusUpdated'))
+      } else {
+        showError(t('admin.applications.statusUpdateFailed'))
+      }
+    } catch (err) {
+      console.error('Status update error:', err)
+      showError(err?.message || t('admin.applications.statusUpdateFailed'))
     }
   }
 
@@ -66,13 +75,21 @@ export default function ApplicationDetailPage() {
   const handleDelete = async () => {
     if (!item) return
     
-    const success = await deleteApp(item.id)
-    
-    if (success) {
-      alert(t('admin.applications.deleted'))
-      navigate('/admin/applications')
-    } else {
-      alert(deleteError || t('admin.applications.deleteFailed'))
+    try {
+      const deleteSuccess = await deleteApp(item.id)
+      
+      if (deleteSuccess) {
+        success(t('admin.applications.deleted'))
+        navigate('/admin/applications')
+      } else {
+        const errorMsg = deleteError || t('admin.applications.deleteFailed')
+        showError(errorMsg)
+        console.error('Delete error:', deleteError)
+        resetDelete()
+      }
+    } catch (err) {
+      console.error('Delete error:', err)
+      showError(err?.message || t('admin.applications.deleteFailed'))
       resetDelete()
     }
   }

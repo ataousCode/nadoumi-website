@@ -28,11 +28,13 @@ function useApplicationDelete() {
     
     try {
       await deleteApplication(applicationId)
+      // If no error is thrown, deletion was successful
       setSuccess(true)
       setIsLoading(false)
       return true
     } catch (err) {
-      const errorMessage = err.message || 'Failed to delete application'
+      console.error('Delete application error:', err)
+      const errorMessage = err?.message || 'Failed to delete application'
       setError(errorMessage)
       setIsLoading(false)
       return false

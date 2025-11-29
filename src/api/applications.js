@@ -267,34 +267,55 @@ export async function deleteApplication(id) {
       const deletePromises = listResult.items.map((itemRef) => 
         deleteObject(itemRef).catch((err) => {
           console.warn(`Failed to delete file ${itemRef.fullPath}:`, err)
+          // Don't throw - continue with other deletions
         })
       )
       
       // Delete all files in subfolders
       for (const prefixRef of listResult.prefixes) {
-        const subList = await listAll(prefixRef)
-        const subDeletePromises = subList.items.map((itemRef) =>
-          deleteObject(itemRef).catch((err) => {
-            console.warn(`Failed to delete file ${itemRef.fullPath}:`, err)
-          })
-        )
-        deletePromises.push(...subDeletePromises)
+        try {
+          const subList = await listAll(prefixRef)
+          const subDeletePromises = subList.items.map((itemRef) =>
+            deleteObject(itemRef).catch((err) => {
+              console.warn(`Failed to delete file ${itemRef.fullPath}:`, err)
+              // Don't throw - continue with other deletions
+            })
+          )
+          deletePromises.push(...subDeletePromises)
+        } catch (subListErr) {
+          console.warn(`Failed to list subfolder ${prefixRef.fullPath}:`, subListErr)
+          // Continue with deletion
+        }
       }
       
-      await Promise.all(deletePromises)
+      // Wait for all file deletions (some may fail, but that's okay)
+      await Promise.allSettled(deletePromises)
     } catch (storageErr) {
       // If folder doesn't exist or other storage error, log but continue
+      // This is not critical - the Firestore document deletion is more important
       console.warn(`Storage deletion warning for application ${id}:`, storageErr)
     }
     
     // Then, delete the Firestore document
-    const ref = doc(applicationsCol, id)
-    await deleteDoc(ref)
+    const docRef = doc(applicationsCol, id)
     
-    return { success: true, id }
+    // Check if document exists before trying to delete
+    const docSnap = await getDoc(docRef)
+    if (!docSnap.exists()) {
+      console.warn(`Application ${id} does not exist in Firestore`)
+      // Still return success since the goal is achieved (document doesn't exist)
+      return
+    }
+    
+    await deleteDoc(docRef)
+    console.log(`Successfully deleted application ${id}`)
   } catch (error) {
     console.error(`Failed to delete application ${id}:`, error)
-    throw new Error(`Failed to delete application: ${error.message}`)
+    // Provide more detailed error message
+    const errorMessage = error?.code === 'permission-denied' 
+      ? 'Permission denied. You may not have permission to delete applications.'
+      : error?.message || 'Failed to delete application'
+    throw new Error(errorMessage)
   }
 }
 
