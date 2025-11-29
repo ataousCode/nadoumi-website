@@ -7,8 +7,9 @@
  * @returns {string} WhatsApp phone number (with country code, no + or spaces)
  */
 export function getWhatsAppNumber() {
-  // You can set this in .env file: VITE_WHATSAPP_NUMBER=1234567890
-  const number = import.meta.env.VITE_WHATSAPP_NUMBER || '1234567890'
+  // Default: +86 155 2057 6024 (China)
+  // You can override in .env file: VITE_WHATSAPP_NUMBER=8615520576024
+  const number = import.meta.env.VITE_WHATSAPP_NUMBER || '8615520576024'
   // Remove any non-digit characters
   return number.replace(/\D/g, '')
 }

@@ -39,8 +39,16 @@
     },
     "testimonialsTitle": "What Clients Say",
     "testimonialsSubtitle": "Real stories from our partners and students",
+    "collaboration": {
+      "title": "Let's Collaborate",
+      "subtitle": "Join us in building successful partnerships and creating lasting impact together.",
+      "whatsappButton": "Contact Us on WhatsApp",
+      "whatsappMessage": "Hello! I would like to collaborate with Nadoumi Consulting.",
+      "contactNote": "Click to start a conversation with us",
+      "imageAlt": "Collaboration"
+    },
     "ctaTitle": "Ready to move forward?",
-    "ctaSubtitle": "Let’s talk about your goals.",
+    "ctaSubtitle": "Let's talk about your goals.",
     "ctaPrimary": "Get Started",
     "ctaSecondary": "Contact Us"
   },
@@ -179,6 +187,12 @@
     "typeToConfirm": "Type \"{{phrase}}\" to confirm",
     "confirmationMismatch": "Confirmation text does not match",
     "processing": "Processing...",
+    "logout": "Logout",
+    "logoutConfirm": "Are you sure you want to logout?",
+    "whatsapp": {
+      "buttonLabel": "Contact us on WhatsApp",
+      "message": "Hello! I would like to get in touch with Nadoumi Consulting."
+    },
     "toast": {
       "saveSuccess": "Saved successfully",
       "saveError": "Failed to save",

@@ -19,6 +19,7 @@ import ApplicationDetailPage from './pages/admin/ApplicationDetailPage.jsx'
 import ProtectedRoute from './component/admin/ProtectedRoute.jsx'
 import { ToastProvider } from './context/ToastContext.jsx'
 import ToastContainer from './component/common/ToastContainer.jsx'
+import WhatsAppFloat from './component/common/WhatsAppFloat.jsx'
 import Products from './pages/Products.jsx'
 import ProductDetail from './pages/ProductDetail.jsx'
 
@@ -33,6 +34,7 @@ function App() {
           {/* Scroll to top on route changes */}
           <ScrollToTop />
           <ToastContainer />
+          <WhatsAppFloat />
           <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

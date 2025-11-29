@@ -38,6 +38,14 @@
     },
     "testimonialsTitle": "客户评价",
     "testimonialsSubtitle": "来自合作伙伴与学生的真实反馈",
+    "collaboration": {
+      "title": "让我们合作",
+      "subtitle": "加入我们，共同建立成功的合作伙伴关系，创造持久的影响。",
+      "whatsappButton": "通过 WhatsApp 联系我们",
+      "whatsappMessage": "您好！我想与 Nadoumi 咨询公司合作。",
+      "contactNote": "点击开始与我们对话",
+      "imageAlt": "合作"
+    },
     "ctaTitle": "准备好迈出下一步？",
     "ctaSubtitle": "聊聊您的目标。",
     "ctaPrimary": "开始咨询",
@@ -178,6 +186,12 @@
     "typeToConfirm": "输入 \"{{phrase}}\" 以确认",
     "confirmationMismatch": "确认文本不匹配",
     "processing": "处理中...",
+    "logout": "登出",
+    "logoutConfirm": "您确定要登出吗？",
+    "whatsapp": {
+      "buttonLabel": "通过 WhatsApp 联系我们",
+      "message": "您好！我想与 Nadoumi 咨询公司取得联系。"
+    },
     "toast": {
       "saveSuccess": "保存成功",
       "saveError": "保存失败",

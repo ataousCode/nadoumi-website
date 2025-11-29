@@ -4,24 +4,21 @@
     "name": "Armand Boukinebe Peugonba",
     "position": "Founder & CEO",
     "bio": "With over a decade of experience in international trade and education consulting, Armand founded Nadoumi Consulting to bridge global opportunities and empower people to thrive beyond borders. His vision drives the company’s commitment to excellence, integrity, and customer success.",
-    "photo": "/assets/images/founder.jpg",
-    "linkedin": "https://linkedin.com/in/armand-nadoumi",
-    "email": "armand@nadoumi.com"
+    "photo": "/assets/images/founder.jpg"
   },
   {
     "id": 2,
     "name": "Amelia Xu",
     "position": "Head of Education Services",
     "bio": "Amelia oversees global student advisory operations, guiding international applicants through university placements, scholarships, and visa support across China’s top institutions.",
-    "photo": "/assets/images/femme.jpg",
-    "linkedin": "https://linkedin.com/in/amelia"
+    "photo": "/assets/images/femme.jpg"
   },
   {
     "id": 3,
-    "name": "Michael Zhang",
+    "name": "Dr Xiao Wei",
     "position": "Head of Trade & Logistics",
     "bio": "Michael leads the trade consulting division, specializing in supplier verification, quality control, and export compliance. He ensures clients receive reliable sourcing and frictionless logistics.",
-    "photo": "/assets/images/founder.jpg",
-    "linkedin": "https://linkedin.com/in/michaelzhang"
+    "photo": "/assets/images/team6.jpg"
+    
   }
 ]

@@ -4,6 +4,7 @@ import ValuesSection from '../component/home/ValuesSection.jsx'
 import ServicesPreview from '../component/home/ServicesPreview.jsx'
 import ProcessSteps from '../component/home/ProcessSteps.jsx'
 import Testimonials from '../component/home/Testimonials.jsx'
+import Collaboration from '../component/home/Collaboration.jsx'
 import CallToAction from '../component/home/CallToAction.jsx'
 import { useI18n } from '../i18n/LocaleProvider.jsx'
 
@@ -36,6 +37,7 @@ function Home() {
         ]}
       />
       <Testimonials title={t('home.testimonialsTitle')} subtitle={t('home.testimonialsSubtitle')} />
+      <Collaboration />
       <CallToAction />
     </>
   )

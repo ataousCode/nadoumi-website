@@ -38,7 +38,15 @@
       "delivery.description": "Nous livrons les résultats et vous accompagnons après la mission."
     },
     "testimonialsTitle": "Ce que disent nos clients",
-    "testimonialsSubtitle": "Témoignages d’entreprises et d’étudiants",
+    "testimonialsSubtitle": "Témoignages d'entreprises et d'étudiants",
+    "collaboration": {
+      "title": "Collaborons ensemble",
+      "subtitle": "Rejoignez-nous pour construire des partenariats réussis et créer un impact durable ensemble.",
+      "whatsappButton": "Nous contacter sur WhatsApp",
+      "whatsappMessage": "Bonjour ! Je souhaiterais collaborer avec Nadoumi Consulting.",
+      "contactNote": "Cliquez pour démarrer une conversation avec nous",
+      "imageAlt": "Collaboration"
+    },
     "ctaTitle": "Prêt à avancer ?",
     "ctaSubtitle": "Parlons de vos objectifs.",
     "ctaPrimary": "Commencer",
@@ -179,6 +187,12 @@
     "typeToConfirm": "Tapez \"{{phrase}}\" pour confirmer",
     "confirmationMismatch": "Le texte de confirmation ne correspond pas",
     "processing": "Traitement...",
+    "logout": "Déconnexion",
+    "logoutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "whatsapp": {
+      "buttonLabel": "Nous contacter sur WhatsApp",
+      "message": "Bonjour ! Je souhaiterais entrer en contact avec Nadoumi Consulting."
+    },
     "toast": {
       "saveSuccess": "Enregistré avec succès",
       "saveError": "Échec de l'enregistrement",

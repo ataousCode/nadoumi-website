@@ -15,7 +15,7 @@ const defaultItems = [
     title: 'Import & Export Support',
     description:
       'We help businesses source reliably from China, manage quality checks, and coordinate logistics and customs for smooth deliveries.',
-    image: 'team0.jpg',
+    image: 'team7.jpg',
   },
   {
     id: 2,
