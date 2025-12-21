@@ -22,8 +22,8 @@ function Hero({
   position = 'center',
   primaryText = 'Explore Services',
   primaryHref = '/services',
-  secondaryText = 'Apply Now',
-  secondaryHref = '/services/apply',
+  secondaryText = 'Browse Scholarships',
+  secondaryHref = '/scholarships',
   stats,
   className = '',
 }) {

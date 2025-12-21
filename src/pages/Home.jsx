@@ -23,7 +23,7 @@ function Home() {
         primaryText={t('home.primary')}
         primaryHref="/services"
         secondaryText={t('home.secondary')}
-        secondaryHref="/services/apply"
+        secondaryHref="/scholarships"
       />
       <ValuesSection title={t('home.valuesTitle')} subtitle={t('home.valuesSubtitle')} />
       <ServicesPreview limit={2} />

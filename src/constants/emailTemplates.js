@@ -25,21 +25,21 @@ export const EMAIL_TEMPLATES = {
     includeApplicationId: true,
     priority: 'normal',
   },
-  [APPLICATION_STATUS.INTERVIEW_SCHEDULED]: {
+  [APPLICATION_STATUS.RECEIVED]: {
     to: 'student',
-    subjectKey: 'email.student.interviewScheduled.subject',
-    bodyKey: 'email.student.interviewScheduled.body',
+    subjectKey: 'email.student.received.subject',
+    bodyKey: 'email.student.received.body',
+    includeApplicationId: true,
+    priority: 'normal',
+  },
+  [APPLICATION_STATUS.INTERVIEW]: {
+    to: 'student',
+    subjectKey: 'email.student.interview.subject',
+    bodyKey: 'email.student.interview.body',
     includeApplicationId: true,
     includeInterviewDetails: true,
     attachCalendarInvite: true,
     priority: 'high',
-  },
-  [APPLICATION_STATUS.INTERVIEW_PASSED]: {
-    to: 'student',
-    subjectKey: 'email.student.interviewPassed.subject',
-    bodyKey: 'email.student.interviewPassed.body',
-    includeApplicationId: true,
-    priority: 'normal',
   },
   [APPLICATION_STATUS.ACCEPTED]: {
     to: 'student',

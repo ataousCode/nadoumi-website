@@ -1,353 +1,267 @@
-// Firebase Firestore-backed applications API
-import { db, storage } from './admissionFirebase.js'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  orderBy,
-  where,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  onSnapshot,
-  Timestamp,
-} from 'firebase/firestore'
-import { ref, deleteObject, listAll } from 'firebase/storage'
-import { APPLICATION_STATUS, isTransitionAllowed } from '../constants/applicationStatus.js'
+// MongoDB-backed applications API
+import { apiRequest, apiRequestFormData } from './config.js'
+import { APPLICATION_STATUS } from '../constants/applicationStatus.js'
 
-const applicationsCol = collection(db, 'applications')
+const API_BASE = '/applications'
+
+/**
+ * Get all applications
+ */
+function normalizeStatus(status) {
+  if (!status) return APPLICATION_STATUS.PENDING
+  const statusLower = status.toLowerCase()
+  if (statusLower === 'pending') return APPLICATION_STATUS.PENDING
+  if (statusLower === 'received') return APPLICATION_STATUS.RECEIVED
+  if (statusLower === 'under_review' || statusLower === 'underreview') return APPLICATION_STATUS.UNDER_REVIEW
+  if (statusLower === 'interview' || statusLower === 'interview_scheduled' || statusLower === 'interviewscheduled') return APPLICATION_STATUS.INTERVIEW
+  if (statusLower === 'interview_passed' || statusLower === 'interviewpassed') return APPLICATION_STATUS.INTERVIEW_PASSED
+  if (statusLower === 'interview_failed' || statusLower === 'interviewfailed') return APPLICATION_STATUS.INTERVIEW_FAILED
+  if (statusLower === 'accepted') return APPLICATION_STATUS.ACCEPTED
+  if (statusLower === 'rejected') return APPLICATION_STATUS.REJECTED
+  if (statusLower === 'revoked') return APPLICATION_STATUS.REVOKED
+  // If already in correct format, return as is
+  if (Object.values(APPLICATION_STATUS).includes(status)) return status
+  return APPLICATION_STATUS.PENDING
+}
 
 export async function listApplications() {
-  const q = query(applicationsCol, orderBy('submittedAt', 'desc'))
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map((d) => {
-    const data = d.data()
-    // Normalize legacy status values
-    if (data.status === 'received') {
-      data.status = APPLICATION_STATUS.PENDING
-    }
-    return { id: d.id, ...data }
+  const apps = await apiRequest(API_BASE)
+  return apps.map(app => {
+    app.status = normalizeStatus(app.status)
+    return app
   })
 }
 
+/**
+ * Get a single application
+ */
 export async function getApplication(id) {
   if (!id) return null
-  const ref = doc(applicationsCol, id)
-  const snap = await getDoc(ref)
-  if (!snap.exists()) return null
+  const app = await apiRequest(`${API_BASE}/${id}`)
+  if (!app) return null
   
-  const data = snap.data()
+  app.status = normalizeStatus(app.status)
   
-  // Normalize legacy status values
-  if (data.status === 'received') {
-    data.status = APPLICATION_STATUS.PENDING
-  }
-  
-  return { id: snap.id, ...data }
+  return app
 }
 
 /**
- * Generate unique application ID: 3 uppercase letters + YEAR + sequential number
- * Format: NAD2025123456
+ * Save/Submit application
  */
-function generateApplicationId() {
-  const now = new Date()
-  const year = now.getFullYear()
-  const timestamp = now.getTime()
-  // Use last 6 digits of timestamp for uniqueness
-  const sequence = String(timestamp).slice(-6)
-  return `NAD${year}${sequence}`
-}
-
 export async function saveApplication(app) {
-  const id = app?.id || generateApplicationId()
-  const ref = doc(applicationsCol, id)
-  const timestamp = Timestamp.now()
-  
-  // Initialize with PENDING status and status history
-  const data = {
-    ...app,
-    id,
-    status: app.status || APPLICATION_STATUS.PENDING,
-    submittedAt: app.submittedAt || timestamp,
-    updatedAt: timestamp,
-    statusHistory: app.statusHistory || [{
-      status: APPLICATION_STATUS.PENDING,
-      timestamp,
-      note: 'Application submitted',
-    }],
-  }
-  
-  await setDoc(ref, data)
-  return { id }
+  const response = await apiRequest(API_BASE, {
+    method: 'POST',
+    body: JSON.stringify(app),
+  })
+  return response
 }
 
 /**
- * Update application status with validation, history tracking, and metadata
- * @param {string} id - Application ID
- * @param {object} statusUpdate - Status update data
- * @param {string} statusUpdate.status - New status
- * @param {string} [statusUpdate.note] - Admin note
- * @param {string} [statusUpdate.adminEmail] - Admin who made the change
- * @param {object} [statusUpdate.metadata] - Additional metadata (interview details, rejection reason, etc.)
- * @returns {Promise<object>} - Updated application
+ * Update application status
  */
 export async function updateApplicationStatus(id, statusUpdate) {
   if (!id) throw new Error('Application ID is required')
   if (!statusUpdate?.status) throw new Error('New status is required')
   
-  const ref = doc(applicationsCol, id)
-  const snap = await getDoc(ref)
-  
-  if (!snap.exists()) {
-    throw new Error('Application not found')
-  }
-  
-  const currentApp = snap.data()
-  const currentStatus = currentApp.status
-  const newStatus = statusUpdate.status
-  
-  // Validate status transition
-  if (!isTransitionAllowed(currentStatus, newStatus)) {
-    throw new Error(`Invalid status transition from ${currentStatus} to ${newStatus}`)
-  }
-  
-  const timestamp = Timestamp.now()
-  
-  // Build status history entry
-  const historyEntry = {
-    status: newStatus,
-    timestamp,
-    note: statusUpdate.note || '',
-    adminEmail: statusUpdate.adminEmail || 'unknown',
-    metadata: statusUpdate.metadata || {},
-  }
-  
-  // Update application
-  const updates = {
-    status: newStatus,
-    updatedAt: timestamp,
-    statusHistory: [...(currentApp.statusHistory || []), historyEntry],
-  }
-  
-  // Add status-specific metadata
-  if (newStatus === APPLICATION_STATUS.INTERVIEW_SCHEDULED && statusUpdate.metadata) {
-    updates.interviewDetails = {
-      date: statusUpdate.metadata.interviewDate || null,
-      time: statusUpdate.metadata.interviewTime || null,
-      location: statusUpdate.metadata.interviewLocation || null,
-      link: statusUpdate.metadata.interviewLink || null,
-      notes: statusUpdate.metadata.interviewNotes || null,
-      scheduledAt: timestamp,
-    }
-  }
-  
-  if (newStatus === APPLICATION_STATUS.REJECTED && statusUpdate.metadata?.rejectionReason) {
-    updates.rejectionDetails = {
-      reason: statusUpdate.metadata.rejectionReason,
-      feedback: statusUpdate.metadata.rejectionFeedback || null,
-      rejectedAt: timestamp,
-    }
-  }
-  
-  if (newStatus === APPLICATION_STATUS.ACCEPTED) {
-    updates.acceptedAt = timestamp
-  }
-  
-  await updateDoc(ref, updates)
-  
-  const updated = await getDoc(ref)
-  return updated.exists() ? { id: updated.id, ...updated.data() } : null
+  return apiRequest(`${API_BASE}/${id}/status`, {
+    method: 'PUT',
+    body: JSON.stringify(statusUpdate),
+  })
 }
 
 /**
- * Legacy simple status update (deprecated - use updateApplicationStatus instead)
+ * Legacy simple status update
  */
 export async function setApplicationStatus(id, status) {
   return updateApplicationStatus(id, { status })
 }
 
-// Persist a normalized array of document entries under documents.synced.
-// Each entry should be { path, name, size, type }.
+/**
+ * Set application synced documents
+ */
 export async function setApplicationSyncedDocuments(id, entries) {
-  if (!id) throw new Error('Application ID is required')
-  const ref = doc(applicationsCol, id)
-  // Read current to merge safely
-  const snap = await getDoc(ref)
-  const current = snap.exists() ? snap.data() : {}
-  const nextDocs = { ...(current.documents || {}), synced: Array.isArray(entries) ? entries : [] }
-  await updateDoc(ref, { documents: nextDocs })
-  const updated = await getDoc(ref)
-  return updated.exists() ? { id: updated.id, ...updated.data() } : null
-}
-
-export function subscribeApplications(onChange) {
-  const q = query(applicationsCol, orderBy('submittedAt', 'desc'))
-  const unsub = onSnapshot(q, (snapshot) => {
-    const list = snapshot.docs.map((d) => {
-      const data = d.data()
-      // Normalize legacy status values
-      if (data.status === 'received') {
-        data.status = APPLICATION_STATUS.PENDING
-      }
-      return { id: d.id, ...data }
-    })
-    try { onChange(list) } catch (_) { /* noop */ }
-  })
-  return unsub
+  // This would need to be implemented in the backend if needed
+  // For now, documents are handled separately
+  return { id, documents: { synced: entries } }
 }
 
 /**
- * Get applications filtered by status
- * @param {string} status - Application status to filter by
- * @returns {Promise<Array>} - List of applications
+ * Subscribe to applications (polling-based)
+ */
+export function subscribeApplications(onChange) {
+  let intervalId = setInterval(async () => {
+    try {
+      const apps = await listApplications()
+      onChange(apps)
+    } catch (error) {
+      console.error('Error fetching applications:', error)
+    }
+  }, 5000)
+
+  listApplications().then(onChange).catch(console.error)
+
+  return () => clearInterval(intervalId)
+}
+
+/**
+ * Get applications by status
  */
 export async function getApplicationsByStatus(status) {
-  const q = query(
-    applicationsCol,
-    where('status', '==', status),
-    orderBy('submittedAt', 'desc')
-  )
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const apps = await apiRequest(`${API_BASE}/status/${status}`)
+  return apps.map(app => {
+    app.status = normalizeStatus(app.status)
+    return app
+  })
 }
 
 /**
- * Subscribe to applications filtered by status
- * @param {string} status - Application status to filter by
- * @param {Function} onChange - Callback function
- * @returns {Function} - Unsubscribe function
+ * Subscribe to applications by status (polling-based)
  */
 export function subscribeApplicationsByStatus(status, onChange) {
-  // Only use where clause - orderBy will be done client-side to avoid composite index requirement
-  const q = query(
-    applicationsCol,
-    where('status', '==', status)
-  )
-  const unsub = onSnapshot(q, (snapshot) => {
-    const list = snapshot.docs
-      .map((d) => {
-        const data = d.data()
-        // Normalize legacy status values
-        if (data.status === 'received') {
-          data.status = APPLICATION_STATUS.PENDING
-        }
-        return { id: d.id, ...data }
-      })
-      .sort((a, b) => {
-        // Client-side sorting by submittedAt descending
-        const aTime = a.submittedAt?.toMillis?.() || a.submittedAt || 0
-        const bTime = b.submittedAt?.toMillis?.() || b.submittedAt || 0
-        return bTime - aTime
-      })
-    try { onChange(list) } catch (_) { /* noop */ }
-  })
-  return unsub
+  let intervalId = setInterval(async () => {
+    try {
+      const apps = await getApplicationsByStatus(status)
+      onChange(apps)
+    } catch (error) {
+      console.error('Error fetching applications by status:', error)
+    }
+  }, 5000)
+
+  getApplicationsByStatus(status).then(onChange).catch(console.error)
+
+  return () => clearInterval(intervalId)
 }
 
 /**
- * Delete application and all associated documents from Storage
- * @param {string} id - Application ID
- * @returns {Promise<void>}
+ * Delete application
  */
 export async function deleteApplication(id) {
   if (!id) throw new Error('Application ID is required')
   
   try {
-    // First, delete all documents from Firebase Storage
-    const folderRef = ref(storage, `applications/${id}`)
-    
-    // List all files in the application folder
-    try {
-      const listResult = await listAll(folderRef)
-      
-      // Delete all files
-      const deletePromises = listResult.items.map((itemRef) => 
-        deleteObject(itemRef).catch((err) => {
-          console.warn(`Failed to delete file ${itemRef.fullPath}:`, err)
-          // Don't throw - continue with other deletions
-        })
-      )
-      
-      // Delete all files in subfolders
-      for (const prefixRef of listResult.prefixes) {
-        try {
-          const subList = await listAll(prefixRef)
-          const subDeletePromises = subList.items.map((itemRef) =>
-            deleteObject(itemRef).catch((err) => {
-              console.warn(`Failed to delete file ${itemRef.fullPath}:`, err)
-              // Don't throw - continue with other deletions
-            })
-          )
-          deletePromises.push(...subDeletePromises)
-        } catch (subListErr) {
-          console.warn(`Failed to list subfolder ${prefixRef.fullPath}:`, subListErr)
-          // Continue with deletion
-        }
-      }
-      
-      // Wait for all file deletions (some may fail, but that's okay)
-      await Promise.allSettled(deletePromises)
-    } catch (storageErr) {
-      // If folder doesn't exist or other storage error, log but continue
-      // This is not critical - the Firestore document deletion is more important
-      console.warn(`Storage deletion warning for application ${id}:`, storageErr)
-    }
-    
-    // Then, delete the Firestore document
-    const docRef = doc(applicationsCol, id)
-    
-    // Check if document exists before trying to delete
-    const docSnap = await getDoc(docRef)
-    if (!docSnap.exists()) {
-      console.warn(`Application ${id} does not exist in Firestore`)
-      // Still return success since the goal is achieved (document doesn't exist)
-      return
-    }
-    
-    await deleteDoc(docRef)
-    console.log(`Successfully deleted application ${id}`)
+    await apiRequest(`${API_BASE}/${id}`, { method: 'DELETE' })
+    return id
   } catch (error) {
     console.error(`Failed to delete application ${id}:`, error)
-    // Provide more detailed error message
-    const errorMessage = error?.code === 'permission-denied' 
-      ? 'Permission denied. You may not have permission to delete applications.'
-      : error?.message || 'Failed to delete application'
-    throw new Error(errorMessage)
+    throw new Error(error.message || 'Failed to delete application')
   }
 }
 
 /**
- * Search applications by student name or email
- * @param {string} searchTerm - Search term
- * @returns {Promise<Array>} - List of matching applications
+ * Search applications
  */
 export async function searchApplications(searchTerm) {
   if (!searchTerm || searchTerm.trim().length < 2) {
     return listApplications()
   }
   
-  // Firestore doesn't support full-text search, so we fetch all and filter client-side
-  // For production, consider using Algolia or similar search service
-  const allApplications = await listApplications()
-  const term = searchTerm.toLowerCase().trim()
-  
-  return allApplications.filter((app) => {
-    const personalInfo = app.personalInfo || {}
-    const contactInfo = app.contactInfo || {}
-    
-    const fullName = `${personalInfo.firstName || ''} ${personalInfo.lastName || ''}`.toLowerCase()
-    const email = (contactInfo.email || '').toLowerCase()
-    const phone = (contactInfo.phone || '').toLowerCase()
-    const applicationId = (app.id || '').toLowerCase()
-    
-    return (
-      fullName.includes(term) ||
-      email.includes(term) ||
-      phone.includes(term) ||
-      applicationId.includes(term)
-    )
+  const apps = await apiRequest(`${API_BASE}/search/${encodeURIComponent(searchTerm)}`)
+  return apps.map(app => {
+    app.status = normalizeStatus(app.status)
+    return app
   })
+}
+
+/**
+ * Get student's applications
+ */
+export async function getStudentApplications() {
+  const response = await apiRequest(`${API_BASE}/student/me`)
+  // Backend returns array directly or { success: true, data: [...] }
+  const apps = Array.isArray(response) ? response : (response.data || [])
+  return apps.map(app => {
+    app.status = normalizeStatus(app.status)
+    return app
+  })
+}
+
+/**
+ * Get single student application
+ */
+export async function getStudentApplication(id) {
+  const response = await apiRequest(`${API_BASE}/student/me/${id}`)
+  // Backend returns object directly or { success: true, data: {...} }
+  const app = response.data || response
+  if (app) {
+    app.status = normalizeStatus(app.status)
+  }
+  return app
+}
+
+/**
+ * Submit application for scholarship
+ */
+export async function submitScholarshipApplication(scholarshipId, data) {
+  // Backend expects JSON with scholarshipId, preferences, and documents (URLs)
+  const response = await apiRequest(`${API_BASE}/student/me`, {
+    method: 'POST',
+    body: JSON.stringify({
+      scholarshipId,
+      preferences: data.preferences || {},
+      documents: data.documents || {},
+    }),
+  })
+  
+  // Backend returns application directly or { success: true, data: {...} }
+  return response
+}
+
+/**
+ * Update student application (before review)
+ */
+export async function updateStudentApplication(id, data) {
+  const formData = new FormData()
+  if (data.preferences) {
+    formData.append('preferences', JSON.stringify(data.preferences))
+  }
+  if (data.documents) {
+    Object.keys(data.documents).forEach(key => {
+      if (data.documents[key]) {
+        if (Array.isArray(data.documents[key])) {
+          data.documents[key].forEach(file => {
+            formData.append(`documents[${key}]`, file)
+          })
+        } else {
+          formData.append(`documents[${key}]`, data.documents[key])
+        }
+      }
+    })
+  }
+
+  return apiRequestFormData(`${API_BASE}/student/me/${id}`, formData, { method: 'PUT' })
+}
+
+/**
+ * Get applications by scholarship (admin)
+ */
+export async function getApplicationsByScholarship(scholarshipId) {
+  const apps = await apiRequest(`${API_BASE}/scholarship/${scholarshipId}`)
+  return apps.map(app => {
+    app.status = normalizeStatus(app.status)
+    return app
+  })
+}
+
+/**
+ * Upload admin document (admission or JW202) for accepted application
+ */
+export async function uploadAdminDocument(applicationId, file, documentType) {
+  if (!file) throw new Error('File is required')
+  if (!['admission', 'jw202'].includes(documentType)) {
+    throw new Error('Document type must be "admission" or "jw202"')
+  }
+  
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('documentType', documentType)
+  
+  const response = await apiRequestFormData(`${API_BASE}/${applicationId}/admin-documents`, formData, {
+    method: 'PUT',
+  })
+  
+  if (response.status) {
+    response.status = normalizeStatus(response.status)
+  }
+  
+  return response
 }

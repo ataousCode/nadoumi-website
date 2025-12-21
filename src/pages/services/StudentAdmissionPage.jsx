@@ -13,13 +13,13 @@ function StudentAdmissionPage() {
         eyebrow={t('navbar.studentAdmission')}
         title={t('home.secondary')}
         subtitle={t('services.howSubtitle')}
-        actions={[{ label: t('home.secondary'), href: '/services/apply' }, { label: t('services.actionsContact'), href: '/contact', variant: 'secondary' }]}
+        actions={[{ label: t('home.secondary'), href: '/scholarships' }, { label: t('services.actionsContact'), href: '/contact', variant: 'secondary' }]}
       />
       <StudentAdmissionOverview />
       <RequiredDocuments />
       <div className="mt-10 container mx-auto px-4 text-center">
         <Link
-          to="/services/apply"
+          to="/scholarships"
           className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-md shadow hover:bg-orange-700"
         >
           {t('home.secondary')}

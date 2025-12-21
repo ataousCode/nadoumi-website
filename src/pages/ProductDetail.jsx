@@ -5,6 +5,7 @@ import { getActiveCategories } from '../api/categories.js'
 import ProductCard from '../component/products/ProductCard.jsx'
 import { openWhatsAppForProduct } from '../utils/whatsapp.js'
 import { useI18n } from '../i18n/LocaleProvider.jsx'
+import { getImageURL } from '../api/config.js'
 
 function ProductDetail() {
   const { id } = useParams()
@@ -47,6 +48,11 @@ function ProductDetail() {
           return
         }
 
+        // Normalize ID
+        if (!productData.id && productData._id) {
+          productData.id = productData._id.toString()
+        }
+
         if (!productData.enabled) {
           setError('Product not available')
           setLoading(false)
@@ -67,13 +73,16 @@ function ProductDetail() {
   // If no products in same category, show other enabled products
   const similarProducts = useMemo(() => {
     if (!product || allProducts.length === 0) return []
+    
+    const productId = product.id || product._id
 
     // First, try to get products from the same category
-    const sameCategory = allProducts.filter(p => 
-      p.id !== product.id && 
-      p.categoryId === product.categoryId &&
-      p.enabled
-    )
+    const sameCategory = allProducts.filter(p => {
+      const pId = p.id || p._id
+      return pId !== productId && 
+        p.categoryId === product.categoryId &&
+        p.enabled
+    })
 
     // If we have products in the same category, use them
     if (sameCategory.length > 0) {
@@ -82,7 +91,10 @@ function ProductDetail() {
 
     // Otherwise, show other enabled products (excluding current)
     return allProducts
-      .filter(p => p.id !== product.id && p.enabled)
+      .filter(p => {
+        const pId = p.id || p._id
+        return pId !== productId && p.enabled
+      })
       .slice(0, 4)
   }, [product, allProducts])
 
@@ -97,9 +109,11 @@ function ProductDetail() {
   const productImages = useMemo(() => {
     if (!product) return []
     const images = []
-    if (product.thumbnail) images.push(product.thumbnail)
-    if (product.carousel && Array.isArray(product.carousel)) {
-      images.push(...product.carousel)
+    if (product.thumbnail) {
+      images.push(getImageURL(product.thumbnail))
+    }
+    if (product.carousel && Array.isArray(product.carousel) && product.carousel.length > 0) {
+      images.push(...product.carousel.map(img => getImageURL(img)))
     }
     return images
   }, [product])
@@ -192,14 +206,21 @@ function ProductDetail() {
                     src={productImages[selectedImageIndex]}
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Failed to load product image:', productImages[selectedImageIndex])
+                      e.target.style.display = 'none'
+                      const fallback = e.target.nextElementSibling
+                      if (fallback) {
+                        fallback.style.display = 'flex'
+                      }
+                    }}
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <svg className="w-24 h-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                )}
+                ) : null}
+                <div className="w-full h-full flex items-center justify-center" style={{ display: productImages.length > 0 ? 'none' : 'flex' }}>
+                  <svg className="w-24 h-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
               </div>
 
               {/* Thumbnail Gallery */}
@@ -219,6 +240,10 @@ function ProductDetail() {
                         src={image}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.error('Failed to load thumbnail image:', image)
+                          e.target.style.display = 'none'
+                        }}
                       />
                     </button>
                   ))}
@@ -354,7 +379,7 @@ function ProductDetail() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {similarProducts.map(similarProduct => (
                 <ProductCard 
-                  key={similarProduct.id} 
+                  key={similarProduct.id || similarProduct._id} 
                   product={similarProduct} 
                   showBuyButton={true}
                 />

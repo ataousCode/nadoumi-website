@@ -7,12 +7,13 @@ import StatusChangeModal from '../../component/admin/StatusChangeModal.jsx'
 import DeleteConfirmModal from '../../component/admin/DeleteConfirmModal.jsx'
 import ApplicationDetail from '../../component/admin/ApplicationDetail.jsx'
 import DocumentList from '../../component/admin/DocumentList.jsx'
+import AdminDocumentUpload from '../../component/admin/AdminDocumentUpload.jsx'
 import ErrorBoundary from '../../component/admin/ErrorBoundary.jsx'
 import useApplicationStatus from '../../hooks/admin/useApplicationStatus.js'
 import useApplicationDelete from '../../hooks/admin/useApplicationDelete.js'
+import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
 import { getApplication } from '../../api/applications.js'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
-import { auth } from '../../api/admissionFirebase.js'
 import { useToast } from '../../context/ToastContext.jsx'
 
 export default function ApplicationDetailPage() {
@@ -20,6 +21,7 @@ export default function ApplicationDetailPage() {
   const navigate = useNavigate()
   const { id } = useParams()
   const { success, error: showError } = useToast()
+  const { user } = useAdminAuth()
   
   const [item, setItem] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -52,18 +54,75 @@ export default function ApplicationDetailPage() {
     if (!item) return
     
     try {
-      const updated = await updateStatus(item.id, {
-        ...statusUpdate,
-        adminEmail: auth.currentUser?.email || 'admin',
-      })
+      const appId = item.applicationId || item.id || item._id
       
-      if (updated) {
-        setItem(updated)
-        setShowStatusModal(false)
-        resetUpdate()
-        success(t('admin.applications.statusUpdated'))
+      // If status is ACCEPTED and files are provided, upload them first
+      if (statusUpdate.status === 'accepted' && statusUpdate.files) {
+        const { files, ...statusData } = statusUpdate
+        
+        // First update the status
+        const updated = await updateStatus(appId, {
+          ...statusData,
+          adminEmail: user?.email || 'admin',
+        })
+        
+        // Then upload files if provided
+        if (updated && files) {
+          const { uploadAdminDocument } = await import('../../api/applications.js')
+          
+          if (files.admission) {
+            try {
+              await uploadAdminDocument(appId, files.admission, 'admission')
+            } catch (uploadErr) {
+              console.error('Failed to upload admission document:', uploadErr)
+              // Continue even if upload fails
+            }
+          }
+          
+          if (files.jw202) {
+            try {
+              await uploadAdminDocument(appId, files.jw202, 'jw202')
+            } catch (uploadErr) {
+              console.error('Failed to upload JW202 document:', uploadErr)
+              // Continue even if upload fails
+            }
+          }
+          
+          // Reload the application to get updated document info
+          const { getApplication } = await import('../../api/applications.js')
+          const refreshed = await getApplication(appId)
+          if (refreshed) {
+            setItem(refreshed)
+            setShowStatusModal(false)
+            resetUpdate()
+            success(t('admin.applications.statusUpdated'))
+            return
+          }
+        }
+        
+        if (updated) {
+          setItem(updated)
+          setShowStatusModal(false)
+          resetUpdate()
+          success(t('admin.applications.statusUpdated'))
+        } else {
+          showError(t('admin.applications.statusUpdateFailed'))
+        }
       } else {
-        showError(t('admin.applications.statusUpdateFailed'))
+        // Normal status update without files
+        const updated = await updateStatus(appId, {
+          ...statusUpdate,
+          adminEmail: user?.email || 'admin',
+        })
+        
+        if (updated) {
+          setItem(updated)
+          setShowStatusModal(false)
+          resetUpdate()
+          success(t('admin.applications.statusUpdated'))
+        } else {
+          showError(t('admin.applications.statusUpdateFailed'))
+        }
       }
     } catch (err) {
       console.error('Status update error:', err)
@@ -76,7 +135,8 @@ export default function ApplicationDetailPage() {
     if (!item) return
     
     try {
-      const deleteSuccess = await deleteApp(item.id)
+      const appId = item.applicationId || item.id || item._id
+      const deleteSuccess = await deleteApp(appId)
       
       if (deleteSuccess) {
         success(t('admin.applications.deleted'))
@@ -95,11 +155,7 @@ export default function ApplicationDetailPage() {
   }
 
   return (
-    <AdminLayout title={t('admin.applications.detail')}>
-      <button type="button" className="mb-4 text-orange-600 font-medium hover:underline" onClick={() => navigate(-1)}>
-        ← {t('admin.applications.list')}
-      </button>
-
+    <AdminLayout>
       {loading && (
         <div className="text-center py-12">
           <p className="text-gray-600">{t('common.loading')}</p>
@@ -125,10 +181,16 @@ export default function ApplicationDetailPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  {item.personalInfo?.firstName} {item.personalInfo?.lastName}
+                  {item.student?.firstName && item.student?.lastName
+                    ? `${item.student.firstName} ${item.student.lastName}`
+                    : item.personalInfo?.firstName && item.personalInfo?.lastName
+                    ? `${item.personalInfo.firstName} ${item.personalInfo.lastName}`
+                    : item.applicant?.firstName && item.applicant?.lastName
+                    ? `${item.applicant.firstName} ${item.applicant.lastName}`
+                    : 'Application'}
                 </h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  {t('admin.applications.id')}: {item.id}
+                  {t('admin.applications.id')}: {item.applicationId || item.id || item._id}
                 </p>
               </div>
               <StatusBadge status={item.status} size="lg" />
@@ -173,6 +235,19 @@ export default function ApplicationDetailPage() {
               </h2>
               <DocumentList application={item} />
             </div>
+
+            {/* Admin Documents Upload (only for accepted applications) */}
+            {(item.status === 'accepted' || item.status === 'ACCEPTED') && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                <AdminDocumentUpload 
+                  application={item} 
+                  onUploadSuccess={(updated) => {
+                    setItem(updated)
+                    success('Application updated successfully')
+                  }}
+                />
+              </div>
+            )}
           </div>
         </ErrorBoundary>
       )}

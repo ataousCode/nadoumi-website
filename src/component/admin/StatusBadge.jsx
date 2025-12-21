@@ -1,6 +1,5 @@
 import React from 'react'
 import { getStatusMetadata } from '../../constants/applicationStatus.js'
-import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
 /**
  * Reusable status badge component
@@ -13,7 +12,6 @@ import { useI18n } from '../../i18n/LocaleProvider.jsx'
  * @param {string} [props.className=''] - Additional CSS classes
  */
 function StatusBadge({ status, showIcon = true, size = 'md', className = '' }) {
-  const { t } = useI18n()
   const metadata = getStatusMetadata(status)
   
   // Size variants
@@ -32,10 +30,10 @@ function StatusBadge({ status, showIcon = true, size = 'md', className = '' }) {
         ${sizeClasses[size] || sizeClasses.md}
         ${className}
       `}
-      title={t(metadata.description)}
+      title={metadata.description}
     >
       {showIcon && <span className="text-sm">{metadata.icon}</span>}
-      <span>{t(metadata.label)}</span>
+      <span>{metadata.label}</span>
     </span>
   )
 }

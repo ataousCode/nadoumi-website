@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import * as authApi from '../../api/auth.js'
-import { auth } from '../../api/admissionFirebase.js'
-import { onAuthStateChanged } from 'firebase/auth'
 
 /**
  * Admin auth hook: tracks auth state and exposes login/logout.
- * Can be backed by Firebase, Supabase, or custom API via src/api/auth.js.
+ * Uses MongoDB backend API via src/api/auth.js.
  */
 export default function useAdminAuth() {
   const [user, setUser] = useState(null)
@@ -19,11 +17,17 @@ export default function useAdminAuth() {
       setUser(current)
       setLoading(false)
     }
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u || null)
-      setLoading(false)
-    })
-    return () => { try { unsub && unsub() } catch (_) { /* noop */ } }
+    
+    // Verify token with backend
+    authApi.verifyToken()
+      .then((user) => {
+        setUser(user || null)
+        setLoading(false)
+      })
+      .catch(() => {
+        setUser(null)
+        setLoading(false)
+      })
   }, [])
 
   const login = useCallback(async (email, password) => {
@@ -34,13 +38,12 @@ export default function useAdminAuth() {
       setUser(u || null)
       return u
     } catch (err) {
-      const code = err?.code || ''
-      const friendly =
-        code === 'auth/invalid-credential' ? 'Invalid email or password.' :
-        code === 'auth/user-not-found' ? 'No admin account found for this email.' :
-        code === 'auth/wrong-password' ? 'Incorrect password.' :
-        code === 'auth/network-request-failed' ? 'Network error. Check connection or emulator status.' :
-        err?.message || 'Login failed'
+      const message = err?.message || 'Login failed'
+      const friendly = message.includes('Invalid') || message.includes('password')
+        ? 'Invalid email or password.'
+        : message.includes('Network') || message.includes('fetch')
+        ? 'Network error. Please check your connection.'
+        : message
       setError(friendly)
       throw err
     } finally {

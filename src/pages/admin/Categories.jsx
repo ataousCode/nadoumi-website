@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import DataTable from '../../component/common/DataTable.jsx'
+import React, { useState, useEffect, useMemo } from 'react'
 import Modal from '../../component/common/Modal.jsx'
 import Button from '../../component/common/Button.jsx'
-import Container from '../../component/common/Container.jsx'
+import AdminLayout from '../../component/admin/AdminLayout.jsx'
 import CategoryForm from '../../component/admin/categories/CategoryForm.jsx'
+import Filters from '../../component/common/Filters.jsx'
+import { getImageURL } from '../../api/config.js'
 import {
   subscribeToCategories,
   createCategory,
@@ -11,7 +12,6 @@ import {
   deleteCategory,
   toggleCategoryStatus
 } from '../../api/categories.js'
-import { Link } from 'react-router-dom'
 import { useToast } from '../../context/ToastContext.jsx'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 import ConfirmDialog from '../../component/common/ConfirmDialog.jsx'
@@ -24,6 +24,10 @@ export default function Categories() {
   const [editingCategory, setEditingCategory] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, categoryId: null })
+  const [filters, setFilters] = useState({
+    search: '',
+    status: 'all',
+  })
 
   // Subscribe to categories
   useEffect(() => {
@@ -32,6 +36,44 @@ export default function Categories() {
     })
     return () => unsub()
   }, [])
+
+  // Filter categories
+  const filteredCategories = useMemo(() => {
+    let filtered = [...categories]
+
+    // Search filter
+    if (filters.search) {
+      const query = filters.search.toLowerCase()
+      filtered = filtered.filter(c => 
+        c.name?.toLowerCase().includes(query) ||
+        c.description?.toLowerCase().includes(query)
+      )
+    }
+
+    // Status filter
+    if (filters.status === 'active') {
+      filtered = filtered.filter(c => c.enabled)
+    } else if (filters.status === 'disabled') {
+      filtered = filtered.filter(c => !c.enabled)
+    }
+
+    return filtered
+  }, [categories, filters])
+
+  // Prepare filter options
+  const filterConfig = useMemo(() => [
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'all', label: 'All Categories' },
+        { value: 'active', label: 'Active Only' },
+        { value: 'disabled', label: 'Disabled Only' },
+      ],
+      placeholder: 'All Categories',
+    },
+  ], [])
 
   const handleCreate = () => {
     setEditingCategory(null)
@@ -63,8 +105,10 @@ export default function Categories() {
   const handleToggleStatus = async (category) => {
     try {
       await toggleCategoryStatus(category.id, !category.enabled)
+      success(category.enabled ? 'Category disabled' : 'Category enabled')
     } catch (error) {
       console.error('Failed to toggle status:', error)
+      showError(error?.message || 'Failed to toggle status')
     }
   }
 
@@ -79,6 +123,7 @@ export default function Categories() {
         success(t('common.toast.saveSuccess'))
       }
       setIsModalOpen(false)
+      setEditingCategory(null)
     } catch (err) {
       console.error('Failed to save category:', err)
       showError(editingCategory ? t('common.toast.updateError') : t('common.toast.saveError'))
@@ -87,111 +132,184 @@ export default function Categories() {
     }
   }
 
-  const columns = [
-    {
-      label: 'Icon',
-      key: 'icon',
-      render: (item) => (
-        item.icon ? (
-          <img src={item.icon} alt={item.name} className="h-10 w-10 rounded-md object-cover bg-gray-50" />
-        ) : (
-          <div className="h-10 w-10 rounded-md bg-gray-100 flex items-center justify-center text-gray-400">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        )
-      )
-    },
-    { label: 'Name', key: 'name', className: 'font-medium' },
-    {
-      label: 'Description',
-      key: 'description',
-      render: (item) => (
-        <span className="text-gray-500 truncate max-w-xs block" title={item.description}>
-          {item.description || '-'}
-        </span>
-      )
-    },
-    {
-      label: 'Status',
-      key: 'enabled',
-      render: (item) => (
-        <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${item.enabled ? 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20' : 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20'
-          }`}>
-          {item.enabled ? 'Active' : 'Disabled'}
-        </span>
-      )
-    },
-    {
-      label: 'Actions',
-      key: 'actions',
-      render: (item) => (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleEdit(item)}
-            className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
-          >
-            Edit
-          </button>
-          <span className="text-gray-300">|</span>
-          <button
-            onClick={() => handleToggleStatus(item)}
-            className={`${item.enabled ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'} text-sm font-medium`}
-          >
-            {item.enabled ? 'Disable' : 'Enable'}
-          </button>
-          <span className="text-gray-300">|</span>
-          <button
-            onClick={() => handleDelete(item.id)}
-            className="text-red-600 hover:text-red-900 text-sm font-medium"
-          >
-            Delete
-          </button>
-        </div>
-      )
-    }
-  ]
-
   return (
-    <Container>
+    <AdminLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              to="/admin"
-              className="p-2 -ml-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
-              title="Back to Dashboard"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-              </svg>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
-              <p className="mt-1 text-sm text-gray-500">Manage product categories</p>
-            </div>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Categories</h1>
+            <p className="text-sm text-gray-500 mt-1">Manage your product categories</p>
           </div>
-          <Button onClick={handleCreate}>
-            + Add Category
+          <Button onClick={handleCreate} className="w-full sm:w-auto">
+            <svg className="w-5 h-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Category
           </Button>
         </div>
 
-        <DataTable
-          columns={columns}
-          data={categories}
-          searchPlaceholder="Search categories..."
-        />
+        {/* Main Content with Filters */}
+        <div className="grid grid-cols-1 lg:grid-cols-[280px,1fr] gap-6 lg:gap-8 items-start">
+          {/* Filters Sidebar */}
+          <div className="order-2 lg:order-1">
+            <Filters
+              values={filters}
+              onChange={setFilters}
+              onReset={() => setFilters({ search: '', status: 'all' })}
+              searchPlaceholder="Search categories..."
+              filters={filterConfig}
+            />
+          </div>
+
+          {/* Categories Grid */}
+          <div className="order-1 lg:order-2 space-y-6">
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="text-sm text-gray-500">Total Categories</div>
+                <div className="text-2xl font-bold text-gray-900 mt-1">{categories.length}</div>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="text-sm text-gray-500">Active</div>
+                <div className="text-2xl font-bold text-green-600 mt-1">
+                  {categories.filter(c => c.enabled).length}
+                </div>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="text-sm text-gray-500">Disabled</div>
+                <div className="text-2xl font-bold text-red-600 mt-1">
+                  {categories.filter(c => !c.enabled).length}
+                </div>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="text-sm text-gray-500">Showing</div>
+                <div className="text-2xl font-bold text-orange-600 mt-1">{filteredCategories.length}</div>
+              </div>
+            </div>
+
+            {/* Categories Grid */}
+            {filteredCategories.length === 0 ? (
+              <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No categories found</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {filters.search || filters.status !== 'all' 
+                    ? 'Try adjusting your filters' 
+                    : 'Get started by creating a new category'}
+                </p>
+                {!filters.search && filters.status === 'all' && (
+                  <div className="mt-6">
+                    <Button onClick={handleCreate}>Add Category</Button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredCategories.map((category) => (
+                  <div
+                    key={category.id || category._id}
+                    className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Small Icon */}
+                      <div className="relative flex-shrink-0">
+                        <div className="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center">
+                          {category.icon ? (
+                            <img
+                              src={getImageURL(category.icon)}
+                              alt={category.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                console.error('Failed to load category icon:', getImageURL(category.icon))
+                                e.target.style.display = 'none'
+                                const fallback = e.target.nextElementSibling
+                                if (fallback) {
+                                  fallback.style.display = 'flex'
+                                }
+                              }}
+                            />
+                          ) : null}
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200" style={{ display: category.icon ? 'none' : 'flex' }}>
+                            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                          </div>
+                        </div>
+                        {/* Status Badge */}
+                        <div className="absolute -top-1 -right-1">
+                          <span className={`inline-flex items-center rounded-full w-3 h-3 ${
+                            category.enabled 
+                              ? 'bg-green-500' 
+                              : 'bg-red-500'
+                          }`} title={category.enabled ? 'Active' : 'Disabled'} />
+                        </div>
+                      </div>
+
+                      {/* Category Info */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-1">
+                          {category.name}
+                        </h3>
+                        {category.description && (
+                          <p className="text-xs text-gray-500 line-clamp-2 mb-3">
+                            {category.description}
+                          </p>
+                        )}
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <button
+                            onClick={() => handleEdit(category)}
+                            className="text-xs font-medium text-indigo-600 hover:text-indigo-900 px-2 py-1 rounded hover:bg-indigo-50 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <span className="text-gray-300">•</span>
+                          <button
+                            onClick={() => handleToggleStatus(category)}
+                            className={`text-xs font-medium px-2 py-1 rounded transition-colors ${
+                              category.enabled
+                                ? 'text-orange-600 hover:text-orange-900 hover:bg-orange-50'
+                                : 'text-green-600 hover:text-green-900 hover:bg-green-50'
+                            }`}
+                          >
+                            {category.enabled ? 'Disable' : 'Enable'}
+                          </button>
+                          <span className="text-gray-300">•</span>
+                          <button
+                            onClick={() => handleDelete(category.id)}
+                            className="text-xs font-medium text-red-600 hover:text-red-900 px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         <Modal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false)
+            setEditingCategory(null)
+          }}
           title={editingCategory ? 'Edit Category' : 'New Category'}
         >
           <CategoryForm
             initialData={editingCategory}
             onSubmit={handleSubmit}
-            onCancel={() => setIsModalOpen(false)}
+            onCancel={() => {
+              setIsModalOpen(false)
+              setEditingCategory(null)
+            }}
             isSubmitting={isSubmitting}
           />
         </Modal>
@@ -205,6 +323,6 @@ export default function Categories() {
           variant="danger"
         />
       </div>
-    </Container>
+    </AdminLayout>
   )
 }

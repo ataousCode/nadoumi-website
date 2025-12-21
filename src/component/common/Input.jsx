@@ -32,8 +32,8 @@ function Input({
     }
 
     const baseClasses = `block w-full rounded-md border px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${hasError
-            ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-            : 'border-gray-300 focus:ring-orange-500 focus:border-orange-500'
+        ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+        : 'border-gray-300 focus:ring-orange-500 focus:border-orange-500'
         } ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`
 
     const renderInput = () => {

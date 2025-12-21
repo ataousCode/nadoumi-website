@@ -2,10 +2,7 @@ import React from 'react'
 import { openWhatsApp } from '../../utils/whatsapp.js'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
-/**
- * Floating WhatsApp Button Component
- * Displays a floating WhatsApp button on all pages for easy contact
- */
+//Floating WhatsApp Button Component
 function WhatsAppFloat({ className = '' }) {
   const { t } = useI18n()
 

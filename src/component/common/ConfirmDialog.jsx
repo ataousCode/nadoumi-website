@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 
-/**
- * Reusable confirmation dialog component
- * 
- * @param {object} props
- * @param {boolean} props.isOpen - Whether dialog is open
- * @param {Function} props.onClose - Close callback
- * @param {Function} props.onConfirm - Confirm callback
- * @param {string} props.title - Dialog title
- * @param {string|React.ReactNode} props.message - Dialog message
- * @param {string} [props.confirmText] - Confirm button text (default: "Confirm")
- * @param {string} [props.cancelText] - Cancel button text (default: "Cancel")
- * @param {string} [props.variant='danger'] - Variant: 'danger' | 'warning' | 'info'
- * @param {boolean} [props.isLoading=false] - Loading state
- * @param {boolean} [props.requireConfirmation=false] - Require typing confirmation phrase
- * @param {string} [props.confirmationPhrase] - Phrase to type if requireConfirmation is true
- * @param {React.ReactNode} [props.children] - Additional content to display
- */
 function ConfirmDialog({
   isOpen,
   onClose,
@@ -35,12 +19,31 @@ function ConfirmDialog({
   const { t } = useI18n()
   const [confirmationText, setConfirmationText] = useState('')
 
-  // Reset confirmation text when dialog closes
   useEffect(() => {
     if (!isOpen) {
       setConfirmationText('')
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = 'unset'
+      }
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && !isLoading) {
+        onClose()
+      }
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, isLoading, onClose])
 
   if (!isOpen) return null
 
@@ -56,6 +59,12 @@ function ConfirmDialog({
   const handleClose = () => {
     setConfirmationText('')
     onClose()
+  }
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget && !isLoading) {
+      onClose()
+    }
   }
 
   // Variant styles
@@ -88,7 +97,6 @@ function ConfirmDialog({
 
   const styles = variantStyles[variant] || variantStyles.danger
 
-  // Icons
   const getIcon = () => {
     if (variant === 'danger') {
       return (
@@ -105,10 +113,18 @@ function ConfirmDialog({
     }
   }
 
-  return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-        {/* Header */}
+  return createPortal(
+    <div 
+      className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-[9999] p-4"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-dialog-title"
+    >
+      <div 
+        className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className={`${styles.headerBg} border-b ${styles.headerBorder} px-6 py-4 rounded-t-2xl`}>
           <div className="flex items-center gap-3">
             <div className={`flex-shrink-0 w-12 h-12 rounded-full ${styles.iconBg} flex items-center justify-center`}>
@@ -125,24 +141,20 @@ function ConfirmDialog({
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+              <h2 id="confirm-dialog-title" className="text-xl font-bold text-gray-900">{title}</h2>
             </div>
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-4">
-          {/* Message */}
           {message && (
             <div className="text-sm text-gray-700">
               {typeof message === 'string' ? <p>{message}</p> : message}
             </div>
           )}
 
-          {/* Children content */}
           {children}
 
-          {/* Confirmation input */}
           {requireConfirmation && (
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -170,7 +182,6 @@ function ConfirmDialog({
             </div>
           )}
 
-          {/* Action buttons */}
           <div className="flex gap-3 pt-4">
             <button
               type="button"
@@ -202,7 +213,8 @@ function ConfirmDialog({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

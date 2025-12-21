@@ -6,14 +6,20 @@ export default function ApplicationDetail({ application, className = '' }) {
   
   if (!application) return <div className="text-gray-500">No application selected.</div>
   
-  // Extract data from ACTUAL structure (applicant, fields, desiredProgram)
+  // Extract data from populated student or legacy structure
+  const student = application.student || {}
   const applicant = application.applicant || {}
   const fields = application.fields || {}
+  const preferences = application.preferences || {}
   
-  const fullName = `${applicant.firstName || ''} ${applicant.lastName || ''}`.trim() || 'N/A'
-  const email = applicant.email || fields.email || 'N/A'
-  const phone = applicant.phone || fields.phone || 'N/A'
-  const program = application.desiredProgram || fields.desiredProgram || 'N/A'
+  const fullName = student.firstName && student.lastName
+    ? `${student.firstName} ${student.lastName}`
+    : `${applicant.firstName || fields.firstName || ''} ${applicant.lastName || fields.lastName || ''}`.trim() || 'N/A'
+  const email = student.email || applicant.email || fields.email || 'N/A'
+  const phone = student.phone || applicant.phone || fields.phone || 'N/A'
+  // Program should be the scholarship title
+  const scholarship = application.scholarship || {}
+  const program = scholarship.title || application.desiredProgram || fields.desiredProgram || preferences.currentDegree || preferences.currentInstitution || 'N/A'
   
   const formatDate = (timestamp) => {
     try {

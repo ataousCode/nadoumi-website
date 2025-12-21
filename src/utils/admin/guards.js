@@ -9,7 +9,7 @@ export function isAdminAuthenticated() {
   }
 }
 
-export function ensureAdminAuthenticatedRedirect(navigate, fallbackPath = '/admin/login') {
+export function ensureAdminAuthenticatedRedirect(navigate, fallbackPath = '/login') {
   const authed = isAdminAuthenticated()
   if (!authed && typeof navigate === 'function') {
     navigate(fallbackPath)

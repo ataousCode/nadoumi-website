@@ -54,15 +54,15 @@ function StatusTimeline({ statusHistory = [], className = '' }) {
               <div
                 className={`
                   flex items-center justify-center w-10 h-10 rounded-full
-                  ${metadata.bgColor} ${metadata.textColor}
-                  ${isLatest ? 'ring-4 ring-orange-100' : ''}
-                  font-medium
+                  bg-green-100 text-green-700
+                  ${isLatest ? 'ring-4 ring-green-200 shadow-lg' : ''}
+                  font-medium border-2 border-green-300
                 `}
               >
                 {metadata.icon}
               </div>
               {index < statusHistory.length - 1 && (
-                <div className="w-0.5 h-full min-h-[2rem] bg-gray-200 mt-2" />
+                <div className="w-1 h-full min-h-[2rem] bg-gradient-to-b from-green-400 to-green-300 mt-2 rounded-full" />
               )}
             </div>
             
@@ -78,7 +78,7 @@ function StatusTimeline({ statusHistory = [], className = '' }) {
                   </p>
                 </div>
                 {isLatest && (
-                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-100 text-orange-700">
+                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-700 border border-green-300">
                     {t('admin.applications.currentStatus')}
                   </span>
                 )}
@@ -86,8 +86,8 @@ function StatusTimeline({ statusHistory = [], className = '' }) {
               
               {/* Admin note */}
               {entry.note && (
-                <p className="text-sm text-gray-700 mt-2 bg-gray-50 rounded-lg p-3 border border-gray-200">
-                  <span className="font-medium">{t('admin.applications.note')}:</span> {entry.note}
+                <p className="text-sm text-gray-700 mt-2 bg-green-50 rounded-lg p-3 border border-green-200">
+                  <span className="font-medium text-green-800">{t('admin.applications.note')}:</span> {entry.note}
                 </p>
               )}
               

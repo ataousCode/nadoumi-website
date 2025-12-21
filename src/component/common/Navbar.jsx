@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import logo from '../../assets/icons/logo.jpg'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
+import ConfirmDialog from './ConfirmDialog.jsx'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
-import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
+import useStudentAuth from '../../hooks/student/useStudentAuth.js'
+import useLogout from '../../hooks/common/useLogout.js'
+import Button from './Button.jsx'
+import { getImageURL } from '../../api/config.js'
 
 function Navbar() {
   const [open, setOpen] = useState(false)
@@ -11,7 +15,15 @@ function Navbar() {
   const [visible, setVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const { t } = useI18n()
-  const { isAuthenticated } = useAdminAuth()
+  const { isAuthenticated: isStudentAuthenticated, student, logout: logoutStudent, loading: studentLoading } = useStudentAuth()
+  
+  const { showConfirm, setShowConfirm, handleLogout, isLoading } = useLogout(
+    logoutStudent,
+    '/',
+    studentLoading
+  )
+
+  const closeMobileMenu = () => setOpen(false)
 
   const services = [
     { href: '/services/import-export', label: t('navbar.importExport') },
@@ -19,83 +31,160 @@ function Navbar() {
     { href: '/services/translation', label: t('navbar.translation') },
   ]
 
+  const publicNavItems = useMemo(() => [
+    { href: '/', label: t('navbar.home'), end: true },
+    { href: '/about', label: t('navbar.about') },
+    { href: '/services', label: t('navbar.services', 'Services') },
+    { href: '/scholarships', label: t('navbar.scholarships', 'Scholarships') },
+    { href: '/products', label: t('navbar.products', 'Products') },
+    { href: '/contact', label: t('navbar.contact') },
+  ], [t])
+
+  const studentNavItems = useMemo(() => [
+    { href: '/scholarships', label: t('navbar.scholarships', 'Scholarships') },
+  ], [t])
+
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY
-
-      // Add shadow when scrolled
       setElevated(currentScrollY > 4)
-
-      // Hide navbar on scroll down, show on scroll up
       if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        // Scrolling down & past threshold
         setVisible(false)
       } else {
-        // Scrolling up or at top
         setVisible(true)
       }
-
       setLastScrollY(currentScrollY)
     }
-
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [lastScrollY])
 
   const linkBase = ({ isActive }) =>
-    `px-3 py-2 rounded-md text-sm font-medium transition ` +
-    (isActive ? 'text-orange-600' : 'text-gray-700 hover:text-orange-600')
+    `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+      isActive 
+        ? 'text-orange-600 bg-orange-50' 
+        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50/50'
+    }`
 
   const mobileLinkBase = ({ isActive }) =>
-    `block px-3 py-2 rounded-md text-base font-medium transition ` +
-    (isActive ? 'text-orange-600 bg-orange-50' : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50')
+    `block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+      isActive 
+        ? 'text-orange-600 bg-orange-50' 
+        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+    }`
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b transition-transform duration-300 ${elevated ? 'shadow-sm' : 'shadow-none'
-        } ${visible ? 'translate-y-0' : '-translate-y-full'}`}
+      className={`fixed top-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-md border-b border-gray-100 transition-all duration-300 ${
+        elevated ? 'shadow-lg shadow-gray-100/50' : 'shadow-sm'
+      } ${visible ? 'translate-y-0' : '-translate-y-full'}`}
       aria-label="Primary"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-14 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Brand logo" className="h-10 w-10" />
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <NavLink 
+              to={isStudentAuthenticated ? "/student/dashboard" : "/"} 
+              className="flex items-center gap-3 group"
+            >
+              <div className="relative">
+                <img src={logo} alt="Nadoumi Logo" className="h-10 w-10 rounded-lg shadow-sm group-hover:shadow-md transition-shadow" />
+                <div className="absolute inset-0 rounded-lg bg-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+              <span className="hidden sm:block text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                Nadoumi
+              </span>
+            </NavLink>
           </div>
 
-          <div className="hidden md:flex items-center gap-6">
-            <NavLink to="/" className={linkBase} end>{t('navbar.home')}</NavLink>
-            <NavLink to="/about" className={linkBase}>{t('navbar.about')}</NavLink>
-            <NavLink to="/products" className={linkBase}>{t('navbar.products', 'Products')}</NavLink>
-            {/* Services with dropdown */}
-            <div className="relative group">
-              <div className="flex items-center">
-                <NavLink to="/services" className={linkBase}>{t('navbar.services')}</NavLink>
-                <svg className="ml-1 h-4 w-4 text-gray-500 group-hover:text-orange-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="absolute left-0 top-full mt-0 w-56 rounded-md shadow-lg bg-white border border-orange-100 hidden group-hover:block z-50" role="menu" aria-label="Services submenu">
-                <div className="py-2">
-                  {services.map((s) => (
-                    <NavLink key={s.href} to={s.href} className={({ isActive }) => `block px-4 py-2 text-sm ${isActive ? 'text-orange-600' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-700'}`}>{s.label}</NavLink>
-                  ))}
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex items-center gap-2 flex-1 justify-center">
+            {isStudentAuthenticated ? (
+              <>
+                {studentNavItems.map((item) => (
+                  <NavLink 
+                    key={item.href} 
+                    to={item.href} 
+                    className={linkBase}
+                    end={item.end}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+                <NavLink to="/student/dashboard" className={linkBase}>
+                  Dashboard
+                </NavLink>
+                <div className="h-6 w-px bg-gray-200 mx-2" />
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50">
+                  {student?.profilePicture ? (
+                    <img 
+                      src={getImageURL(student.profilePicture)}
+                      alt={student.firstName}
+                      className="w-6 h-6 rounded-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        const fallback = e.target.nextElementSibling
+                        if (fallback) {
+                          fallback.style.display = 'flex'
+                        }
+                      }}
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                      <span className="text-xs font-semibold text-white">
+                        {student?.firstName?.[0] || 'S'}
+                      </span>
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-700">
+                    {student?.firstName || 'Student'}
+                  </span>
                 </div>
-              </div>
-            </div>
-            <NavLink to="/contact" className={linkBase}>{t('navbar.contact')}</NavLink>
-            {isAuthenticated && (
-              <NavLink to="/admin" className={linkBase}>{t('navbar.dashboard', 'Dashboard')}</NavLink>
+                <button
+                  onClick={() => setShowConfirm(true)}
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  aria-label="Logout"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                {publicNavItems.map((item) => (
+                  <NavLink 
+                    key={item.href} 
+                    to={item.href} 
+                    className={linkBase}
+                    end={item.end}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </>
             )}
-            <LanguageSwitcher className="ml-2" />
           </div>
 
+          {/* Right Side Actions - Sign Up and Language */}
+          <div className="hidden md:flex items-center gap-3 flex-shrink-0">
+            {!isStudentAuthenticated && (
+              <NavLink to="/student/register">
+                <Button variant="primary" size="sm" ariaLabel="Sign Up">
+                  Sign Up
+                </Button>
+              </NavLink>
+            )}
+            <LanguageSwitcher />
+          </div>
+
+          {/* Mobile Menu Button */}
           <button
-            className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors"
             aria-label="Toggle Menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               {open ? (
                 <path d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -106,45 +195,104 @@ function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden border-t bg-white shadow-lg">
-          <div className="px-4 py-3 space-y-1">
-            <NavLink to="/" className={mobileLinkBase} end onClick={() => setOpen(false)}>{t('navbar.home')}</NavLink>
-            <NavLink to="/about" className={mobileLinkBase} onClick={() => setOpen(false)}>{t('navbar.about')}</NavLink>
-            <NavLink to="/products" className={mobileLinkBase} onClick={() => setOpen(false)}>{t('navbar.products', 'Products')}</NavLink>
-
-            {/* Services section */}
-            <div className="py-1">
-              <div className="px-3 py-2 text-base font-medium text-gray-900">
-                {t('navbar.services')}
-              </div>
-              <div className="ml-3 space-y-1">
-                {services.map((s) => (
+        <div className="md:hidden border-t border-gray-100 bg-white shadow-xl">
+          <div className="px-4 py-4 space-y-1">
+            {isStudentAuthenticated ? (
+              <>
+                {studentNavItems.map((item) => (
                   <NavLink
-                    key={s.href}
-                    to={s.href}
-                    className={({ isActive }) => `block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'text-orange-600 bg-orange-50' : 'text-gray-600 hover:text-orange-600 hover:bg-gray-50'}`}
-                    onClick={() => setOpen(false)}
+                    key={item.href}
+                    to={item.href}
+                    className={mobileLinkBase}
+                    end={item.end}
+                    onClick={closeMobileMenu}
                   >
-                    {s.label}
+                    {item.label}
                   </NavLink>
                 ))}
-              </div>
-            </div>
-
-            <NavLink to="/contact" className={mobileLinkBase} onClick={() => setOpen(false)}>{t('navbar.contact')}</NavLink>
-            {isAuthenticated && (
-              <NavLink to="/admin" className={mobileLinkBase} onClick={() => setOpen(false)}>{t('navbar.dashboard', 'Dashboard')}</NavLink>
+                <NavLink to="/student/dashboard" className={mobileLinkBase} onClick={closeMobileMenu}>
+                  Dashboard
+                </NavLink>
+                <div className="px-4 py-3 my-2 bg-gray-50 rounded-lg flex items-center gap-3">
+                  {student?.profilePicture ? (
+                    <img 
+                      src={`${API_BASE_URL}${student.profilePicture}`}
+                      alt={student.firstName}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-orange-200"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                      <span className="text-orange-50 font-semibold">
+                        {student?.firstName?.[0] || 'S'}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {student?.firstName} {student?.lastName}
+                    </p>
+                    <p className="text-xs text-gray-500">{student?.email}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowConfirm(true)
+                    closeMobileMenu()
+                  }}
+                  className="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                {publicNavItems.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    to={item.href}
+                    className={mobileLinkBase}
+                    end={item.end}
+                    onClick={closeMobileMenu}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+                <NavLink to="/services" className={mobileLinkBase} onClick={closeMobileMenu}>
+                  {t('navbar.services', 'Services')}
+                </NavLink>
+                <NavLink to="/student/register" className="block mt-2" onClick={closeMobileMenu}>
+                  <Button variant="primary" className="w-full" ariaLabel="Sign Up">
+                    Sign Up
+                  </Button>
+                </NavLink>
+              </>
             )}
 
-            <div className="pt-4 pb-2 border-t border-gray-100">
-              <div className="px-3">
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">{t('navbar.language')}</p>
+            <div className="pt-4 pb-2 border-t border-gray-100 mt-4">
+              <div className="px-4">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                  {t('navbar.language')}
+                </p>
                 <LanguageSwitcher variant="buttons" />
               </div>
             </div>
           </div>
         </div>
+      )}
+
+      {isStudentAuthenticated && (
+        <ConfirmDialog
+          isOpen={showConfirm}
+          onClose={() => setShowConfirm(false)}
+          onConfirm={handleLogout}
+          title={t('common.logout')}
+          message={t('common.logoutConfirm')}
+          variant="warning"
+          isLoading={isLoading}
+          confirmText={t('common.logout')}
+        />
       )}
     </nav>
   )

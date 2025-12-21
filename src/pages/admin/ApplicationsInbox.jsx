@@ -7,15 +7,16 @@ import DeleteConfirmModal from '../../component/admin/DeleteConfirmModal.jsx'
 import useApplications from '../../hooks/admin/useApplications.js'
 import useApplicationStatus from '../../hooks/admin/useApplicationStatus.js'
 import useApplicationDelete from '../../hooks/admin/useApplicationDelete.js'
+import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 import { getAllStatuses } from '../../constants/applicationStatus.js'
-import { auth } from '../../api/admissionFirebase.js'
 import { useToast } from '../../context/ToastContext.jsx'
 
 export default function ApplicationsInbox() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const { success, error: showError } = useToast()
+  const { user } = useAdminAuth()
   
   const [filterStatus, setFilterStatus] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -50,18 +51,75 @@ export default function ApplicationsInbox() {
     if (!selectedApp) return
     
     try {
-      const updated = await updateStatus(selectedApp.id, {
-        ...statusUpdate,
-        adminEmail: auth.currentUser?.email || 'admin',
-      })
+      const appId = selectedApp.applicationId || selectedApp.id || selectedApp._id
       
-      if (updated) {
-        setShowStatusModal(false)
-        setSelectedApp(null)
-        resetUpdate()
-        success(t('admin.applications.statusUpdated'))
+      // If status is ACCEPTED and files are provided, upload them first
+      if (statusUpdate.status === 'accepted' && statusUpdate.files) {
+        const { files, ...statusData } = statusUpdate
+        
+        // First update the status
+        const updated = await updateStatus(appId, {
+          ...statusData,
+          adminEmail: user?.email || 'admin',
+        })
+        
+        // Then upload files if provided
+        if (updated && files) {
+          const { uploadAdminDocument } = await import('../../api/applications.js')
+          
+          if (files.admission) {
+            try {
+              await uploadAdminDocument(appId, files.admission, 'admission')
+            } catch (uploadErr) {
+              console.error('Failed to upload admission document:', uploadErr)
+              // Continue even if upload fails
+            }
+          }
+          
+          if (files.jw202) {
+            try {
+              await uploadAdminDocument(appId, files.jw202, 'jw202')
+            } catch (uploadErr) {
+              console.error('Failed to upload JW202 document:', uploadErr)
+              // Continue even if upload fails
+            }
+          }
+          
+          // Reload the application to get updated document info
+          const { getApplication } = await import('../../api/applications.js')
+          const refreshed = await getApplication(appId)
+          if (refreshed) {
+            setShowStatusModal(false)
+            setSelectedApp(null)
+            resetUpdate()
+            success(t('admin.applications.statusUpdated'))
+            return
+          }
+        }
+        
+        if (updated) {
+          setShowStatusModal(false)
+          setSelectedApp(null)
+          resetUpdate()
+          success(t('admin.applications.statusUpdated'))
+        } else {
+          showError(t('admin.applications.statusUpdateFailed'))
+        }
       } else {
-        showError(t('admin.applications.statusUpdateFailed'))
+        // Normal status update without files
+        const updated = await updateStatus(appId, {
+          ...statusUpdate,
+          adminEmail: user?.email || 'admin',
+        })
+        
+        if (updated) {
+          setShowStatusModal(false)
+          setSelectedApp(null)
+          resetUpdate()
+          success(t('admin.applications.statusUpdated'))
+        } else {
+          showError(t('admin.applications.statusUpdateFailed'))
+        }
       }
     } catch (err) {
       console.error('Status update error:', err)
@@ -74,7 +132,8 @@ export default function ApplicationsInbox() {
     if (!selectedApp) return
     
     try {
-      const deleteSuccess = await deleteApp(selectedApp.id)
+      const appId = selectedApp.applicationId || selectedApp.id || selectedApp._id
+      const deleteSuccess = await deleteApp(appId)
       
       if (deleteSuccess) {
         setShowDeleteModal(false)
@@ -104,16 +163,11 @@ export default function ApplicationsInbox() {
   }
   
   return (
-    <AdminLayout title={t('admin.applications.title')}>
-      <button type="button" className="mb-4 text-orange-600 font-medium hover:underline" onClick={() => navigate('/admin')}>
-        ← Back to dashboard
-      </button>
-      
-      {/* Header with filters */}
-      <div className="mb-6 space-y-4">
+    <AdminLayout>
+      <div className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('admin.applications.title')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Applications</h1>
             <p className="text-gray-600 text-sm mt-1">
               Showing {applications.length} of {totalCount || applications.length} applications
             </p>
@@ -125,7 +179,7 @@ export default function ApplicationsInbox() {
             🔄 {t('admin.applications.actions.refresh')}
           </button>
         </div>
-        
+
         {/* Search and filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <input
@@ -148,25 +202,24 @@ export default function ApplicationsInbox() {
             ))}
           </select>
         </div>
-      </div>
-      
-      {/* Error state */}
-      {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
-          {error}
-        </div>
-      )}
-      
-      {/* Applications list */}
-      {isLoading ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">{t('common.loading')}</p>
-        </div>
-      ) : applications.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">{t('admin.applications.noApplications')}</p>
-        </div>
-      ) : (
+
+        {/* Error state */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+            {error}
+          </div>
+        )}
+
+        {/* Applications list */}
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600">{t('common.loading')}</p>
+          </div>
+        ) : applications.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600">{t('admin.applications.noApplications')}</p>
+          </div>
+        ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -194,16 +247,19 @@ export default function ApplicationsInbox() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {paginatedApplications.map((app) => {
-                  // Extract name and email from actual application structure
+                  // Extract name and email from populated student or legacy fields
+                  const student = app.student || {}
                   const applicant = app.applicant || {}
                   const fields = app.fields || {}
-                  const fullName = `${applicant.firstName || fields.firstName || ''} ${applicant.lastName || fields.lastName || ''}`.trim() || 'N/A'
-                  const email = applicant.email || fields.email || 'N/A'
+                  const fullName = student.firstName && student.lastName
+                    ? `${student.firstName} ${student.lastName}`
+                    : `${applicant.firstName || fields.firstName || ''} ${applicant.lastName || fields.lastName || ''}`.trim() || 'N/A'
+                  const email = student.email || applicant.email || fields.email || 'N/A'
                   
                   return (
                     <tr key={app.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-mono text-gray-900">{app.id}</div>
+                        <div className="text-sm font-mono text-gray-900">{app.applicationId || app.id || app._id}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">{fullName}</div>
@@ -219,7 +275,7 @@ export default function ApplicationsInbox() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                         <button
-                          onClick={() => navigate(`/admin/applications/${app.id}`)}
+                          onClick={() => navigate(`/admin/applications/${app.applicationId || app.id || app._id}`)}
                           className="text-orange-600 hover:text-orange-700"
                         >
                           {t('admin.applications.actions.view')}
@@ -280,10 +336,10 @@ export default function ApplicationsInbox() {
             </div>
           )}
         </div>
-      )}
-      
-      {/* Status Change Modal */}
-      <StatusChangeModal
+        )}
+
+        {/* Status Change Modal */}
+        <StatusChangeModal
         isOpen={showStatusModal}
         onClose={() => {
           setShowStatusModal(false)
@@ -294,10 +350,10 @@ export default function ApplicationsInbox() {
         currentStatus={selectedApp?.status}
         application={selectedApp}
         isLoading={isUpdating}
-      />
-      
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmModal
+        />
+
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmModal
         isOpen={showDeleteModal}
         onClose={() => {
           setShowDeleteModal(false)
@@ -308,6 +364,7 @@ export default function ApplicationsInbox() {
         application={selectedApp}
         isLoading={isDeleting}
       />
+      </div>
     </AdminLayout>
   )
 }

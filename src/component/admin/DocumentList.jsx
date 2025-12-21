@@ -1,15 +1,42 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { storage } from '../../api/admissionFirebase.js'
 import useDocumentPreview from '../../hooks/admin/useDocumentPreview.js'
 import Loading from './Loading.jsx'
 import EmptyState from './EmptyState.jsx'
+import DocumentViewer from '../common/DocumentViewer.jsx'
 
 function flattenDocs(entry, out = []) {
   if (!entry) return out
-  if (Array.isArray(entry)) entry.forEach((e) => flattenDocs(e, out))
-  else if (typeof entry === 'object') {
-    if (entry.path) out.push(entry)
-    else Object.values(entry).forEach((v) => flattenDocs(v, out))
+  if (Array.isArray(entry)) {
+    entry.forEach((e) => {
+      if (typeof e === 'string') {
+        out.push({ path: e })
+      } else {
+        flattenDocs(e, out)
+      }
+    })
+  } else if (typeof entry === 'object') {
+    if (entry.path) {
+      out.push(entry)
+    } else {
+      // Handle documents object with keys like passport, transcripts, etc.
+      Object.entries(entry).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+          out.push({ path: value, name: key })
+        } else if (Array.isArray(value)) {
+          value.forEach((v) => {
+            if (typeof v === 'string') {
+              out.push({ path: v, name: key })
+            } else {
+              flattenDocs(v, out)
+            }
+          })
+        } else {
+          flattenDocs(value, out)
+        }
+      })
+    }
+  } else if (typeof entry === 'string') {
+    out.push({ path: entry })
   }
   return out
 }
@@ -27,6 +54,7 @@ export default function DocumentList({ application, documents, className = '' })
   const [syncedCount, setSyncedCount] = useState(0)
   const [lastScanPrefixes, setLastScanPrefixes] = useState([])
   const [lastPathsTried, setLastPathsTried] = useState([])
+  const [viewingDocument, setViewingDocument] = useState(null)
 
   const appId = application?.id || application?.docId || null
   const docsKey = useMemo(() => JSON.stringify(documents || application?.documents || {}), [documents, application])
@@ -46,17 +74,45 @@ export default function DocumentList({ application, documents, className = '' })
   }, [application, documents])
 
   const items = useMemo(() => {
-    return (urls || []).map(({ path, url }) => {
+    return (urls || []).map(({ path, url, type, size, name }) => {
       const meta = metaByPath.get(path) || {}
       return {
         path,
         url,
-        name: meta.name || nameFromPath(path),
-        size: meta.size || '',
-        type: meta.type || '',
+        name: name || meta.name || nameFromPath(path),
+        size: size || meta.size || '',
+        type: type || meta.type || getFileType(path),
       }
     })
   }, [urls, metaByPath])
+
+  function getFileType(path) {
+    if (!path) return 'Unknown'
+    const ext = path.split('.').pop()?.toLowerCase()
+    const typeMap = {
+      'pdf': 'PDF',
+      'jpg': 'Image',
+      'jpeg': 'Image',
+      'png': 'Image',
+      'gif': 'Image',
+      'webp': 'Image',
+      'doc': 'Document',
+      'docx': 'Document',
+      'mp4': 'Video',
+      'mov': 'Video',
+      'avi': 'Video',
+      'mkv': 'Video'
+    }
+    return typeMap[ext] || 'File'
+  }
+
+  function formatFileSize(bytes) {
+    if (!bytes) return 'N/A'
+    if (typeof bytes === 'string') return bytes
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
 
   // Compute diagnostics count BEFORE any early returns to follow Rules of Hooks
   const savedPathsCount = useMemo(() => (
@@ -111,8 +167,6 @@ export default function DocumentList({ application, documents, className = '' })
             )}
           </div>
           <div className="text-gray-700">
-            <div>Bucket: <code>{storage?.app?.options?.storageBucket || 'unknown'}</code></div>
-            <div>Emulators: <code>{String(import.meta.env.VITE_USE_EMULATORS || 'false')}</code></div>
             <div>Application: <code>{appId || 'unknown'}</code></div>
           </div>
           {lastScanPrefixes.length > 0 && (
@@ -152,16 +206,42 @@ export default function DocumentList({ application, documents, className = '' })
             {items.map((d) => (
               <tr key={d.path}>
                 <td className="px-3 py-2 text-gray-900 break-words">{d.name}</td>
-                <td className="px-3 py-2 text-gray-700">{d.type}</td>
-                <td className="px-3 py-2 text-gray-700">{d.size ? `${d.size} bytes` : ''}</td>
+                <td className="px-3 py-2 text-gray-700">{d.type || 'N/A'}</td>
+                <td className="px-3 py-2 text-gray-700">{formatFileSize(d.size)}</td>
                 <td className="px-3 py-2">
-                  <a href={d.url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-800">Download</a>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setViewingDocument(d)}
+                      className="text-orange-600 hover:text-orange-700 font-medium"
+                    >
+                      View Document
+                    </button>
+                    <span className="text-gray-300">|</span>
+                    <a
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-indigo-600 hover:text-indigo-800"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setViewingDocument(d)
+                      }}
+                    >
+                      Download
+                    </a>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      
+      <DocumentViewer
+        isOpen={!!viewingDocument}
+        onClose={() => setViewingDocument(null)}
+        document={viewingDocument}
+      />
     </div>
   )
 }

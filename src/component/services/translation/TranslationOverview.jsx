@@ -4,7 +4,7 @@ import ServiceHeader from '../common/ServiceHeader.jsx'
 import ServiceHero from '../common/ServiceHero.jsx'
 import ServiceCard from '../common/ServiceCard.jsx'
 import ServiceCTA from '../common/ServiceCTA.jsx'
-import Modal from '../common/Modal.jsx'
+import Modal from '../../common/Modal.jsx'
 import useTranslation from '../../../hooks/service/useTranslation.js'
 import { useI18n } from '../../../i18n/LocaleProvider.jsx'
 
@@ -29,7 +29,6 @@ export default function TranslationOverview() {
         subtitle={t('translation.offerSubtitle')}
       />
 
-      {/* spacing below header */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {features.map((f) => (
           <ServiceCard
@@ -42,7 +41,6 @@ export default function TranslationOverview() {
         ))}
       </div>
 
-      {/* spacing between offer grid and CTA */}
       <div className="mt-10">
         <ServiceCTA
           heading={details.cta.heading}
@@ -52,9 +50,7 @@ export default function TranslationOverview() {
         />
       </div>
 
-      {/* <FAQ items={faq} /> */}
-
-      <Modal open={open} onClose={() => setOpen(false)} title={active?.title}>
+      <Modal isOpen={open} onClose={() => setOpen(false)} title={active?.title}>
         <p>{active?.detail}</p>
       </Modal>
     </ServiceLayout>
