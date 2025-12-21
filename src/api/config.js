@@ -79,23 +79,53 @@ export const apiRequest = async (endpoint, options = {}) => {
     },
   }
 
-  const response = await fetch(url, config)
-  const data = await response.json().catch(() => ({ error: { message: 'Request failed' } }))
-  
-  if (!response.ok) {
-    const errorMessage = data.error?.message || data.error || data.message || 'Request failed'
-    const error = new Error(errorMessage)
-    if (data.error?.errors) {
-      error.errors = data.error.errors
+  try {
+    // Log API request in development
+    if (import.meta.env.DEV) {
+      console.log('API Request:', { method: config.method || 'GET', url, endpoint })
     }
-    if (data.error?.code) {
-      error.code = data.error.code
+    
+    const response = await fetch(url, config)
+    
+    // Try to parse JSON response
+    let data
+    try {
+      const text = await response.text()
+      data = text ? JSON.parse(text) : {}
+    } catch (parseError) {
+      // If response is not JSON, create error object
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`)
+      }
+      data = {}
     }
-    error.response = data
-    throw error
-  }
+    
+    if (!response.ok) {
+      const errorMessage = data.error?.message || data.error || data.message || `Request failed: ${response.status} ${response.statusText}`
+      const error = new Error(errorMessage)
+      if (data.error?.errors) {
+        error.errors = data.error.errors
+      }
+      if (data.error?.code) {
+        error.code = data.error.code
+      }
+      error.response = data
+      error.status = response.status
+      throw error
+    }
 
-  return data
+    return data
+  } catch (err) {
+    // Handle network errors (CORS, connection refused, etc.)
+    if (err instanceof TypeError && err.message.includes('fetch')) {
+      const networkError = new Error('Network error. Please check your connection and ensure the API server is running.')
+      networkError.originalError = err
+      networkError.isNetworkError = true
+      throw networkError
+    }
+    // Re-throw other errors
+    throw err
+  }
 }
 export const apiRequestFormData = async (endpoint, formData, options = {}) => {
   const isStudentEndpoint = 

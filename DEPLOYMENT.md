@@ -233,9 +233,14 @@ If the 404 page doesn't work in production:
 - Test email configuration: Check logs for `📧 Email service configured for Gmail SMTP`
 
 ### CORS Errors
-- Ensure `FRONTEND_URL` in backend (Render) matches your Vercel domain
+- **Most Common Issue**: Backend CORS not configured to allow requests from frontend domain
+- Ensure `FRONTEND_URL` in backend (Render) matches your Vercel domain exactly:
+  - If using custom domain: `https://nadoumi.com`
+  - If using Vercel default: `https://your-project.vercel.app`
 - Check CORS configuration in your backend server (typically in the main entry file like `index.js` or `server.js`)
 - Verify the frontend URL includes protocol: `https://nadoumi.com` (not just `nadoumi.com`)
+- **Test CORS**: Open browser console and check for CORS error messages
+- **Network Error on Registration/Login**: Usually indicates CORS issue - verify backend allows your frontend domain
 
 ### File Upload Issues
 - Verify `uploads` directory exists in backend repository
@@ -244,10 +249,16 @@ If the 404 page doesn't work in production:
 - Check Render logs for upload errors
 
 ### API Connection Issues
-- Verify `VITE_API_BASE_URL` in Vercel is set to: `https://nadoumibackend.onrender.com/api`
+- **Verify `VITE_API_BASE_URL` in Vercel**: Must be set to `https://nadoumibackend.onrender.com/api`
+- **Check Environment Variables**: Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 - Ensure backend URL includes `/api` at the end
 - Check Render service is running and not sleeping (free tier sleeps after inactivity)
 - Test API endpoint directly: `https://nadoumibackend.onrender.com/api/health` (if you have a health check)
+- **Network Error on Registration**: 
+  1. Check browser console for actual error (CORS, 404, 500, etc.)
+  2. Verify `VITE_API_BASE_URL` is correctly set in Vercel
+  3. Ensure backend CORS allows your frontend domain
+  4. Test API directly: `curl https://nadoumibackend.onrender.com/api/students/register` (should return error, not connection refused)
 
 ### Build Failures
 
