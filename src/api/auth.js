@@ -1,23 +1,12 @@
 // Admin auth API
 import { apiRequest, setAuthToken, getAuthToken } from './config.js'
+import { getUserFromToken } from '../utils/tokenUtils.js'
 
 const API_BASE = '/admin'
 
 export function getCurrentUser() {
   const token = getAuthToken('admin')
-  if (!token) return null
-  
-  // Decode token to get user info (simple JWT decode without verification)
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    if (payload.type !== 'admin') return null
-    return {
-      uid: payload.id,
-      email: payload.email
-    }
-  } catch {
-    return null
-  }
+  return getUserFromToken(token, 'admin')
 }
 
 export async function login(email, password) {

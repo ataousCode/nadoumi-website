@@ -5,31 +5,22 @@ import Button from '../../component/common/Button.jsx'
 import useStudentAuth from '../../hooks/student/useStudentAuth.js'
 import { getStudentApplications } from '../../api/applications.js'
 import { APPLICATION_STATUS } from '../../constants/applicationStatus.js'
+import { getStatusConfig } from '../../constants/statusConfig.js'
 import Loading from '../../component/admin/Loading.jsx'
 import StatusBadge from '../../component/admin/StatusBadge.jsx'
 import { getImageURL } from '../../api/config.js'
-
-function formatDate(value) {
-  if (!value) return '—'
-  try {
-    const d = new Date(value)
-    if (Number.isNaN(d.getTime())) return '—'
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-  } catch {
-    return '—'
-  }
-}
+import { formatDate } from '../../utils/dateFormatter.js'
 
 const statusConfig = {
-  [APPLICATION_STATUS.PENDING]: { color: 'yellow', bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700', icon: '⏳' },
-  [APPLICATION_STATUS.RECEIVED]: { color: 'blue', bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', icon: '📥' },
-  [APPLICATION_STATUS.UNDER_REVIEW]: { color: 'purple', bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', icon: '🔍' },
-  [APPLICATION_STATUS.INTERVIEW]: { color: 'indigo', bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', icon: '💼' },
-  [APPLICATION_STATUS.INTERVIEW_PASSED]: { color: 'green', bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', icon: '✅' },
-  [APPLICATION_STATUS.INTERVIEW_FAILED]: { color: 'red', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: '❌' },
-  [APPLICATION_STATUS.ACCEPTED]: { color: 'green', bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', icon: '🎉' },
-  [APPLICATION_STATUS.REJECTED]: { color: 'red', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: '✖️' },
-  [APPLICATION_STATUS.REVOKED]: { color: 'orange', bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', icon: '⚠️' },
+  [APPLICATION_STATUS.PENDING]: getStatusConfig(APPLICATION_STATUS.PENDING),
+  [APPLICATION_STATUS.RECEIVED]: getStatusConfig(APPLICATION_STATUS.RECEIVED),
+  [APPLICATION_STATUS.UNDER_REVIEW]: getStatusConfig(APPLICATION_STATUS.UNDER_REVIEW),
+  [APPLICATION_STATUS.INTERVIEW]: getStatusConfig(APPLICATION_STATUS.INTERVIEW),
+  [APPLICATION_STATUS.INTERVIEW_PASSED]: getStatusConfig(APPLICATION_STATUS.INTERVIEW_PASSED),
+  [APPLICATION_STATUS.INTERVIEW_FAILED]: getStatusConfig(APPLICATION_STATUS.INTERVIEW_FAILED),
+  [APPLICATION_STATUS.ACCEPTED]: getStatusConfig(APPLICATION_STATUS.ACCEPTED),
+  [APPLICATION_STATUS.REJECTED]: getStatusConfig(APPLICATION_STATUS.REJECTED),
+  [APPLICATION_STATUS.REVOKED]: getStatusConfig(APPLICATION_STATUS.REVOKED),
 }
 
 export default function StudentDashboard() {

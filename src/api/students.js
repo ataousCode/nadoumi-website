@@ -1,5 +1,6 @@
 // Student API client
 import { apiRequest, setAuthToken, getAuthToken, API_BASE_URL } from './config.js'
+import { getUserFromToken } from '../utils/tokenUtils.js'
 
 const API_BASE = '/students'
 
@@ -124,18 +125,7 @@ export async function changePassword(currentPassword, newPassword) {
  */
 export function getCurrentStudent() {
   const token = getAuthToken('student')
-  if (!token) return null
-  
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    if (payload.type !== 'student') return null
-    return {
-      id: payload.id,
-      email: payload.email
-    }
-  } catch {
-    return null
-  }
+  return getUserFromToken(token, 'student')
 }
 
 /**

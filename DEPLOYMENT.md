@@ -234,13 +234,18 @@ If the 404 page doesn't work in production:
 
 ### CORS Errors
 - **Most Common Issue**: Backend CORS not configured to allow requests from frontend domain
+- **IMPORTANT - Trailing Slash Issue**: 
+  - Ensure `FRONTEND_URL` in backend (Render) is `https://nadoumi.com` (NO trailing slash)
+  - If set to `https://nadoumi.com/` (with trailing slash), CORS will fail
+  - The origin must match exactly: `https://nadoumi.com` (no trailing slash)
 - Ensure `FRONTEND_URL` in backend (Render) matches your Vercel domain exactly:
-  - If using custom domain: `https://nadoumi.com`
-  - If using Vercel default: `https://your-project.vercel.app`
+  - If using custom domain: `https://nadoumi.com` (no trailing slash)
+  - If using Vercel default: `https://your-project.vercel.app` (no trailing slash)
 - Check CORS configuration in your backend server (typically in the main entry file like `index.js` or `server.js`)
 - Verify the frontend URL includes protocol: `https://nadoumi.com` (not just `nadoumi.com`)
 - **Test CORS**: Open browser console and check for CORS error messages
 - **Network Error on Registration/Login**: Usually indicates CORS issue - verify backend allows your frontend domain
+- **See CORS_FIX.md** for detailed fix instructions
 
 ### File Upload Issues
 - Verify `uploads` directory exists in backend repository
