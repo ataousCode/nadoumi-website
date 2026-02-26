@@ -27,7 +27,6 @@ function Navbar() {
 
   const services = [
     { href: '/services/import-export', label: t('navbar.importExport') },
-    { href: '/services/student-admission', label: t('navbar.studentAdmission') },
     { href: '/services/translation', label: t('navbar.translation') },
   ]
 
@@ -36,7 +35,6 @@ function Navbar() {
     { href: '/about', label: t('navbar.about') },
     { href: '/services', label: t('navbar.services', 'Services') },
     { href: '/scholarships', label: t('navbar.scholarships', 'Scholarships') },
-    { href: '/products', label: t('navbar.products', 'Products') },
     { href: '/contact', label: t('navbar.contact') },
   ], [t])
 

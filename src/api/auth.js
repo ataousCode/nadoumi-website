@@ -24,7 +24,14 @@ export async function login(email, password) {
 }
 
 export async function logout() {
-  setAuthToken(null, 'admin')
+  try {
+    // Ask the backend to clear the httpOnly cookie
+    await apiRequest(`${API_BASE}/logout`, { method: 'DELETE' })
+  } catch {
+    // Proceed with local cleanup regardless of server response
+  } finally {
+    setAuthToken(null, 'admin')
+  }
 }
 
 // Verify token on app load

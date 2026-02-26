@@ -2,7 +2,6 @@
   "navbar": {
     "home": "Accueil",
     "about": "À propos",
-    "products": "Produits",
     "scholarships": "Bourses",
     "services": "Services",
     "importExport": "Import & Export",
@@ -254,35 +253,6 @@
     "required": "Ce champ est requis",
     "invalidEmail": "Veuillez entrer une adresse e-mail valide",
     "invalidPhone": "Veuillez entrer un numéro de téléphone valide"
-  },
-  "products": {
-    "title": "Nos Produits",
-    "subtitle": "Découvrez notre incroyable collection de produits",
-    "searchPlaceholder": "Rechercher des produits...",
-    "allCategories": "Toutes les catégories",
-    "sort": {
-      "name": "Nom (A-Z)",
-      "priceAsc": "Prix : Croissant",
-      "priceDesc": "Prix : Décroissant"
-    },
-    "showing": "Affichage",
-    "of": "de",
-    "products": "produits",
-    "noProducts": "Aucun produit trouvé",
-    "noProductsFiltered": "Essayez d'ajuster vos filtres",
-    "noProductsAvailable": "Aucun produit disponible pour le moment",
-    "notFound": "Produit introuvable",
-    "notFoundMessage": "Le produit que vous recherchez n'existe pas ou n'est plus disponible.",
-    "backToProducts": "Retour aux produits",
-    "home": "Accueil",
-    "details": "Détails du produit",
-    "weight": "Poids",
-    "reservationTime": "Temps de réservation",
-    "buyNow": "Acheter maintenant via WhatsApp",
-    "inStock": "En stock",
-    "outOfStock": "Rupture de stock",
-    "similarProducts": "Produits similaires",
-    "similarProductsSubtitle": "Vous pourriez également aimer ces produits"
   },
   "footer": {
     "description": "Nous rapprochons les opportunités mondiales via un conseil fiable en commerce et éducation.",

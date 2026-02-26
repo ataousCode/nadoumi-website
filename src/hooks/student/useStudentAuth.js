@@ -1,86 +1,55 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 import * as studentApi from '../../api/students.js'
+import { createAuthHook, mapFriendlyError } from '../createAuthHook.js'
+
+const useStudentSession = createAuthHook({
+  getCurrentUser: studentApi.getCurrentStudent,
+  verifyUser: studentApi.verifyStudentToken,
+})
 
 export default function useStudentAuth() {
-  const [student, setStudent] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    setLoading(true)
-    const current = studentApi.getCurrentStudent?.()
-    if (current) {
-      setStudent(current)
-    }
-    
-    studentApi.verifyStudentToken()
-      .then((studentData) => {
-        setStudent(studentData || null)
-        setLoading(false)
-      })
-      .catch(() => {
-        setStudent(null)
-        setLoading(false)
-      })
-  }, [])
+  const { user: student, setUser: setStudent, loading, setLoading, error, setError, isAuthenticated } = useStudentSession()
 
   const register = useCallback(async (studentData) => {
     setLoading(true)
     setError('')
     try {
-      const result = await studentApi.registerStudent(studentData)
-      return result
+      return await studentApi.registerStudent(studentData)
     } catch (err) {
-      const message = err?.message || 'Registration failed'
-      const friendly = message.includes('already') 
-        ? 'This email or passport number is already registered.'
-        : message.includes('Network') || message.includes('fetch')
-        ? 'Network error. Please check your connection.'
-        : message
-      setError(friendly)
+      setError(mapFriendlyError(err?.message || 'Registration failed'))
       throw err
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setLoading, setError])
 
   const verifyEmail = useCallback(async (email, otp) => {
     setLoading(true)
     setError('')
     try {
       const result = await studentApi.verifyEmail(email, otp)
-      if (result.student) {
-        setStudent(result.student)
-      }
+      if (result.student) setStudent(result.student)
       return result
     } catch (err) {
-      const message = err?.message || 'Verification failed'
-      const friendly = message.includes('Invalid') || message.includes('expired')
-        ? 'Invalid or expired verification code.'
-        : message.includes('Network') || message.includes('fetch')
-        ? 'Network error. Please check your connection.'
-        : message
-      setError(friendly)
+      setError(mapFriendlyError(err?.message || 'Verification failed'))
       throw err
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setStudent, setLoading, setError])
 
   const resendOTP = useCallback(async (email) => {
     setLoading(true)
     setError('')
     try {
-      const result = await studentApi.resendOTP(email)
-      return result
+      return await studentApi.resendOTP(email)
     } catch (err) {
-      const message = err?.message || 'Failed to resend code'
-      setError(message)
+      setError(err?.message || 'Failed to resend code')
       throw err
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setLoading, setError])
 
   const login = useCallback(async (email, password) => {
     setLoading(true)
@@ -95,20 +64,12 @@ export default function useStudentAuth() {
       }
       return result
     } catch (err) {
-      const message = err?.message || 'Login failed'
-      const friendly = message.includes('Invalid') || message.includes('password')
-        ? 'Invalid email or password.'
-        : message.includes('verify')
-        ? 'Please verify your email before logging in.'
-        : message.includes('Network') || message.includes('fetch')
-        ? 'Network error. Please check your connection.'
-        : message
-      setError(friendly)
+      setError(mapFriendlyError(err?.message || 'Login failed'))
       throw err
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setStudent, setLoading, setError])
 
   const logout = useCallback(async () => {
     setLoading(true)
@@ -122,20 +83,7 @@ export default function useStudentAuth() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setStudent, setLoading, setError])
 
-  const isAuthenticated = useMemo(() => Boolean(student), [student])
-
-  return { 
-    student, 
-    isAuthenticated, 
-    loading, 
-    error, 
-    register,
-    verifyEmail,
-    resendOTP,
-    login, 
-    logout 
-  }
+  return { student, isAuthenticated, loading, error, register, verifyEmail, resendOTP, login, logout }
 }
-

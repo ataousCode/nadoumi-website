@@ -17,10 +17,10 @@ function Services() {
   const goTo = (slug) => {
     const map = {
       'import-export': '/services/import-export',
-      'student-admission': '/services/student-admission',
-      'translation': '/services/translation',
+      'translation':   '/services/translation',
+      // student-admission → scholarships (handled by ctaHref on the card directly)
     }
-    const href = map[slug] || '/services'
+    const href = map[slug] || '/scholarships'
     navigate(href)
   }
 

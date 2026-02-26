@@ -5,6 +5,9 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nadoumi</title>
+    <!-- Preconnect to the API server so the TCP/TLS handshake is done before JS fires -->
+    <link rel="preconnect" href="https://nadoumibackend.onrender.com" crossorigin />
+    <link rel="dns-prefetch" href="https://nadoumibackend.onrender.com" />
   </head>
   <body>
     <div id="root"></div>

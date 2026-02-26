@@ -2,7 +2,6 @@
   "navbar": {
     "home": "首页",
     "about": "关于我们",
-    "products": "产品",
     "scholarships": "奖学金",
     "services": "服务",
     "importExport": "进出口",
@@ -254,35 +253,6 @@
     "required": "此字段为必填项",
     "invalidEmail": "请输入有效的电子邮件地址",
     "invalidPhone": "请输入有效的电话号码"
-  },
-  "products": {
-    "title": "我们的产品",
-    "subtitle": "探索我们令人惊叹的产品系列",
-    "searchPlaceholder": "搜索产品...",
-    "allCategories": "所有类别",
-    "sort": {
-      "name": "名称 (A-Z)",
-      "priceAsc": "价格：从低到高",
-      "priceDesc": "价格：从高到低"
-    },
-    "showing": "显示",
-    "of": "共",
-    "products": "个产品",
-    "noProducts": "未找到产品",
-    "noProductsFiltered": "请尝试调整筛选条件",
-    "noProductsAvailable": "目前没有可用产品",
-    "notFound": "产品未找到",
-    "notFoundMessage": "您要查找的产品不存在或不再可用。",
-    "backToProducts": "返回产品",
-    "home": "首页",
-    "details": "产品详情",
-    "weight": "重量",
-    "reservationTime": "预订时间",
-    "buyNow": "通过 WhatsApp 立即购买",
-    "inStock": "有库存",
-    "outOfStock": "缺货",
-    "similarProducts": "类似产品",
-    "similarProductsSubtitle": "您可能也喜欢这些产品"
   },
   "footer": {
     "description": "我们通过可靠的贸易与教育咨询连接全球机遇。",

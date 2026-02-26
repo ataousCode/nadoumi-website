@@ -5,32 +5,38 @@ const LocaleContext = createContext({ locale: 'en', setLocale: () => {}, t: (k) 
 const STORAGE_KEY = 'app_locale'
 const SUPPORTED = ['en', 'fr', 'zh']
 
+function detectLocale() {
+  const saved = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null
+  if (saved && SUPPORTED.includes(saved)) return saved
+  const bro = typeof navigator !== 'undefined' ? String(navigator.language || '').slice(0, 2).toLowerCase() : 'en'
+  return SUPPORTED.includes(bro) ? bro : 'en'
+}
+
 async function loadMessages(locale) {
   const mod = await import(`./locales/${locale}/common.json`)
   return mod.default || {}
 }
 
 export function LocaleProvider({ children }) {
-  const [locale, setLocale] = useState('en')
+  // Detect locale synchronously on first render — eliminates the double-render flash
+  const [locale, setLocale] = useState(detectLocale)
   const [messages, setMessages] = useState({})
-
-  useEffect(() => {
-    const saved = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null
-    const bro = typeof navigator !== 'undefined' ? String(navigator.language || '').slice(0, 2).toLowerCase() : 'en'
-    const initial = saved && SUPPORTED.includes(saved) ? saved : SUPPORTED.includes(bro) ? bro : 'en'
-    setLocale(initial)
-  }, [])
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     let active = true
-    ;(async () => {
-      const data = await loadMessages(locale)
-      if (active) setMessages(data)
-    })()
+    loadMessages(locale).then(data => {
+      if (active) {
+        setMessages(data)
+        setReady(true)
+      }
+    })
     if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, locale)
     return () => { active = false }
   }, [locale])
 
+  // Show nothing until the first locale chunk is loaded to avoid flashing raw keys
+  // NOTE: useMemo must be declared BEFORE any conditional return (Rules of Hooks)
   const t = useMemo(() => {
     return (key) => {
       if (!key) return ''
@@ -68,6 +74,8 @@ export function LocaleProvider({ children }) {
   }, [messages])
 
   const value = useMemo(() => ({ locale, setLocale, t }), [locale, t])
+
+  if (!ready) return null
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
 }

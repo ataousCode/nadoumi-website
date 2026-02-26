@@ -99,12 +99,6 @@ export default function NotFound() {
               Scholarships
             </Link>
             <Link
-              to="/products"
-              className="text-orange-600 hover:text-orange-700 font-medium text-sm transition-colors"
-            >
-              Products
-            </Link>
-            <Link
               to="/about"
               className="text-orange-600 hover:text-orange-700 font-medium text-sm transition-colors"
             >

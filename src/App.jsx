@@ -1,46 +1,55 @@
+import React, { lazy, Suspense } from 'react'
 import Navbar from './component/common/Navbar.jsx'
 import Footer from './component/common/Footer.jsx'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import About from './pages/About.jsx'
-import Contact from './pages/Contact.jsx'
 import ScrollToTop from './component/common/ScrollToTop.jsx'
-import Services from './pages/services/Services.jsx'
-import ImportExportPage from './pages/services/ImportExportPage.jsx'
-import StudentAdmissionPage from './pages/services/StudentAdmissionPage.jsx'
-import TranslationPage from './pages/services/TranslationPage.jsx'
-import Login from './pages/Login.jsx'
-import AdminLogin from './pages/admin/AdminLogin.jsx'
-import Dashboard from './pages/admin/Dashboard.jsx'
-import AdminProducts from './pages/admin/Products.jsx'
-import Categories from './pages/admin/Categories.jsx'
-import ApplicationsInbox from './pages/admin/ApplicationsInbox.jsx'
-import ApplicationDetailPage from './pages/admin/ApplicationDetailPage.jsx'
-import AdminScholarships from './pages/admin/Scholarships.jsx'
-import Universities from './pages/admin/Universities.jsx'
-import Students from './pages/admin/Students.jsx'
-import Settings from './pages/admin/Settings.jsx'
 import ProtectedRoute from './component/admin/ProtectedRoute.jsx'
+import StudentProtectedRoute from './component/student/StudentProtectedRoute.jsx'
 import { ToastProvider } from './context/ToastContext.jsx'
 import ToastContainer from './component/common/ToastContainer.jsx'
 import WhatsAppFloat from './component/common/WhatsAppFloat.jsx'
 import WeChatFloat from './component/common/WeChatFloat.jsx'
-import Products from './pages/Products.jsx'
-import ProductDetail from './pages/ProductDetail.jsx'
-import Scholarships from './pages/Scholarships.jsx'
-import ScholarshipDetail from './pages/ScholarshipDetail.jsx'
-import UniversityDetail from './pages/UniversityDetail.jsx'
-import ApplyScholarship from './pages/student/ApplyScholarship.jsx'
-import StudentRegister from './pages/student/StudentRegister.jsx'
-import VerifyEmail from './pages/student/VerifyEmail.jsx'
-import StudentDashboard from './pages/student/StudentDashboard.jsx'
-import MyApplications from './pages/student/MyApplications.jsx'
-import ApplicationDetail from './pages/student/ApplicationDetail.jsx'
-import StudentProfile from './pages/student/StudentProfile.jsx'
-import ForgotPassword from './pages/student/ForgotPassword.jsx'
-import ResetPassword from './pages/student/ResetPassword.jsx'
-import StudentProtectedRoute from './component/student/StudentProtectedRoute.jsx'
-import NotFound from './pages/NotFound.jsx'
+
+// Public pages — loaded on first visit
+const Home              = lazy(() => import('./pages/Home.jsx'))
+const About             = lazy(() => import('./pages/About.jsx'))
+const Contact           = lazy(() => import('./pages/Contact.jsx'))
+const Scholarships      = lazy(() => import('./pages/Scholarships.jsx'))
+const ScholarshipDetail = lazy(() => import('./pages/ScholarshipDetail.jsx'))
+const UniversityDetail  = lazy(() => import('./pages/UniversityDetail.jsx'))
+const Services          = lazy(() => import('./pages/services/Services.jsx'))
+const ImportExportPage  = lazy(() => import('./pages/services/ImportExportPage.jsx'))
+const TranslationPage   = lazy(() => import('./pages/services/TranslationPage.jsx'))
+const NotFound          = lazy(() => import('./pages/NotFound.jsx'))
+
+// Auth pages
+const Login             = lazy(() => import('./pages/Login.jsx'))
+const AdminLogin        = lazy(() => import('./pages/admin/AdminLogin.jsx'))
+
+// Student pages — loaded only when student navigates there
+const StudentRegister   = lazy(() => import('./pages/student/StudentRegister.jsx'))
+const VerifyEmail       = lazy(() => import('./pages/student/VerifyEmail.jsx'))
+const ForgotPassword    = lazy(() => import('./pages/student/ForgotPassword.jsx'))
+const ResetPassword     = lazy(() => import('./pages/student/ResetPassword.jsx'))
+const ApplyScholarship  = lazy(() => import('./pages/student/ApplyScholarship.jsx'))
+const StudentDashboard  = lazy(() => import('./pages/student/StudentDashboard.jsx'))
+const MyApplications    = lazy(() => import('./pages/student/MyApplications.jsx'))
+const ApplicationDetail = lazy(() => import('./pages/student/ApplicationDetail.jsx'))
+const StudentProfile    = lazy(() => import('./pages/student/StudentProfile.jsx'))
+
+// Admin pages — loaded only when admin navigates there
+const Dashboard            = lazy(() => import('./pages/admin/Dashboard.jsx'))
+const ApplicationsInbox    = lazy(() => import('./pages/admin/ApplicationsInbox.jsx'))
+const ApplicationDetailPage = lazy(() => import('./pages/admin/ApplicationDetailPage.jsx'))
+const AdminScholarships    = lazy(() => import('./pages/admin/Scholarships.jsx'))
+const Universities         = lazy(() => import('./pages/admin/Universities.jsx'))
+const Students             = lazy(() => import('./pages/admin/Students.jsx'))
+const Settings             = lazy(() => import('./pages/admin/Settings.jsx'))
+
+// Minimal fallback — invisible spinner to avoid layout shift
+function PageLoader() {
+  return <div className="min-h-screen bg-white" aria-hidden="true" />
+}
 
 function AppContent() {
   const location = useLocation()
@@ -63,12 +72,11 @@ function AppContent() {
               <WhatsAppFloat />
             </>
           )}
+          <Suspense fallback={<PageLoader />}>
           <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/scholarships" element={<Scholarships />} />
           <Route path="/scholarships/:id" element={<ScholarshipDetail />} />
           <Route path="/universities/:id" element={<UniversityDetail />} />
@@ -126,29 +134,12 @@ function AppContent() {
           
           <Route path="/services" element={<Services />} />
           <Route path="/services/import-export" element={<ImportExportPage />} />
-          <Route path="/services/student-admission" element={<StudentAdmissionPage />} />
           <Route path="/services/translation" element={<TranslationPage />} />
           <Route
             path="/admin"
             element={
               <ProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/products"
-            element={
-              <ProtectedRoute>
-                <AdminProducts />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/categories"
-            element={
-              <ProtectedRoute>
-                <Categories />
               </ProtectedRoute>
             }
           />
@@ -204,6 +195,7 @@ function AppContent() {
           {/* 404 - Catch all unmatched routes */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+          </Suspense>
       </main>
       {!isAdminRoute && (
         <footer>

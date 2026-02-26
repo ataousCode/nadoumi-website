@@ -1,34 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 import * as authApi from '../../api/auth.js'
+import { createAuthHook, mapFriendlyError } from '../createAuthHook.js'
 
-/**
- * Admin auth hook: tracks auth state and exposes login/logout.
- * Uses MongoDB backend API via src/api/auth.js.
- */
+const useAdminSession = createAuthHook({
+  getCurrentUser: authApi.getCurrentUser,
+  verifyUser: authApi.verifyToken,
+})
+
 export default function useAdminAuth() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true) // Start as loading
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    setLoading(true)
-    const current = authApi.getCurrentUser?.()
-    if (current) {
-      setUser(current)
-      setLoading(false)
-    }
-    
-    // Verify token with backend
-    authApi.verifyToken()
-      .then((user) => {
-        setUser(user || null)
-        setLoading(false)
-      })
-      .catch(() => {
-        setUser(null)
-        setLoading(false)
-      })
-  }, [])
+  const { user, setUser, loading, setLoading, error, setError, isAuthenticated } = useAdminSession()
 
   const login = useCallback(async (email, password) => {
     setLoading(true)
@@ -38,18 +18,12 @@ export default function useAdminAuth() {
       setUser(u || null)
       return u
     } catch (err) {
-      const message = err?.message || 'Login failed'
-      const friendly = message.includes('Invalid') || message.includes('password')
-        ? 'Invalid email or password.'
-        : message.includes('Network') || message.includes('fetch')
-        ? 'Network error. Please check your connection.'
-        : message
-      setError(friendly)
+      setError(mapFriendlyError(err?.message || 'Login failed'))
       throw err
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setUser, setLoading, setError])
 
   const logout = useCallback(async () => {
     setLoading(true)
@@ -63,9 +37,7 @@ export default function useAdminAuth() {
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  const isAuthenticated = useMemo(() => Boolean(user), [user])
+  }, [setUser, setLoading, setError])
 
   return { user, isAuthenticated, loading, error, login, logout }
 }

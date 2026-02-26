@@ -145,10 +145,17 @@ export async function verifyStudentToken() {
 }
 
 /**
- * Logout student
+ * Logout student — clears httpOnly cookie via backend + removes local token.
  */
-export function logoutStudent() {
-  setAuthToken(null, 'student')
+export async function logoutStudent() {
+  try {
+    // Ask the backend to clear the httpOnly cookie
+    await apiRequest(`${API_BASE}/logout`, { method: 'DELETE' })
+  } catch {
+    // Proceed with local cleanup regardless of server response
+  } finally {
+    setAuthToken(null, 'student')
+  }
 }
 
 /**
