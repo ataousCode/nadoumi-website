@@ -3,18 +3,10 @@
  * Central source of truth for all application status-related functionality
  */
 
-// Status enum - use these constants throughout the app
-export const APPLICATION_STATUS = {
-  PENDING: 'pending',
-  RECEIVED: 'received',
-  UNDER_REVIEW: 'under_review',
-  INTERVIEW: 'interview',
-  INTERVIEW_PASSED: 'interview_passed',
-  INTERVIEW_FAILED: 'interview_failed',
-  ACCEPTED: 'accepted',
-  REJECTED: 'rejected',
-  REVOKED: 'revoked',
-}
+import { APPLICATION_STATUS } from './enums.js'
+
+// Re-export for backward compatibility if needed, or just use the import above
+export { APPLICATION_STATUS }
 
 // Status metadata: display name, color, icon, description
 export const STATUS_METADATA = {
@@ -108,6 +100,15 @@ export const STATUS_METADATA = {
     icon: '⚠️',
     description: 'Application has been revoked due to missing documents or issues',
   },
+  [APPLICATION_STATUS.WAITLISTED]: {
+    label: 'Waitlisted',
+    color: 'blue',
+    bgColor: 'bg-blue-100',
+    textColor: 'text-blue-800',
+    borderColor: 'border-blue-300',
+    icon: '⏳',
+    description: 'Application is on the waiting list',
+  },
 }
 
 // Define allowed status transitions (workflow)
@@ -128,19 +129,27 @@ export const ALLOWED_TRANSITIONS = {
     APPLICATION_STATUS.ACCEPTED,
     APPLICATION_STATUS.REJECTED,
     APPLICATION_STATUS.REVOKED,
+    APPLICATION_STATUS.WAITLISTED,
   ],
   [APPLICATION_STATUS.INTERVIEW]: [
     APPLICATION_STATUS.INTERVIEW_PASSED,
     APPLICATION_STATUS.INTERVIEW_FAILED,
     APPLICATION_STATUS.ACCEPTED,
     APPLICATION_STATUS.REJECTED,
+    APPLICATION_STATUS.WAITLISTED,
   ],
   [APPLICATION_STATUS.INTERVIEW_PASSED]: [
     APPLICATION_STATUS.ACCEPTED,
     APPLICATION_STATUS.REJECTED,
+    APPLICATION_STATUS.WAITLISTED,
   ],
   [APPLICATION_STATUS.INTERVIEW_FAILED]: [
     APPLICATION_STATUS.REJECTED,
+  ],
+  [APPLICATION_STATUS.WAITLISTED]: [
+    APPLICATION_STATUS.ACCEPTED,
+    APPLICATION_STATUS.REJECTED,
+    APPLICATION_STATUS.REVOKED,
   ],
   [APPLICATION_STATUS.ACCEPTED]: [], // Terminal state
   [APPLICATION_STATUS.REJECTED]: [], // Terminal state

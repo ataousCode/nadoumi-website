@@ -15,6 +15,7 @@ import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
 import { getApplication } from '../../api/applications.js'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
+import { APPLICATION_STATUS } from '../../constants/applicationStatus.js'
 
 export default function ApplicationDetailPage() {
   const { t } = useI18n()
@@ -57,7 +58,7 @@ export default function ApplicationDetailPage() {
       const appId = item.applicationId || item.id || item._id
       
       // If status is ACCEPTED and files are provided, upload them first
-      if (statusUpdate.status === 'accepted' && statusUpdate.files) {
+      if (statusUpdate.status === APPLICATION_STATUS.ACCEPTED && statusUpdate.files) {
         const { files, ...statusData } = statusUpdate
         
         // First update the status

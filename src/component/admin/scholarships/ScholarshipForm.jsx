@@ -2,31 +2,26 @@ import React, { useState, useEffect } from 'react'
 import Input from '../../common/Input.jsx'
 import Button from '../../common/Button.jsx'
 import { getUniversities } from '../../../api/universities.js'
+import { 
+  SCHOLARSHIP_STATUS, 
+  PROGRAM_CATEGORY, 
+  SCHOLARSHIP_CATEGORY 
+} from '../../../constants/enums.js'
 
-const STATUS_OPTIONS = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'published', label: 'Published' },
-  { value: 'closed', label: 'Closed' },
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' }
-]
+const STATUS_OPTIONS = Object.entries(SCHOLARSHIP_STATUS).map(([key, value]) => ({
+  value,
+  label: value.charAt(0).toUpperCase() + value.slice(1).replace(/_/g, ' ')
+}))
 
-const PROGRAM_CATEGORIES = [
-  { value: 'Language', label: 'Language' },
-  { value: 'Bachelor', label: 'Bachelor' },
-  { value: 'Master', label: 'Master' },
-  { value: 'PhD', label: 'PhD' }
-]
+const PROGRAM_CATEGORIES = Object.entries(PROGRAM_CATEGORY).map(([key, value]) => ({
+  value,
+  label: value
+}))
 
-const SCHOLARSHIP_CATEGORIES = [
-  { value: 'Self-funded', label: 'Self-funded' },
-  { value: 'Partial', label: 'Partial' },
-  { value: 'CSC', label: 'CSC' },
-  { value: 'Province', label: 'Province' },
-  { value: 'Universities', label: 'Universities' },
-  { value: 'HSK', label: 'HSK' },
-  { value: 'Other', label: 'Other' }
-]
+const SCHOLARSHIP_CATEGORIES = Object.entries(SCHOLARSHIP_CATEGORY).map(([key, value]) => ({
+  value,
+  label: value
+}))
 
 function ScholarshipForm({ initialData, onSubmit, onCancel, isSubmitting }) {
   const [activeSection, setActiveSection] = useState('basic')
@@ -35,18 +30,13 @@ function ScholarshipForm({ initialData, onSubmit, onCancel, isSubmitting }) {
     titleInChinese: '',
     description: '',
     category: '',
-    tags: '',
-    status: 'draft',
-    applicationDeadline: '',
-    startDate: '',
-    duration: '',
     availableSlots: 1,
-    programCategory: 'Bachelor',
+    programCategory: PROGRAM_CATEGORY.BACHELOR,
     field: '',
     programName: '',
     degree: '',
     intake: '',
-    scholarshipCategory: 'Partial',
+    scholarshipCategory: SCHOLARSHIP_CATEGORY.PARTIAL,
     scholarshipDuration: '',
     originalTuitionFee: '',
     tuitionFeeAfterScholarship: '',

@@ -15,6 +15,7 @@ import {
   deleteScholarship,
   updateScholarshipStatus
 } from '../../api/scholarships.js'
+import { SCHOLARSHIP_STATUS, STATUS_UI } from '../../constants/enums.js'
 
 export default function Scholarships() {
   const { success, error: showError } = useToast()
@@ -74,9 +75,10 @@ export default function Scholarships() {
 
   const handleToggleStatus = async (scholarship) => {
     try {
-      const newStatus = scholarship.status === 'published' ? 'draft' : 'published'
+      const isPublished = scholarship.status === SCHOLARSHIP_STATUS.PUBLISHED || scholarship.status === SCHOLARSHIP_STATUS.ACTIVE
+      const newStatus = isPublished ? SCHOLARSHIP_STATUS.DRAFT : SCHOLARSHIP_STATUS.PUBLISHED
       await updateScholarshipStatus(scholarship._id || scholarship.id, newStatus)
-      success(`Scholarship ${newStatus === 'published' ? 'published' : 'unpublished'}`)
+      success(`Scholarship ${newStatus === SCHOLARSHIP_STATUS.PUBLISHED ? 'published' : 'unpublished'}`)
       loadScholarships()
     } catch (err) {
       showError('Failed to update status')
@@ -132,14 +134,11 @@ export default function Scholarships() {
       label: 'Status',
       key: 'status',
       render: (item) => {
-        const statusColors = {
-          draft: 'bg-gray-100 text-gray-700',
-          published: 'bg-green-50 text-green-700',
-          closed: 'bg-red-50 text-red-700'
-        }
+        const status = item.status || SCHOLARSHIP_STATUS.DRAFT
+        const metadata = STATUS_UI.SCHOLARSHIP[status] || STATUS_UI.SCHOLARSHIP[SCHOLARSHIP_STATUS.DRAFT]
         return (
-          <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${statusColors[item.status] || statusColors.draft}`}>
-            {item.status || 'draft'}
+          <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${metadata.color}`}>
+            {metadata.label}
           </span>
         )
       }
@@ -158,9 +157,9 @@ export default function Scholarships() {
           <span className="text-gray-300">|</span>
           <button
             onClick={() => handleToggleStatus(item)}
-            className={`${item.status === 'published' ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'} text-sm font-medium`}
+            className={`${(item.status === SCHOLARSHIP_STATUS.PUBLISHED || item.status === SCHOLARSHIP_STATUS.ACTIVE) ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'} text-sm font-medium`}
           >
-            {item.status === 'published' ? 'Unpublish' : 'Publish'}
+            {(item.status === SCHOLARSHIP_STATUS.PUBLISHED || item.status === SCHOLARSHIP_STATUS.ACTIVE) ? 'Unpublish' : 'Publish'}
           </button>
           <span className="text-gray-300">|</span>
           <button

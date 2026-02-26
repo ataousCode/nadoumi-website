@@ -15,12 +15,13 @@ export async function login(email, password) {
     body: JSON.stringify({ email, password }),
   })
   
-  // Backend returns { success: true, data: { token, user } }
+  // Backend returns { success: true, data: { token, user/admin } }
   const data = response.data || response
   if (data.token) {
     setAuthToken(data.token, 'admin')
   }
-  return { user: data.user }
+  const adminUser = data.admin || data.user
+  return { user: adminUser }
 }
 
 export async function logout() {
@@ -41,8 +42,9 @@ export async function verifyToken() {
   
   try {
     const response = await apiRequest(`${API_BASE}/verify`)
-    // Backend returns { success: true, data: { user } }
-    return response.data?.user || response.user
+    // Backend returns { success: true, data: { user/admin } }
+    const adminUser = response.data?.admin || response.data?.user || response.admin || response.user
+    return adminUser
   } catch {
     setAuthToken(null, 'admin')
     return null

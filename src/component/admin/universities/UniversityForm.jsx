@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import Input from '../../common/Input.jsx'
 import Button from '../../common/Button.jsx'
+import { getUniversities } from '../../../api/universities.js'
+import { UNIVERSITY_STATUS, UNIVERSITY_TYPE } from '../../../constants/enums.js'
 
-const STATUS_OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-  { value: 'draft', label: 'Draft' }
-]
+const STATUS_OPTIONS = Object.entries(UNIVERSITY_STATUS).map(([key, value]) => ({
+  value,
+  label: value.charAt(0).toUpperCase() + value.slice(1)
+}))
 
-const TYPE_OPTIONS = [
-  { value: 'Public', label: 'Public' },
-  { value: 'Private', label: 'Private' }
-]
+const TYPE_OPTIONS = Object.entries(UNIVERSITY_TYPE).map(([key, value]) => ({
+  value,
+  label: value
+}))
 
 function UniversityForm({ initialData, onSubmit, onCancel, isSubmitting }) {
   const [activeSection, setActiveSection] = useState('basic')
@@ -22,7 +23,7 @@ function UniversityForm({ initialData, onSubmit, onCancel, isSubmitting }) {
     bannerImage: '',
     city: '',
     province: '',
-    type: 'Public',
+    type: UNIVERSITY_TYPE.PUBLIC,
     foundedYear: '',
     totalStudents: '',
     internationalStudents: '',
@@ -30,7 +31,7 @@ function UniversityForm({ initialData, onSubmit, onCancel, isSubmitting }) {
     numberOfPrograms: 0,
     description: '',
     advantages: [],
-    status: 'active',
+    status: UNIVERSITY_STATUS.ACTIVE,
     rankings: [],
     albums: []
   })
@@ -49,7 +50,7 @@ function UniversityForm({ initialData, onSubmit, onCancel, isSubmitting }) {
         bannerImage: initialData.bannerImage || '',
         city: initialData.city || '',
         province: initialData.province || '',
-        type: initialData.type || 'Public',
+        type: initialData.type || UNIVERSITY_TYPE.PUBLIC,
         foundedYear: initialData.foundedYear || '',
         totalStudents: initialData.totalStudents || '',
         internationalStudents: initialData.internationalStudents || '',
@@ -57,7 +58,7 @@ function UniversityForm({ initialData, onSubmit, onCancel, isSubmitting }) {
         numberOfPrograms: initialData.numberOfPrograms || 0,
         description: initialData.description || '',
         advantages: initialData.advantages || [],
-        status: initialData.status || 'active',
+        status: initialData.status || UNIVERSITY_STATUS.ACTIVE,
         rankings: initialData.rankings || [],
         albums: initialData.albums || []
       })

@@ -9,7 +9,7 @@ import useApplicationStatus from '../../hooks/admin/useApplicationStatus.js'
 import useApplicationDelete from '../../hooks/admin/useApplicationDelete.js'
 import useAdminAuth from '../../hooks/admin/useAdminAuth.js'
 import { useI18n } from '../../i18n/LocaleProvider.jsx'
-import { getAllStatuses } from '../../constants/applicationStatus.js'
+import { getAllStatuses, APPLICATION_STATUS } from '../../constants/applicationStatus.js'
 import { useToast } from '../../context/ToastContext.jsx'
 
 export default function ApplicationsInbox() {
@@ -54,7 +54,7 @@ export default function ApplicationsInbox() {
       const appId = selectedApp.applicationId || selectedApp.id || selectedApp._id
       
       // If status is ACCEPTED and files are provided, upload them first
-      if (statusUpdate.status === 'accepted' && statusUpdate.files) {
+      if (statusUpdate.status === APPLICATION_STATUS.ACCEPTED && statusUpdate.files) {
         const { files, ...statusData } = statusUpdate
         
         // First update the status

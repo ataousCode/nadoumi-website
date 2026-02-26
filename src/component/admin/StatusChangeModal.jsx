@@ -62,6 +62,7 @@ function StatusChangeModal({
     if (statusLower === 'accepted') return APPLICATION_STATUS.ACCEPTED
     if (statusLower === 'rejected') return APPLICATION_STATUS.REJECTED
     if (statusLower === 'revoked') return APPLICATION_STATUS.REVOKED
+    if (statusLower === 'waitlisted') return APPLICATION_STATUS.WAITLISTED
     
     // If already in correct format, return as is
     if (Object.values(APPLICATION_STATUS).includes(currentStatus)) return currentStatus
