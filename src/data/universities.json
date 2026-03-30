@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Tsinghua University",
+    "location": "Beijing",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x1V_B1N3W_0z1O8yW2E_oT4L_N_4L_N_4L_N_4L_N_4L_N_4",
+    "image": "https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?auto=format&fit=crop&q=80&w=800",
+    "badges": [{ "label": "Project 985", "variant": "blue" }, { "label": "Double First Class", "variant": "orange" }],
+    "qsRank": 14,
+    "intlStudents": "4,000",
+    "scholarshipCount": 12,
+    "subjects": ["Engineering & Tech", "Science"],
+    "degreeTypes": ["Bachelor's", "Master's", "PhD"],
+    "language": "English",
+    "tuition": 30000,
+    "popularity": 98
+  },
+  {
+    "name": "Peking University",
+    "location": "Beijing",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x1V_B1N3W_0z1O8yW2E_oT4L_N_4L_N_4L_N_4L_N_4L_N_4",
+    "image": "https://images.unsplash.com/photo-1523050335456-c75c89901592?auto=format&fit=crop&q=80&w=800",
+    "badges": [{ "label": "Project 985", "variant": "blue" }],
+    "qsRank": 17,
+    "intlStudents": "3,800",
+    "scholarshipCount": 10,
+    "subjects": ["Arts & Humanities", "Social Sciences"],
+    "degreeTypes": ["Bachelor's", "Master's", "PhD"],
+    "language": "English",
+    "tuition": 28000,
+    "popularity": 95
+  },
+  {
+    "name": "Fudan University",
+    "location": "Shanghai",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x1V_B1N3W_0z1O8yW2E_oT4L_N_4L_N_4L_N_4L_N_4L_N_4",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=800",
+    "badges": [{ "label": "Project 211", "variant": "indigo" }],
+    "qsRank": 34,
+    "intlStudents": "3,500",
+    "scholarshipCount": 8,
+    "subjects": ["Medicine", "Business"],
+    "degreeTypes": ["Bachelor's", "Master's"],
+    "language": "English",
+    "tuition": 45000,
+    "popularity": 92
+  },
+  {
+    "name": "Zhejiang University",
+    "location": "Hangzhou",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x1V_B1N3W_0z1O8yW2E_oT4L_N_4L_N_4L_N_4L_N_4L_N_4",
+    "image": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=800",
+    "badges": [{ "label": "Project 985", "variant": "blue" }],
+    "qsRank": 42,
+    "intlStudents": "6,000",
+    "scholarshipCount": 15,
+    "subjects": ["Engineering & Tech", "Science"],
+    "degreeTypes": ["Bachelor's", "Master's", "PhD", "Language"],
+    "language": "Chinese",
+    "tuition": 20000,
+    "popularity": 90
+  }
+]

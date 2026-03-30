@@ -1,0 +1,23 @@
+[
+  {
+    "title": "CSC Chinese University Program",
+    "description": "The most prestigious scholarship for international students covering tuition, accommodation and living allowance.",
+    "badge": "Full Funding",
+    "badgeColor": "blue",
+    "image": "https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "title": "Shanghai Government Scholarship",
+    "description": "Supporting outstanding students to study in Shanghai's world-class universities like Fudan and Jiao Tong.",
+    "badge": "Partial Funding",
+    "badgeColor": "green",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "title": "Zhejiang University Belt & Road",
+    "description": "Specialized funding for engineering and technology majors at one of China's Big Three universities.",
+    "badge": "Excellence Award",
+    "badgeColor": "orange",
+    "image": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=800"
+  }
+]

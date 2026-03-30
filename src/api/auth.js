@@ -2,7 +2,7 @@
 import { apiRequest, setAuthToken, getAuthToken } from './config.js'
 import { getUserFromToken } from '../utils/tokenUtils.js'
 
-const API_BASE = '/admin'
+const API_BASE = 'admin'
 
 export function getCurrentUser() {
   const token = getAuthToken('admin')

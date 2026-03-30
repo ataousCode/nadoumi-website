@@ -1,46 +1,30 @@
-import React from 'react'
-import Hero from '../component/home/Hero.jsx'
-import ValuesSection from '../component/home/ValuesSection.jsx'
-import ServicesPreview from '../component/home/ServicesPreview.jsx'
-import ProcessSteps from '../component/home/ProcessSteps.jsx'
-import Testimonials from '../component/home/Testimonials.jsx'
-import Collaboration from '../component/home/Collaboration.jsx'
-import CallToAction from '../component/home/CallToAction.jsx'
-import { useI18n } from '../i18n/LocaleProvider.jsx'
+import React from "react";
+import Hero from "../features/home/components/Hero.jsx";
+import PartnerUniversities from "../features/home/components/PartnerUniversities.jsx";
+import RecommendedUniversities from "../features/home/components/RecommendedUniversities.jsx";
+import RecommendedSelfFinanced from "../features/home/components/RecommendedSelfFinanced.jsx";
+import TopScholarships from "../features/home/components/TopScholarships.jsx";
+import FeaturedScholarships from "../features/home/components/FeaturedScholarships.jsx";
+import TopUniversitiesChina from "../features/home/components/TopUniversitiesChina.jsx";
+import WhyChooseUs from "../features/home/components/WhyChooseUs.jsx";
+import JourneySection from "../features/home/components/JourneySection.jsx";
+import TestimonialSection from "../features/home/components/TestimonialSection.jsx";
 
 function Home() {
-  const { t } = useI18n()
   return (
-    <>
-      <Hero
-        imageSrc="team.jpg"
-        fit="cover"
-        position="center 30%"
-        title={t('home.subtitle')}
-        highlight={t('home.highlight')}
-        subtitle=""
-        description={t('home.description')}
-        primaryText={t('home.primary')}
-        primaryHref="/services"
-        secondaryText={t('home.secondary')}
-        secondaryHref="/scholarships"
-      />
-      <ValuesSection title={t('home.valuesTitle')} subtitle={t('home.valuesSubtitle')} />
-      <ServicesPreview limit={2} />
-      <ProcessSteps
-        title={t('home.processTitle')}
-        subtitle={t('home.processSubtitle')}
-        steps={[
-          { title: t('home.processSteps.consultation.title'), description: t('home.processSteps.consultation.description') },
-          { title: t('home.processSteps.execution.title'), description: t('home.processSteps.execution.description') },
-          { title: t('home.processSteps.delivery.title'), description: t('home.processSteps.delivery.description') },
-        ]}
-      />
-      <Testimonials title={t('home.testimonialsTitle')} subtitle={t('home.testimonialsSubtitle')} />
-      <Collaboration />
-      <CallToAction />
-    </>
-  )
+    <div className="flex flex-col">
+      <Hero />
+      <FeaturedScholarships />
+      <PartnerUniversities />
+      <RecommendedUniversities />
+      <TopScholarships />
+      <RecommendedSelfFinanced />
+      <TopUniversitiesChina />
+      <WhyChooseUs />
+      <JourneySection />
+      <TestimonialSection />
+    </div>
+  );
 }
 
-export default Home
+export default Home;

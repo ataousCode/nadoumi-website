@@ -1,7 +1,7 @@
 import { apiRequest, apiRequestFormData } from './config.js'
 import { APPLICATION_STATUS } from '../constants/applicationStatus.js'
 
-const API_BASE = '/applications'
+const API_BASE = 'applications'
 
 // Lookup map — much faster and cleaner than a chain of if-statements
 const STATUS_NORMALIZE_MAP = {

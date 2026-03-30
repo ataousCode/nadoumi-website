@@ -5,12 +5,16 @@ import './index.css'
 import App from './App.jsx'
 import { LocaleProvider } from './i18n/LocaleProvider.jsx'
 
+import ErrorBoundary from './components/common/ErrorBoundary.jsx'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <LocaleProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </LocaleProvider>
+    <ErrorBoundary>
+      <LocaleProvider>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <App />
+        </BrowserRouter>
+      </LocaleProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )

@@ -1,0 +1,136 @@
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/api/auth.service.js
+  1:42  error  'setAuthToken' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/api/documents.js
+   5:7   error  'getBaseUrl' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  13:71  error  'timeoutMs' is assigned a value but never used                                              no-unused-vars
+  13:91  error  'onProgress' is assigned a value but never used                                             no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/components/common/AdminProtect.jsx
+   8:9   error  'studentToken' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                 no-unused-vars
+  18:47  error  React Hook "useQuery" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/components/common/Navbar/UserMenu.jsx
+  4:30  error  'onLogout' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/components/layout/AdminSidebar.jsx
+  18:34  error  'Icon' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/components/layout/StudentSidebar.jsx
+  16:34  error  'Icon' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/constants/emailTemplates.js
+  91:5  error  'process' is not defined  no-undef
+  92:5  error  'process' is not defined  no-undef
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/constants/statusConfig.js
+  5:30  error  'getStatusMetadata' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/context/ToastContext.jsx
+  63:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/application/hooks/useApplicationForm.js
+  65:67  error  '_' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/home/components/FeaturedScholarships.jsx
+  11:28  error  'isError' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/home/components/Hero.jsx
+  4:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/messages/components/MessageInput.jsx
+  11:10  error  'getImageURL' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/messages/hooks/useChatSocket.js
+    8:5  error    'subscribeToMessages' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                    no-unused-vars
+    9:5  error    'subscribeToTyping' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                      no-unused-vars
+   10:5  error    'subscribeToPresence' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                    no-unused-vars
+   12:5  error    'subscribeToPresenceResponse' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                            no-unused-vars
+  115:8  warning  React Hook useEffect has missing dependencies: 'activeConversationId' and 'targetUserId'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/profile/components/AccountAccessCard.jsx
+  5:32  error  'Icon' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/programs/components/ProgramCard.jsx
+  3:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/programs/components/ProgramSidebar.jsx
+  93:21  error  'value' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/scholarships/components/ScholarshipHero.jsx
+  1:17  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  3:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/scholarships/components/UniversityDetailCard.jsx
+  4:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/universities/components/UniversityCard.jsx
+   4:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  12:3   error  'province' is defined but never used                                       no-unused-vars
+  17:3   error  'type' is defined but never used                                           no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/universities/components/UniversityHero.jsx
+  1:17  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  3:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/features/universities/components/UniversitySidebar.jsx
+  5:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/hooks/common/useAsync.js
+  45:6  warning  React Hook useEffect was passed a dependency list that is not an array literal. This means we can't statically verify whether you've passed the correct dependencies                                                                       react-hooks/exhaustive-deps
+  45:6  warning  React Hook useEffect has missing dependencies: 'execute' and 'immediate'. Either include them or remove the dependency array                                                                                                               react-hooks/exhaustive-deps
+  94:6  warning  React Hook useEffect has a missing dependency: 'fetchFunction'. Either include it or remove the dependency array. If 'fetchFunction' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+  94:7  warning  React Hook useEffect has a spread element in its dependency array. This means we can't statically verify whether you've passed the correct dependencies                                                                                    react-hooks/exhaustive-deps
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/hooks/common/useLogout.js
+  18:14  error  'err' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/hooks/createAuthHook.js
+  1:10  error  'useCallback' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/hooks/usePresence.js
+  2:10  error  'subscribeToPresence' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  2:46  error  'subscribeToPresenceResponse' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/i18n/LocaleProvider.jsx
+  83:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Admin/MessagesPage.jsx
+  10:28  error    'subscribeToMessages' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                            no-unused-vars
+  31:9   warning  The 'conversations' conditional could make the dependencies of useEffect Hook (at line 42) change on every render. To fix this, wrap the initialization of 'conversations' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Admin/Profile.jsx
+  38:14  error  'err' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Admin/UniversitiesList.jsx
+  17:22  error  'setCityFilter' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Admin/components/Profile/ProfileSectionHeader.jsx
+  3:39  error  'Icon' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Admin/components/StatsCard.jsx
+  4:42  error  'Icon' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/ForgotPassword.jsx
+  2:10  error  'useNavigate' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Scholarships.jsx
+  32:28  error  'isError' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Student/ApplicationsPage.jsx
+  26:47  error  'isError' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/pages/Student/MessagesPage.jsx
+  10:28  error    'subscribeToMessages' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                            no-unused-vars
+  10:49  error    'getSocket' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                      no-unused-vars
+  38:9   warning  The 'conversations' conditional could make the dependencies of useEffect Hook (at line 49) change on every render. To fix this, wrap the initialization of 'conversations' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/utils/admin/guards.js
+  7:12  error  '_' is defined but never used  no-unused-vars
+
+/Users/mac/Desktop/webdevelopment/nadoumi/nadoumi-website/src/utils/constants.js
+  2:43  error  Unnecessary escape character: \.  no-useless-escape
+
+✖ 57 problems (50 errors, 7 warnings)
+

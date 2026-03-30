@@ -21,7 +21,7 @@ export async function uploadDocument(file, applicationId, filename, { timeoutMs 
 
   // Note: Progress tracking would need XMLHttpRequest for real progress
   // This is a simplified version
-  const response = await apiRequestFormData(`/documents/${applicationId}`, formData, {
+  const response = await apiRequestFormData(`documents/${applicationId}`, formData, {
     method: 'POST',
   })
 
@@ -88,7 +88,7 @@ export async function getDocumentUrls(application) {
     const applicationId = application?.applicationId || application?.id || application?.docId || null
     if (applicationId) {
       try {
-        const fsDocuments = await apiRequest(`/documents/${applicationId}`)
+        const fsDocuments = await apiRequest(`documents/${applicationId}`)
         const fsMap = new Map()
         fsDocuments.forEach(doc => {
           fsMap.set(doc.path, doc)
@@ -116,7 +116,7 @@ export async function getDocumentUrls(application) {
   if (!applicationId) return []
 
   try {
-    const documents = await apiRequest(`/documents/${applicationId}`)
+    const documents = await apiRequest(`documents/${applicationId}`)
     return documents.map(doc => {
       // Normalize path - ensure it starts with /uploads
       let docPath = (doc.path || '').trim()

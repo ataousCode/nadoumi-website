@@ -1,178 +1,268 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Container from '../component/common/Container.jsx'
-import ScholarshipCard from '../component/scholarships/ScholarshipCard.jsx'
-import ScholarshipFilters from '../component/scholarships/ScholarshipFilters.jsx'
-import { getScholarships } from '../api/scholarships.js'
-import Loading from '../component/admin/Loading.jsx'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import Container from '../components/common/Container.jsx';
+import ScholarshipHero from '../features/scholarships/components/ScholarshipHero.jsx';
+import FilterSidebar from '../features/scholarships/components/FilterSidebar.jsx';
+import ScholarshipCard from '../components/common/ScholarshipCard.jsx';
+import ScholarshipTable from '../features/scholarships/components/ScholarshipTable.jsx';
+import { Icons } from '../assets/icons/Icons.jsx';
+import { cn } from '../utils/cn';
 
-const EMPTY_FILTERS = { search: '', country: '', category: '' }
+const sortOptions = [
+  { id: 'ranking', label: 'Ranking' },
+  { id: 'popularity', label: 'Popularity' },
+  { id: 'tuition', label: 'Tuition' },
+];
 
-export default function Scholarships() {
-  const navigate  = useNavigate()
-  const [filters, setFilters] = useState(EMPTY_FILTERS)
-  const [data, setData]       = useState({ scholarships: [], pagination: null })
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState(null) // null | 'network' | 'server'
+import { useQuery } from '@tanstack/react-query';
+import { getScholarships } from '../api/scholarships.js';
+import { useSearchParams } from 'react-router-dom';
 
-  useEffect(() => {
-    let cancelled = false
-    const run = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const res = await getScholarships({
-          search:   filters.search   || undefined,
-          country:  filters.country  || undefined,
-          category: filters.category || undefined,
-        })
-        if (!cancelled) {
-          setData({
-            scholarships: res.scholarships || [],
-            pagination:   res.pagination   || null,
-          })
-        }
-      } catch (err) {
-        if (!cancelled) {
-          console.error('Failed to load scholarships', err)
-          const isNetwork = !err.status ||
-                            err.message?.toLowerCase().includes('network') ||
-                            err.message?.toLowerCase().includes('failed to fetch')
-          setError(isNetwork ? 'network' : 'server')
-          setData({ scholarships: [], pagination: null })
-        }
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
+const catMap = {
+  'language': 'Language',
+  'bachelor': 'Bachelor',
+  'master': 'Master',
+  'phd': 'PhD',
+  'Language': 'Language',
+  "Bachelor's": 'Bachelor',
+  "Master's": 'Master',
+  'PhD': 'PhD'
+};
+
+const reverseCatMap = {
+  'Language': 'Language',
+  'Bachelor': "Bachelor's",
+  'Master': "Master's",
+  'PhD': 'PhD'
+};
+
+const Scholarships = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeSort, setActiveSort] = React.useState('ranking');
+  const [viewMode, setViewMode] = React.useState('list'); // 'list' or 'grid'
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  const initialProgramCat = searchParams.get('programCategory');
+  const initialDegreeTypes = initialProgramCat && reverseCatMap[initialProgramCat] 
+    ? [reverseCatMap[initialProgramCat]] 
+    : [];
+
+  const [filters, setFilters] = React.useState({
+    search: searchParams.get('search') || '',
+    location: 'All Locations',
+    degreeTypes: initialDegreeTypes,
+    subject: 'All Categories',
+    rankMin: '',
+    rankMax: '',
+    language: 'English',
+    tuitionRange: 100
+  });
+
+  // Sync state with URL params when they change (e.g., from Home Hero)
+  React.useEffect(() => {
+    const urlQuery = searchParams.get('search') || '';
+    const urlCat = searchParams.get('programCategory');
+    
+    setFilters(prev => ({
+      ...prev,
+      search: urlQuery,
+      degreeTypes: urlCat && reverseCatMap[urlCat] ? [reverseCatMap[urlCat]] : prev.degreeTypes
+    }));
+    setCurrentPage(1);
+  }, [searchParams]);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['scholarships', filters, activeSort, currentPage],
+    queryFn: () => {
+      const programCategories = filters.degreeTypes.map(d => catMap[d]).filter(Boolean);
+
+      return getScholarships({
+        ...filters,
+        programCategories: programCategories.length > 0 ? programCategories : undefined,
+        page: currentPage,
+        limit: 12,
+        sort: activeSort
+      });
     }
-    run()
-    return () => { cancelled = true }
-  }, [filters.search, filters.country, filters.category])
+  });
 
-  const countries = useMemo(() => {
-    const set = new Set()
-    data.scholarships.forEach((s) => { if (s.university?.country) set.add(s.university.country) })
-    return Array.from(set).sort()
-  }, [data.scholarships])
+  const scholarships = data?.data?.scholarships || [];
+  const totalPages = data?.data?.pagination?.totalPages || 1;
+  const totalItems = data?.data?.pagination?.total || 0;
 
-  const categories = useMemo(() => {
-    const set = new Set()
-    data.scholarships.forEach((s) => { if (s.category) set.add(s.category) })
-    return Array.from(set).sort()
-  }, [data.scholarships])
+  const handleSearch = (searchData) => {
+    // GlobalSearch returns { query, category }
+    const { query, category } = typeof searchData === 'object' ? searchData : { query: searchData };
+    
+    setFilters(prev => ({ 
+      ...prev, 
+      search: query || '',
+      degreeTypes: category && category !== 'all' && reverseCatMap[catMap[category] || category]
+        ? [reverseCatMap[catMap[category] || category]]
+        : prev.degreeTypes
+    }));
+    setCurrentPage(1);
+  };
 
-  const hasActiveFilters = filters.search || filters.country || filters.category
-  const resetFilters     = () => setFilters(EMPTY_FILTERS)
-  // Retrigger the effect by creating a new object reference
-  const retry            = () => setFilters((f) => ({ ...f }))
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      location: 'All Locations',
+      degreeTypes: [],
+      subject: 'All Categories',
+      rankMin: '',
+      rankMax: '',
+      language: 'English',
+      tuitionRange: 100
+    });
+    setSearchParams({}); // Clear URL params too
+    setCurrentPage(1);
+  };
 
   return (
-    <Container className="py-8 md:py-10 lg:py-12">
-      <div className="mb-6 md:mb-8 text-center">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Scholarships &amp; Universities
-        </h1>
-        <p className="mt-2 text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
-          Explore available scholarships and university programs in China. Filter by
-          major, category, and keywords to find the opportunities that fit you best.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[280px,1fr] gap-6 lg:gap-8 items-start">
-        <div className="order-2 lg:order-1">
-          <ScholarshipFilters
-            values={filters}
-            onChange={setFilters}
-            onReset={resetFilters}
-            countries={countries}
-            categories={categories}
+    <div className="bg-white">
+      <ScholarshipHero onSearch={handleSearch} />
+      
+      <Container className="py-20">
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Sidebar */}
+          <FilterSidebar 
+            filters={filters} 
+            setFilters={setFilters} 
+            onClear={clearFilters} 
           />
-        </div>
 
-        <div className="order-1 lg:order-2">
-          {loading && (
-            <div className="py-10">
-              <Loading label="Loading scholarships..." />
-            </div>
-          )}
+          {/* Main Feed */}
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest leading-none">
+                  Showing <span className="text-gray-900">{totalItems}</span> Scholarships
+                </h2>
+                <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest ml-0.5 mt-1 animate-pulse">
+                  {viewMode === 'list' ? 'List mode Active' : 'Grid mode Active'}
+                </span>
+              </div>
 
-          {!loading && (
-            <>
-              {/* ── Error state ── */}
-              {error && (
-                <div className="rounded-2xl border border-red-100 bg-red-50 px-6 py-12 text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
-                    {error === 'network' ? (
-                      <svg className="h-7 w-7 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18M8.111 8.111A7.5 7.5 0 0 0 4.5 12c0 1.38.373 2.67 1.023 3.773M12 12v.01M9.879 9.879A4.5 4.5 0 0 0 7.5 12a4.5 4.5 0 0 0 .739 2.5M15.5 12a4.5 4.5 0 0 0-4.5-4.5m0 0a4.5 4.5 0 0 0-2.122.532" />
-                      </svg>
-                    ) : (
-                      <svg className="h-7 w-7 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3v3.75a3 3 0 0 1-3 3m-13.5 0v3a3 3 0 0 0 3 3h7.5a3 3 0 0 0 3-3v-3M8.25 9h.008v.008H8.25V9Zm3.75 0h.008v.008H12V9Zm3.75 0h.008v.008h-.008V9Z" />
-                      </svg>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {error === 'network' ? 'Unable to reach the server' : 'Something went wrong'}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
-                    {error === 'network'
-                      ? 'Please check your internet connection and make sure the backend server is running, then try again.'
-                      : 'We had trouble loading scholarships. This is usually temporary — please try again in a moment.'}
-                  </p>
+              <div className="flex flex-wrap items-center gap-6">
+                {/* Sort Sort */}
+                <div className="flex items-center gap-2 p-1 bg-gray-50 rounded-xl transition-all h-12">
+                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-3">Sort by:</span>
+                   {sortOptions.map((opt) => (
+                     <button
+                      key={opt.id}
+                      onClick={() => {
+                        setActiveSort(opt.id);
+                        setCurrentPage(1);
+                      }}
+                      className={cn(
+                        "py-2.5 px-5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all h-full",
+                        activeSort === opt.id 
+                          ? "bg-white text-orange-600 shadow-sm" 
+                          : "text-gray-400 hover:text-gray-600"
+                      )}
+                     >
+                       {opt.label}
+                     </button>
+                   ))}
+                </div>
+
+                {/* View Mode Toggle */}
+                <div className="flex items-center p-1 bg-gray-100/50 rounded-xl border border-gray-100 h-10 ml-auto">
                   <button
-                    onClick={retry}
-                    className="mt-6 inline-flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 transition-colors"
+                    onClick={() => setViewMode('grid')}
+                    className={cn(
+                      "w-10 h-8 flex items-center justify-center rounded-lg transition-all",
+                      viewMode === 'grid' ? "bg-white text-orange-600 shadow-sm" : "text-gray-400 hover:text-gray-600"
+                    )}
+                    title="Grid View"
                   >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                    </svg>
-                    Try again
+                    <Icons.Grid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={cn(
+                      "w-10 h-8 flex items-center justify-center rounded-lg transition-all",
+                      viewMode === 'list' ? "bg-white text-orange-600 shadow-sm" : "text-gray-400 hover:text-gray-600"
+                    )}
+                    title="List View"
+                  >
+                    <Icons.List className="w-4 h-4" />
                   </button>
                 </div>
-              )}
+              </div>
+            </div>
 
-              {/* ── Empty state ── */}
-              {!error && data.scholarships.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-                    <svg className="h-7 w-7 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803 7.5 7.5 0 0 0 15.803 15.803Z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">No scholarships found</h3>
-                  <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
-                    {hasActiveFilters
-                      ? 'No scholarships match your current filters. Try adjusting your search criteria.'
-                      : 'There are no scholarships available at the moment. Please check back later.'}
-                  </p>
-                  {hasActiveFilters && (
-                    <button
-                      onClick={resetFilters}
-                      className="mt-5 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                      Clear all filters
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {/* ── Results grid ── */}
-              {!error && data.scholarships.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                  {data.scholarships.map((s) => (
-                    <ScholarshipCard
-                      key={s.id || s._id}
+            {/* List / Grid Render */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-[400px] bg-gray-50 animate-pulse rounded-3xl" />
+                ))}
+              </div>
+            ) : scholarships.length > 0 ? (
+              viewMode === 'list' ? (
+                <ScholarshipTable scholarships={scholarships} />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  {scholarships.map((s) => (
+                    <ScholarshipCard 
+                      key={s.id} 
                       scholarship={s}
-                      onClick={() => navigate(`/scholarships/${s.id || s._id}`)}
+                      variant="detailed"
                     />
                   ))}
                 </div>
-              )}
-            </>
-          )}
+              )
+            ) : (
+              <div className="col-span-full py-20 text-center animate-fade-in">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Icons.Search className="w-8 h-8 text-gray-300" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">No scholarships found</h3>
+                <p className="text-gray-500 text-sm">Try adjusting your filters or search keywords.</p>
+              </div>
+            )}
+
+            {/* Dynamic Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2">
+                <button 
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  className="h-10 w-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-400 hover:bg-gray-100 transition-colors disabled:opacity-30"
+                >
+                  <Icons.ChevronLeft className="w-5 h-5" />
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p)}
+                    className={cn(
+                      "h-10 w-10 flex items-center justify-center rounded-xl font-bold text-sm transition-all",
+                      p === currentPage 
+                        ? "bg-orange-600 text-white shadow-lg shadow-orange-100" 
+                        : "bg-gray-50 text-gray-400 hover:bg-gray-100"
+                    )}
+                  >
+                    {p}
+                  </button>
+                ))}
+
+                <button 
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  className="h-10 w-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-400 hover:bg-gray-100 transition-colors disabled:opacity-30"
+                >
+                  <Icons.ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </Container>
-  )
+      </Container>
+    </div>
+  );
 }
+
+export default Scholarships;

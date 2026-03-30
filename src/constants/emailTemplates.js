@@ -88,8 +88,8 @@ export const EMAIL_CONFIG = {
   
   // Admin email addresses (from environment variables)
   adminEmails: [
-    process.env.VITE_ADMIN_EMAIL,
-    process.env.VITE_ADMIN_EMAIL_SECONDARY,
+    import.meta.env.VITE_ADMIN_EMAIL,
+    import.meta.env.VITE_ADMIN_EMAIL_SECONDARY,
   ].filter(Boolean),
   
   // Branding
