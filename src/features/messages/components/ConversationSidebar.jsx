@@ -15,15 +15,19 @@ const ConversationSidebar = ({
 }) => {
   const { isOnline } = usePresence();
 
+  // Helper to extract a reliable ID from various backend formats
+  const getSafeId = (obj) => obj?.id || obj?._id || obj?.uuid || null;
+
   // Top "Stories" calculation for legacy/mobile support (kept internal)
   const stories = (supportAdmins || []).map(admin => {
-    const adminName = admin?.name || 'Support';
+    const adminName = admin?.name || admin?.fullName || 'Support';
+    const adminId = getSafeId(admin);
     return {
-      id: admin.id,
+      id: adminId,
       name: adminName.includes(' ') ? adminName.split(' ')[0] : adminName,
       fullName: adminName,
       image: admin.profilePicture ? getImageURL(admin.profilePicture) : null,
-      isOnline: isOnline(admin.id)
+      isOnline: isOnline(adminId)
     };
   });
 
@@ -57,7 +61,7 @@ const ConversationSidebar = ({
   }
 
   return (
-    <div className="w-[300px] border-r border-gray-100 flex flex-col bg-white h-full">
+    <div className="w-[300px] border-r border-gray-100 flex flex-col bg-white h-full shadow-sm">
       {/* Search Header */}
       <div className="p-6 pb-2">
         <h2 className="text-xl font-black text-gray-900 mb-4 flex items-center justify-between">
@@ -71,7 +75,7 @@ const ConversationSidebar = ({
       </div>
 
       {/* Main Scrollable Area */}
-      <div className="flex-1 overflow-y-auto no-scrollbar pb-6">
+      <div className="flex-1 overflow-y-auto no-scrollbar pb-12">
         
         {/* Recent Conversations */}
         <div className="mb-2">
@@ -90,7 +94,8 @@ const ConversationSidebar = ({
               ? (participant?.firstName ? `${participant.firstName} ${participant.lastName}` : (participant?.name || 'Student'))
               : (participant?.name || 'Support');
             const lastMsgAt = conv.lastMessageAt ? new Date(conv.lastMessageAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-            const participantIsOnline = isOnline(participant?.id);
+            const pId = getSafeId(participant);
+            const participantIsOnline = isOnline(pId);
             
             return (
               <div 
@@ -139,7 +144,7 @@ const ConversationSidebar = ({
 
         {/* Support Team (Direct Contact) Section */}
         <div className="mt-4 px-6">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between border-t border-gray-50 pt-6">
             <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
               Available Support
             </h3>
@@ -148,14 +153,18 @@ const ConversationSidebar = ({
           
           <div className="space-y-2">
             {supportAdmins.map((admin) => {
+              const adminId = getSafeId(admin);
               // Only show in direct contact if they DON'T have an active conversation
-              const hasActiveConv = conversations.some(c => (isAdminView ? c.studentId : c.adminId) === admin.id);
+              const hasActiveConv = conversations.some(c => 
+                (isAdminView ? getSafeId(c.student) : getSafeId(c.admin)) === adminId
+              );
+              
               if (hasActiveConv) return null;
 
               return (
                 <div 
-                  key={admin.id} 
-                  onClick={() => onSelect(admin.id)}
+                  key={adminId || Math.random()} 
+                  onClick={() => onSelect(adminId)}
                   className="flex items-center gap-3 cursor-pointer group p-2 -mx-2 rounded-xl hover:bg-gray-50 hover:shadow-sm border border-transparent hover:border-gray-100 transition-all"
                 >
                   <div className="w-9 h-9 rounded-xl overflow-hidden border border-gray-100 bg-white flex-shrink-0 relative">
@@ -163,17 +172,17 @@ const ConversationSidebar = ({
                       <img src={getImageURL(admin.profilePicture)} alt={admin.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400 font-bold text-[9px] uppercase">
-                        {(admin.name || 'Admin').substring(0, 2)}
+                        {(admin.name || admin.fullName || 'Admin').substring(0, 2)}
                       </div>
                     )}
-                    {isOnline(admin.id) && (
+                    {isOnline(adminId) && (
                       <div className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 border border-white rounded-full shadow-sm" />
                     )}
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <p className="text-[11px] font-black text-gray-900 group-hover:text-blue-600 truncate transition-colors">
-                      {admin.name || 'Support Agent'}
+                      {admin.name || admin.fullName || 'Support Agent'}
                     </p>
                     <p className="text-[9px] font-bold text-blue-500 uppercase tracking-tight">Chat Now</p>
                   </div>
@@ -185,9 +194,11 @@ const ConversationSidebar = ({
               );
             })}
             
-            {supportAdmins.length === 0 && (
+            {/* If NO admins are showing, confirm it's truly empty */}
+            {supportAdmins.filter(admin => !conversations.some(c => (isAdminView ? getSafeId(c.student) : getSafeId(c.admin)) === getSafeId(admin))).length === 0 && (
                 <div className="py-8 px-4 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-100">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Team Offline</p>
+                    <p className="text-[9px] text-gray-400 mt-1">Try again later</p>
                 </div>
             )}
           </div>

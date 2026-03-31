@@ -114,9 +114,19 @@ axiosInstance.interceptors.response.use(
       const tokenType = config._tokenType || (isStudentEndpoint(endpoint) ? 'student' : 'admin');
       setAuthToken(tokenValue, tokenType);
     }
+    // 4. Diagnostic logging for messaging
+    if (config.url?.includes('support-admins')) {
+      console.log('[API DEBUG] Support Admins Success:', data);
+    }
+    
     return data;        // unwrap the axios envelope — callers get raw data
   },
   (error) => {
+    // 5. Diagnostic logging for messaging errors
+    if (error.config?.url?.includes('support-admins')) {
+      console.error('[API DEBUG] Support Admins Error:', error.response?.status, error.response?.data);
+    }
+
     if (!error.response) {
       // Network error (no internet, server down, CORS etc.)
       const networkError = new Error('Network error. Please check your connection.');
