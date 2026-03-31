@@ -13,22 +13,18 @@ export const getAuthToken = (type = null) => {
   const adminToken   = localStorage.getItem('adminToken');
   const studentToken = localStorage.getItem('studentToken');
 
-  // Hardcoded priority if type is explicitly requested
   if (type === 'student') return studentToken;
   if (type === 'admin')   return adminToken;
   
-  // High-priority Context: If we are in the student portal, we MUST use the student token.
-  // This bypasses any absolute-URL vs relative-URL issues.
-  const isStudentDashboard = window.location.pathname.startsWith('/profile') || 
-                             window.location.pathname.startsWith('/applications') ||
-                             window.location.pathname.startsWith('/messages');
+  const path = window.location.pathname.toLowerCase();
+  const isStudentDashboard = path.includes('/profile') || 
+                             path.includes('/applications') ||
+                             path.includes('/messages') ||
+                             path.includes('/students');
 
   if (isStudentDashboard && studentToken) return studentToken;
+  if (path.includes('/admin') && adminToken) return adminToken;
 
-  // Fallback: If we're on an admin page, prioritize the admin token
-  if (window.location.pathname.startsWith('/admin') && adminToken) return adminToken;
-
-  // Final fallback (order matters: check student first as it's the primary interface)
   return studentToken || adminToken;
 };
 
@@ -40,10 +36,11 @@ export const setAuthToken = (token, type = 'admin') => {
   if (token) {
     if (type === 'student') {
       localStorage.setItem('studentToken', token);
-      localStorage.removeItem('adminToken');
+      // Only remove admin if it's actually there to avoid unnecessary state changes
+      if (localStorage.getItem('adminToken')) localStorage.removeItem('adminToken');
     } else {
       localStorage.setItem('adminToken', token);
-      localStorage.removeItem('studentToken');
+      if (localStorage.getItem('studentToken')) localStorage.removeItem('studentToken');
     }
   } else {
     localStorage.removeItem('adminToken');
@@ -63,10 +60,11 @@ const isStudentEndpoint = (url) => {
   if (!url) return false;
   const lowerUrl = url.toLowerCase();
   
+  // PRIMARY STUDENT KEYS: login, register, me, and specific dashboards
   return (
+    lowerUrl.includes('/students/') ||  // Covers /api/students/login, me, etc.
+    lowerUrl.includes('/student/') ||   // Covers /api/applications/student/
     lowerUrl.includes('messages') || 
-    lowerUrl.includes('applications/student') || 
-    lowerUrl.includes('students/me') ||
     lowerUrl.includes('scholarships') ||
     lowerUrl.includes('universities') ||
     lowerUrl.includes('programs')
