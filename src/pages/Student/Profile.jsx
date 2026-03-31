@@ -12,12 +12,10 @@ import { useToast } from '../../context/ToastContext';
 const Profile = () => {
   const { error } = useToast();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error: queryError } = useQuery({
     queryKey: ['profile'],
     queryFn: () => authService.getProfile(),
-    onError: (err) => {
-      console.error('Profile fetch error:', err);
-    }
+    retry: false
   });
 
   const student = data?.data || data;
@@ -32,8 +30,10 @@ const Profile = () => {
     );
   }
 
-  // Only handle missing student data AFTER loading is complete
-  if (!isLoading && !student) {
+  // Only handle missing student data AFTER loading is complete AND if there was an error
+  if (isError || !student) {
+    const is401 = queryError?.status === 401;
+    
     return (
       <StudentLayout user={null}>
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-12">
@@ -42,10 +42,14 @@ const Profile = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-black text-gray-900 mb-2">Session Expired</h2>
-          <p className="text-sm font-medium text-gray-500 mb-6 max-w-xs">Your session may have timed out. Please log in again to access your profile.</p>
+          <h2 className="text-xl font-black text-gray-900 mb-2">
+            {is401 ? 'Session Expired' : 'Unable to load profile'}
+          </h2>
+          <p className="text-sm font-medium text-gray-500 mb-6 max-w-xs">
+            {is401 ? 'Your session may have timed out. Please log in again.' : 'There was an issue fetching your profile. Please refresh or try again later.'}
+          </p>
           <a href="/login" className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-105 transition-all">
-            Return to Login
+            {is401 ? 'Return to Login' : 'Try Again'}
           </a>
         </div>
       </StudentLayout>

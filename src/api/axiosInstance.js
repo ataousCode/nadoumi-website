@@ -10,12 +10,19 @@ export const API_BASE_URL =
 // Token Management (localStorage)
 // ─────────────────────────────────────────────
 export const getAuthToken = (type = null) => {
-  const studentToken = localStorage.getItem('studentToken');
   const adminToken   = localStorage.getItem('adminToken');
+  const studentToken = localStorage.getItem('studentToken');
 
   if (type === 'student') return studentToken;
   if (type === 'admin')   return adminToken;
-  return adminToken || studentToken || localStorage.getItem('token');
+  
+  // If no type is specified, we check if we are on a student route or admin route
+  const isStudentRoute = window.location.pathname.startsWith('/profile') || 
+                        window.location.pathname.startsWith('/applications') ||
+                        window.location.pathname.startsWith('/messages');
+
+  if (isStudentRoute) return studentToken;
+  return adminToken || studentToken;
 };
 
 export const isAuthenticated = (type = 'student') => {
