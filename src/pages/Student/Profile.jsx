@@ -16,7 +16,6 @@ const Profile = () => {
     queryKey: ['profile'],
     queryFn: () => authService.getProfile(),
     onError: (err) => {
-      error('Failed to load profile. Please try logging in again.');
       console.error('Profile fetch error:', err);
     }
   });
@@ -33,7 +32,11 @@ const Profile = () => {
     );
   }
 
-  if (!student) return null;
+  // If no student data is found after loading, redirect to login instead of showing a white screen
+  if (!student) {
+    window.location.href = '/login';
+    return null;
+  }
 
   return (
     <StudentLayout user={student}>

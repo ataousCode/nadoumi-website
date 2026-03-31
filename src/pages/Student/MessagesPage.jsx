@@ -96,12 +96,12 @@ const MessagesPage = () => {
 
   // Helper: is this a support admin conversation?
   const isSupportConv = (c) => {
-    if (!c?.adminId || !supportAdmins) return false;
-    return supportAdmins.some(a => a.id === c.adminId);
+    // If the conversation has an admin, it's a support conversation for students
+    return !!c?.adminId || !!c?.admin;
   };
 
   const totalUnread = conversations.filter(isSupportConv).reduce(
-    (sum, c) => sum + (c.unreadCount || 0),
+    (sum, c) => sum + (parseInt(c.unreadCount) || 0),
     0
   );
 

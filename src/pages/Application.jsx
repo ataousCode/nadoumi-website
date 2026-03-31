@@ -55,7 +55,7 @@ function Application() {
 
   const onVerifySuccess = () => {
     toast.success('Email verified! Redirecting to dashboard...');
-    setTimeout(() => navigate('/dashboard'), 2000);
+    setTimeout(() => navigate('/applications'), 2000);
   };
 
   const handleResendOTP = async () => {
