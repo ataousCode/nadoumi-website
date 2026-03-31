@@ -13,17 +13,22 @@ export const getAuthToken = (type = null) => {
   const adminToken   = localStorage.getItem('adminToken');
   const studentToken = localStorage.getItem('studentToken');
 
+  // Hardcoded priority if type is explicitly requested
   if (type === 'student') return studentToken;
   if (type === 'admin')   return adminToken;
   
-  // High-priority: Use studentToken for anything in student dashboard / messaging
-  const isStudentPage = window.location.pathname.includes('/profile') || 
-                        window.location.pathname.includes('/applications') ||
-                        window.location.pathname.includes('/messages');
+  // High-priority Context: If we are in the student portal, we MUST use the student token.
+  // This bypasses any absolute-URL vs relative-URL issues.
+  const isStudentDashboard = window.location.pathname.startsWith('/profile') || 
+                             window.location.pathname.startsWith('/applications') ||
+                             window.location.pathname.startsWith('/messages');
 
-  if (isStudentPage && studentToken) return studentToken;
-  if (adminToken && window.location.pathname.includes('/admin')) return adminToken;
+  if (isStudentDashboard && studentToken) return studentToken;
 
+  // Fallback: If we're on an admin page, prioritize the admin token
+  if (window.location.pathname.startsWith('/admin') && adminToken) return adminToken;
+
+  // Final fallback (order matters: check student first as it's the primary interface)
   return studentToken || adminToken;
 };
 
@@ -54,21 +59,17 @@ export const clearAuthTokens = () => {
 // ─────────────────────────────────────────────
 // Endpoint → token-type mapping
 // ─────────────────────────────────────────────
-const STUDENT_ENDPOINT_PREFIXES = [
-  'students/', 
-  'applications/student/', 
-  'messages', 
-  'scholarships', 
-  'universities', 
-  'programs'
-];
-
 const isStudentEndpoint = (url) => {
   if (!url) return false;
-  // Strip leading slash for consistent matching
-  const normalized = url.startsWith('/') ? url.slice(1) : url;
-  return STUDENT_ENDPOINT_PREFIXES.some(
-    (prefix) => normalized === prefix || normalized.startsWith(prefix + '/')
+  const lowerUrl = url.toLowerCase();
+  
+  return (
+    lowerUrl.includes('messages') || 
+    lowerUrl.includes('applications/student') || 
+    lowerUrl.includes('students/me') ||
+    lowerUrl.includes('scholarships') ||
+    lowerUrl.includes('universities') ||
+    lowerUrl.includes('programs')
   );
 };
 
