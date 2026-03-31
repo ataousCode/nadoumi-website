@@ -16,13 +16,15 @@ export const getAuthToken = (type = null) => {
   if (type === 'student') return studentToken;
   if (type === 'admin')   return adminToken;
   
-  // If no type is specified, we check if we are on a student route or admin route
-  const isStudentRoute = window.location.pathname.startsWith('/profile') || 
-                        window.location.pathname.startsWith('/applications') ||
-                        window.location.pathname.startsWith('/messages');
+  // High-priority: Use studentToken for anything in student dashboard / messaging
+  const isStudentPage = window.location.pathname.includes('/profile') || 
+                        window.location.pathname.includes('/applications') ||
+                        window.location.pathname.includes('/messages');
 
-  if (isStudentRoute) return studentToken;
-  return adminToken || studentToken;
+  if (isStudentPage && studentToken) return studentToken;
+  if (adminToken && window.location.pathname.includes('/admin')) return adminToken;
+
+  return studentToken || adminToken;
 };
 
 export const isAuthenticated = (type = 'student') => {
