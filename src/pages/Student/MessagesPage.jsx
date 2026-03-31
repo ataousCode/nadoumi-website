@@ -23,11 +23,16 @@ const MessagesPage = () => {
   const user = profileData?.data || profileData;
 
   // 1.1 Fetch Support Admins
-  const { data: supportAdmins, isLoading: adminsLoading } = useQuery({
+  const { data: rawSupportAdmins, isLoading: adminsLoading } = useQuery({
     queryKey: ['support-admins'],
     queryFn: () => messageService.getSupportAdmins('student'),
     retry: false,
   });
+  const supportAdmins = Array.isArray(rawSupportAdmins)
+    ? rawSupportAdmins
+    : Array.isArray(rawSupportAdmins?.data)
+    ? rawSupportAdmins.data
+    : [];
 
   // 2. Fetch Conversations
   const { data: rawConversations, isLoading: convLoading } = useQuery({
