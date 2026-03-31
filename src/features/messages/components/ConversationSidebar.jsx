@@ -16,13 +16,16 @@ const ConversationSidebar = ({
   const { isOnline } = usePresence();
 
   // Top "Stories" - The authorized support admins
-  const stories = (supportAdmins || []).map(admin => ({
-    id: admin.id,
-    name: admin.name.split(' ')[0], // First name for compact story view
-    fullName: admin.name,
-    image: admin.profilePicture ? getImageURL(admin.profilePicture) : logo,
-    isOnline: isOnline(admin.id)
-  }));
+  const stories = (supportAdmins || []).map(admin => {
+    const adminName = admin?.name || 'Support';
+    return {
+      id: admin.id,
+      name: adminName.includes(' ') ? adminName.split(' ')[0] : adminName, // Safe first name split
+      fullName: adminName,
+      image: admin.profilePicture ? getImageURL(admin.profilePicture) : logo,
+      isOnline: isOnline(admin.id)
+    };
+  });
 
   if (isLoading) {
     return (

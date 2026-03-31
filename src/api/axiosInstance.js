@@ -55,24 +55,22 @@ export const clearAuthTokens = () => {
 // Endpoint → token-type mapping
 // ─────────────────────────────────────────────
 const STUDENT_ENDPOINT_PREFIXES = [
-  '/students/me',
-  '/students/register',
-  '/students/login',
-  '/students/verify-email',
-  '/students/resend-otp',
-  '/students/forgot-password',
-  '/students/reset-password',
-  '/applications/student/me',
-  '/messages',
-  '/scholarships',
-  '/universities',
-  '/programs',
+  'students/', 
+  'applications/student/', 
+  'messages', 
+  'scholarships', 
+  'universities', 
+  'programs'
 ];
 
-const isStudentEndpoint = (url) =>
-  STUDENT_ENDPOINT_PREFIXES.some(
-    (prefix) => url === prefix || url.startsWith(prefix + '/')
+const isStudentEndpoint = (url) => {
+  if (!url) return false;
+  // Strip leading slash for consistent matching
+  const normalized = url.startsWith('/') ? url.slice(1) : url;
+  return STUDENT_ENDPOINT_PREFIXES.some(
+    (prefix) => normalized === prefix || normalized.startsWith(prefix + '/')
   );
+};
 
 // ─────────────────────────────────────────────
 // Axios Instance
