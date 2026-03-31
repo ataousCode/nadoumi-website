@@ -28,10 +28,10 @@ const StudentTopNav = ({ user }) => {
         <div className="flex items-center gap-4 group cursor-pointer">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-black text-gray-900 leading-none mb-1 group-hover:text-blue-600 transition-colors">
-              {user?.firstName ? `${user.firstName} ${user.lastName}` : (user?.name || user?.email || 'Scholarship Applicant')}
+              {user?.lastName || user?.firstName || user?.name || user?.email?.split('@')[0] || 'Student'}
             </p>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              {user?.role === 'admin' ? 'Administrator' : (user?.type || 'Student Account')}
+              {user?.role === 'admin' ? 'Administrator' : 'Student Account'}
             </p>
           </div>
           <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 border-2 border-transparent group-hover:border-blue-100 transition-all">

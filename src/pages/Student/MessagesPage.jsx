@@ -157,7 +157,7 @@ const MessagesPage = () => {
         {/* Sidebar */}
         <ConversationSidebar
           conversations={conversations.filter(isSupportConv)}
-          supportAdmins={supportAdmins}
+          supportAdmins={supportAdmins || []}
           activeId={activeConversationId}
           onSelect={handleSelect}
           totalUnread={totalUnread}
