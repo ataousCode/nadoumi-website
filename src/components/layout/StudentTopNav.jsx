@@ -1,7 +1,10 @@
 import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { getImageURL } from '../../api/config';
+import { useUnreadCount } from '../../hooks/useUnreadCount';
 
 const StudentTopNav = ({ user }) => {
+  const { totalUnread } = useUnreadCount('student');
+
   return (
     <header className="h-24 bg-white/80 backdrop-blur-md border-b border-gray-100/30 px-12 flex items-center justify-between sticky top-0 z-30">
       {/* Search Bar */}
@@ -20,7 +23,11 @@ const StudentTopNav = ({ user }) => {
       <div className="flex items-center gap-6">
         <button className="relative p-2.5 text-gray-500 hover:text-orange-600 bg-gray-50 hover:bg-orange-50 rounded-xl transition-all">
           <BellIcon className="w-6 h-6" />
-          <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-orange-600 border-2 border-white rounded-full"></span>
+          {totalUnread > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-orange-600 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-sm animate-bounce-subtle">
+              {totalUnread > 99 ? '99+' : totalUnread}
+            </span>
+          )}
         </button>
         
         <div className="h-10 w-[1px] bg-gray-100/50 mx-2"></div>

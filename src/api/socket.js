@@ -4,6 +4,8 @@ import { API_BASE_URL } from "./config";
 let socket;
 
 export const initiateSocketConnection = (token) => {
+  if (socket?.connected) return socket;
+
   socket = io(API_BASE_URL.replace("/api", ""), {
     auth: {
       token,

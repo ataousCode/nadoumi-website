@@ -1,8 +1,13 @@
 import React from 'react';
 import StudentSidebar from './StudentSidebar';
 import StudentTopNav from './StudentTopNav';
+import { useChatSocket } from '../../features/messages/hooks/useChatSocket';
 
 const StudentLayout = ({ children, user }) => {
+  // Global socket listener — no active conversation selected
+  // This ensures the student is connected and receiving notifications on all pages.
+  useChatSocket(null, null, 'student');
+
   return (
     <div className="flex h-screen bg-[#FDFCFB]">
       {/* Sidebar */}
