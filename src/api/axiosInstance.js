@@ -61,10 +61,12 @@ const isStudentEndpoint = (url) => {
   const lowerUrl = url.toLowerCase();
   
   // PRIMARY STUDENT KEYS: login, register, me, and specific dashboards
+  // We're making this very inclusive to ensure student tokens are always used on student-facing APIs.
   return (
     lowerUrl.includes('/students/') ||  // Covers /api/students/login, me, etc.
     lowerUrl.includes('/student/') ||   // Covers /api/applications/student/
     lowerUrl.includes('messages') || 
+    lowerUrl.includes('applications') || 
     lowerUrl.includes('scholarships') ||
     lowerUrl.includes('universities') ||
     lowerUrl.includes('programs')
@@ -85,6 +87,10 @@ axiosInstance.interceptors.request.use((config) => {
   const endpoint = config.url || '';
   const tokenType = config._tokenType || (isStudentEndpoint(endpoint) ? 'student' : 'admin');
   const token = getAuthToken(tokenType);
+
+  if (config.url?.includes('messages') || config.url?.includes('student')) {
+    console.log(`[AUTH REQUEST] Endpoint: ${endpoint} | Selected Type: ${tokenType} | Token found: ${!!token}`);
+  }
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

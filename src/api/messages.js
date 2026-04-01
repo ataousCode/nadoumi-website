@@ -42,28 +42,16 @@ export const messageService = {
    * Returns: { url, name, size, type }
    */
   uploadFile: async (conversationId, file, role = 'student') => {
-    const token = getAuthToken(role);
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch(
-      `${API_BASE_URL}/messages/conversations/${conversationId}/upload`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      }
+    const res = await apiRequestFormData(
+      `${BASE}/conversations/${conversationId}/upload`,
+      formData,
+      { tokenType: role }
     );
 
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err?.message || `Upload failed with status ${response.status}`);
-    }
-
-    const json = await response.json();
-    // Backend returns { success, data: { url, name, size, type } }
-    return json?.data ?? json;
+    // Backend returns { success: true, data: { url, name, size, type } }
+    return res?.data ?? res;
   },
 };
