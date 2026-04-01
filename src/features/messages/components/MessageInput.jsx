@@ -107,7 +107,8 @@ const MessageInput = ({ onSend, onTyping, conversationId, role = 'student' }) =>
       }));
     } catch (err) {
       console.error('[UPLOAD DEBUG] Image upload catch block:', err);
-      alert('Image upload failed. Please try again.');
+      const errMsg = err.response?.data?.message || err.message || 'Unknown upload error';
+      alert(`Image upload failed: ${errMsg}`);
       setImagePreview(null);
     } finally {
       setUploading(false);
@@ -151,7 +152,8 @@ const MessageInput = ({ onSend, onTyping, conversationId, role = 'student' }) =>
       }));
     } catch (err) {
       console.error('[UPLOAD DEBUG] File upload catch block:', err);
-      alert('File upload failed. Please try again.');
+      const errMsg = err.response?.data?.message || err.message || 'Unknown upload error';
+      alert(`File upload failed: ${errMsg}`);
       setFilePreview(null);
     } finally {
       setUploading(false);
