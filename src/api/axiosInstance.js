@@ -13,8 +13,8 @@ export const getAuthToken = (type = null) => {
   const adminToken   = localStorage.getItem('adminToken');
   const studentToken = localStorage.getItem('studentToken');
 
-  if (type === 'student') return studentToken;
-  if (type === 'admin')   return adminToken;
+  if (type === 'student') return studentToken || adminToken; // CRITICAL FALLBACK
+  if (type === 'admin')   return adminToken || studentToken; // CRITICAL FALLBACK
   
   const path = window.location.pathname.toLowerCase();
   const isStudentDashboard = path.includes('/profile') || 
@@ -22,8 +22,8 @@ export const getAuthToken = (type = null) => {
                              path.includes('/messages') ||
                              path.includes('/students');
 
-  if (isStudentDashboard && studentToken) return studentToken;
-  if (path.includes('/admin') && adminToken) return adminToken;
+  if (isStudentDashboard) return studentToken || adminToken;
+  if (path.includes('/admin')) return adminToken || studentToken;
 
   return studentToken || adminToken;
 };
@@ -36,11 +36,8 @@ export const setAuthToken = (token, type = 'admin') => {
   if (token) {
     if (type === 'student') {
       localStorage.setItem('studentToken', token);
-      // Only remove admin if it's actually there to avoid unnecessary state changes
-      if (localStorage.getItem('adminToken')) localStorage.removeItem('adminToken');
     } else {
       localStorage.setItem('adminToken', token);
-      if (localStorage.getItem('studentToken')) localStorage.removeItem('studentToken');
     }
   } else {
     localStorage.removeItem('adminToken');
@@ -62,9 +59,10 @@ const isStudentEndpoint = (url) => {
   
   // PRIMARY STUDENT KEYS: login, register, me, and specific dashboards
   // We're making this very inclusive to ensure student tokens are always used on student-facing APIs.
+  // REMOVED EXTRA SLASHES: Now matches 'students/me', 'students/login', etc.
   return (
-    lowerUrl.includes('/students/') ||  // Covers /api/students/login, me, etc.
-    lowerUrl.includes('/student/') ||   // Covers /api/applications/student/
+    lowerUrl.includes('students') || 
+    lowerUrl.includes('student') || 
     lowerUrl.includes('messages') || 
     lowerUrl.includes('applications') || 
     lowerUrl.includes('scholarships') ||
