@@ -1,8 +1,13 @@
 import React from 'react';
 import AdminSidebar from './AdminSidebar';
 import StudentTopNav from './StudentTopNav';
+import { useChatSocket } from '../../features/messages/hooks/useChatSocket';
 
 const AdminLayout = ({ children, admin }) => {
+  // Global socket listener — no active conversation selected
+  // This ensures the administrator is connected and receiving notifications on all pages.
+  useChatSocket(null, null, 'admin');
+
   return (
     <div className="flex h-screen bg-[#FDFCFB]">
       {/* Sidebar */}

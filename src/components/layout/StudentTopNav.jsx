@@ -3,7 +3,8 @@ import { getImageURL } from '../../api/config';
 import { useUnreadCount } from '../../hooks/useUnreadCount';
 
 const StudentTopNav = ({ user }) => {
-  const { totalUnread } = useUnreadCount('student');
+  const role = user?.role === 'admin' ? 'admin' : 'student';
+  const { totalUnread } = useUnreadCount(role);
 
   return (
     <header className="h-24 bg-white/80 backdrop-blur-md border-b border-gray-100/30 px-12 flex items-center justify-between sticky top-0 z-30">

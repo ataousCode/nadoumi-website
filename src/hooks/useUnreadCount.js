@@ -6,8 +6,10 @@ import { messageService } from '../api/messages';
  * Reuses the 'conversations' query key so it syncs with the Messages page.
  */
 export const useUnreadCount = (role = 'student') => {
+  const queryKey = role === 'admin' ? ['admin-conversations'] : ['conversations'];
+
   const { data: rawConversations, isLoading } = useQuery({
-    queryKey: ['conversations'],
+    queryKey,
     queryFn: () => messageService.getConversations(role),
     staleTime: 30000, // 30 seconds
     refetchOnWindowFocus: true,
