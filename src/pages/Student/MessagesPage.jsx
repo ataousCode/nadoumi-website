@@ -75,6 +75,9 @@ const MessagesPage = () => {
       }, 'student'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      if (activeConversationId) {
+        queryClient.invalidateQueries({ queryKey: ['messages', activeConversationId] });
+      }
     },
     onError: (err) => {
       console.error('Send failed:', err);

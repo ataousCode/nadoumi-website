@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
     initiateSocketConnection,
     disconnectSocket,
     joinConversation,
     leaveConversation,
-    subscribeToMessages,
-    subscribeToTyping,
-    subscribeToPresence,
     queryPresence,
-    subscribeToPresenceResponse,
     getSocket,
 } from '../../../api/socket';
 import { getAuthToken } from '../../../api/config';
@@ -19,8 +15,14 @@ export const useChatSocket = (activeConversationId, targetUserId, role = 'studen
     const [typingUser, setTypingUser] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState(new Set());
 
+    // Use refs for values needed in long-lived socket handlers (prevents stale closures)
+    const activeIdRef = useRef(activeConversationId);
+    useEffect(() => { activeIdRef.current = activeConversationId; }, [activeConversationId]);
+
+    const roleRef = useRef(role);
+    useEffect(() => { roleRef.current = role; }, [role]);
+
     // 1. Manage Socket Connection (Stability Fix)
-    // Only connects when token or role changes
     useEffect(() => {
         const token = getAuthToken(role);
         if (!token) return;
@@ -33,7 +35,9 @@ export const useChatSocket = (activeConversationId, targetUserId, role = 'studen
 
         // Listen for new messages
         const messageHandler = (newMessage) => {
-            const queryKey = role === 'admin' ? ['admin-messages', newMessage.conversationId] : ['messages', newMessage.conversationId];
+            console.log('[SOCKET MESSAGE] Received new message:', newMessage.id, 'for conversation:', newMessage.conversationId);
+            const currentRole = roleRef.current;
+            const queryKey = currentRole === 'admin' ? ['admin-messages', newMessage.conversationId] : ['messages', newMessage.conversationId];
             
             // Update cache only if it matches current active chat or just invalidates
             queryClient.setQueryData(
@@ -48,17 +52,17 @@ export const useChatSocket = (activeConversationId, targetUserId, role = 'studen
             );
 
             // Invalidate conversations list to show last message/unread
-            const conversationsKey = role === 'admin' ? ['admin-conversations'] : ['conversations'];
+            const conversationsKey = currentRole === 'admin' ? ['admin-conversations'] : ['conversations'];
             queryClient.invalidateQueries({ queryKey: conversationsKey });
         };
 
         const refreshHandler = () => {
-            const conversationsKey = role === 'admin' ? ['admin-conversations'] : ['conversations'];
+            const conversationsKey = roleRef.current === 'admin' ? ['admin-conversations'] : ['conversations'];
             queryClient.invalidateQueries({ queryKey: conversationsKey });
         };
 
         const typingHandler = (data) => {
-            if (data?.conversationId === activeConversationId) {
+            if (data?.conversationId === activeIdRef.current) {
                 setTypingUser(data.isTyping ? data.userId : null);
             }
         };
@@ -84,8 +88,9 @@ export const useChatSocket = (activeConversationId, targetUserId, role = 'studen
         };
 
         const readStatusHandler = (data) => {
-            if (data?.conversationId === activeConversationId) {
-                const messageKey = role === 'admin' ? ['admin-messages', activeConversationId] : ['messages', activeConversationId];
+            if (data?.conversationId === activeIdRef.current) {
+                const currentRole = roleRef.current;
+                const messageKey = currentRole === 'admin' ? ['admin-messages', activeIdRef.current] : ['messages', activeIdRef.current];
                 queryClient.invalidateQueries({ queryKey: messageKey });
             }
         };
@@ -112,7 +117,7 @@ export const useChatSocket = (activeConversationId, targetUserId, role = 'studen
             socket.off('presence:res', presenceResHandler);
             disconnectSocket();
         };
-    }, [role, queryClient]); // Only reconnect if role/client changes
+    }, [role, queryClient, targetUserId]); // targetUserId added to ensure initial presence runs when target changes
 
     // 2. Manage Conversation Room Subscriptions
     useEffect(() => {

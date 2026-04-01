@@ -76,6 +76,7 @@ const MessageInput = ({ onSend, onTyping, conversationId, role = 'student' }) =>
       return;
     }
 
+    console.log('[UPLOAD DEBUG] Image selected:', file.name, 'Size:', file.size);
     setUploading(true);
     try {
       // Show local preview immediately while uploading
@@ -87,15 +88,25 @@ const MessageInput = ({ onSend, onTyping, conversationId, role = 'student' }) =>
         uploadedUrl: null, // will be set after upload
       });
 
+      console.log('[UPLOAD DEBUG] Starting upload to conversation:', conversationId);
       const result = await messageService.uploadFile(conversationId, file, role);
+      console.log('[UPLOAD DEBUG] Upload result received:', result);
+      
+      // Our apiRequest unwraps the axios envelope, so 'result' IS the data object
       const uploadedUrl = result?.url || result?.data?.url;
+      
+      if (!uploadedUrl) {
+        console.warn('[UPLOAD DEBUG] No URL found in result object!');
+      } else {
+        console.log('[UPLOAD DEBUG] Successfully obtained uploaded URL:', uploadedUrl);
+      }
 
       setImagePreview((prev) => ({
         ...prev,
         uploadedUrl,
       }));
     } catch (err) {
-      console.error('Image upload failed:', err);
+      console.error('[UPLOAD DEBUG] Image upload catch block:', err);
       alert('Image upload failed. Please try again.');
       setImagePreview(null);
     } finally {
@@ -115,6 +126,7 @@ const MessageInput = ({ onSend, onTyping, conversationId, role = 'student' }) =>
       return;
     }
 
+    console.log('[UPLOAD DEBUG] File selected:', file.name, 'Size:', file.size);
     setUploading(true);
     try {
       setFilePreview({
@@ -123,15 +135,22 @@ const MessageInput = ({ onSend, onTyping, conversationId, role = 'student' }) =>
         uploadedUrl: null,
       });
 
+      console.log('[UPLOAD DEBUG] Starting upload to conversation:', conversationId);
       const result = await messageService.uploadFile(conversationId, file, role);
+      console.log('[UPLOAD DEBUG] Upload result received:', result);
+
       const uploadedUrl = result?.url || result?.data?.url;
+      
+      if (!uploadedUrl) {
+        console.warn('[UPLOAD DEBUG] No URL found in result object!');
+      }
 
       setFilePreview((prev) => ({
         ...prev,
         uploadedUrl,
       }));
     } catch (err) {
-      console.error('File upload failed:', err);
+      console.error('[UPLOAD DEBUG] File upload catch block:', err);
       alert('File upload failed. Please try again.');
       setFilePreview(null);
     } finally {
