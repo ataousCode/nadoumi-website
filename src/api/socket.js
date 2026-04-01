@@ -8,7 +8,10 @@ export const initiateSocketConnection = (token) => {
     auth: {
       token,
     },
-    transports: ["websocket", "polling"],
+    transports: ["polling", "websocket"],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
   });
 
   console.log("Connecting socket...");

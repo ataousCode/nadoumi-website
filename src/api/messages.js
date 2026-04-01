@@ -1,4 +1,4 @@
-import { apiRequest, getAuthToken, API_BASE_URL } from './config';
+import { apiRequest, apiRequestFormData, getAuthToken, API_BASE_URL } from './config';
 
 const BASE = 'messages';
 
