@@ -24,7 +24,7 @@ function TopScholarships() {
 
   const scholarships = data?.data?.scholarships || [];
 
-  if (scholarships.length === 0) return null;
+  if (scholarships.length === 0 && !isLoading) return null;
 
   return (
     <section className="py-24 bg-gray-50/50">
