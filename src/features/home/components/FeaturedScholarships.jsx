@@ -10,7 +10,10 @@ import LoadingSpinner from '../../../components/common/LoadingSpinner.jsx';
 function FeaturedScholarships() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['featured-scholarships'],
-    queryFn: () => getFeaturedScholarships()
+    queryFn: () => getFeaturedScholarships(),
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 
   if (isLoading) {
