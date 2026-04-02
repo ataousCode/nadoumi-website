@@ -6,6 +6,7 @@ import RecommendedSelfFinanced from "../features/home/components/RecommendedSelf
 import TopScholarships from "../features/home/components/TopScholarships.jsx";
 import FeaturedScholarships from "../features/home/components/FeaturedScholarships.jsx";
 import TopUniversitiesChina from "../features/home/components/TopUniversitiesChina.jsx";
+import UniversityGrid from "../features/home/components/UniversityGrid.jsx";
 import WhyChooseUs from "../features/home/components/WhyChooseUs.jsx";
 import JourneySection from "../features/home/components/JourneySection.jsx";
 import TestimonialSection from "../features/home/components/TestimonialSection.jsx";
@@ -20,6 +21,7 @@ function Home() {
       <TopScholarships />
       <RecommendedSelfFinanced />
       <TopUniversitiesChina />
+      <UniversityGrid />
       <WhyChooseUs />
       <JourneySection />
       <TestimonialSection />

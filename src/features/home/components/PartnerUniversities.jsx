@@ -7,7 +7,7 @@ import LoadingSpinner from '../../../components/common/LoadingSpinner.jsx';
 import { Link } from 'react-router-dom';
 
 function PartnerUniversities() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['partner-universities'],
     queryFn: () => getUniversities({ isPartner: true, limit: 3 })
   });
@@ -24,7 +24,24 @@ function PartnerUniversities() {
 
   const universities = data?.data?.universities || [];
 
-  if (universities.length === 0) return null;
+  if (isError || universities.length === 0) {
+    return (
+      <section className="py-24 bg-white">
+        <Container>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="max-w-2xl">
+              <span className="text-orange-600 font-black uppercase tracking-[0.2em] text-[10px] mb-4 block">Global Network</span>
+              <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">Partner Universities</h2>
+            </div>
+          </div>
+          <div className="py-16 text-center border-2 border-dashed border-gray-100 rounded-[2.5rem] bg-gray-50/50">
+             <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">No partner universities available yet</p>
+             <p className="text-gray-500 text-sm mt-2 font-medium">Flag universities as 'Partner' in the admin panel to show them here.</p>
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 bg-white">

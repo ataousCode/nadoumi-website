@@ -24,7 +24,24 @@ function TopScholarships() {
 
   const scholarships = data?.data?.scholarships || [];
 
-  if (scholarships.length === 0) return null;
+  if (isError || scholarships.length === 0) {
+    return (
+      <section className="py-24 bg-gray-50/50">
+        <Container>
+          <div className="flex justify-between items-end mb-12">
+            <div className="max-w-xl">
+              <span className="text-red-600 font-bold uppercase tracking-widest text-xs mb-3 block">Elite Opportunities</span>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900">Top Scholarships</h2>
+            </div>
+          </div>
+          <div className="py-16 text-center border-2 border-dashed border-gray-100 rounded-[2.5rem] bg-white">
+             <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">No top scholarships available yet</p>
+             <p className="text-gray-500 text-sm mt-2 font-medium">Flag scholarships as 'Top' in the admin panel to show them here.</p>
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 bg-gray-50/50">

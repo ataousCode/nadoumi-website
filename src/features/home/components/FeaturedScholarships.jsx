@@ -25,6 +25,25 @@ function FeaturedScholarships() {
 
   const scholarships = data?.data || [];
 
+  if (isError || scholarships.length === 0) {
+    return (
+      <section className="py-24 bg-white">
+        <Container>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <span className="text-orange-600 font-bold uppercase tracking-widest text-xs mb-3 block">Opportunities</span>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900">Featured Scholarships</h2>
+            </div>
+          </div>
+          <div className="py-16 text-center border-2 border-dashed border-gray-100 rounded-[2.5rem] bg-gray-50/50">
+             <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">No featured scholarships available yet</p>
+             <p className="text-gray-500 text-sm mt-2 font-medium">Check back soon or explore our general programs.</p>
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
   return (
     <section className="py-24 bg-white">
       <Container>
@@ -39,7 +58,7 @@ function FeaturedScholarships() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {scholarships.map((s, i) => (
+          {scholarships.slice(0, 3).map((s, i) => (
             <ScholarshipCard key={s.id || i} scholarship={s} variant="simple" />
           ))}
         </div>
