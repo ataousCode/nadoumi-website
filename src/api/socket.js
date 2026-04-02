@@ -11,12 +11,15 @@ export const initiateSocketConnection = (token) => {
       token,
     },
     transports: ["polling", "websocket"],
+    upgrade: true,
+    rememberUpgrade: true,
     reconnection: true,
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
+    timeout: 20000,
   });
 
-  console.log("Connecting socket...");
+  console.log("Connecting socket (prioritizing polling for stability)...");
   
   socket.on("connect", () => {
     console.log("Socket connected!");

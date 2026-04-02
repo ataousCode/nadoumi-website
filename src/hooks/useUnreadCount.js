@@ -5,7 +5,8 @@ import { messageService } from '../api/messages';
  * Global hook to fetch and sum the unread message counts for students.
  * Reuses the 'conversations' query key so it syncs with the Messages page.
  */
-export const useUnreadCount = (role = 'student') => {
+export const useUnreadCount = (roleInput = 'student') => {
+  const role = roleInput?.toLowerCase() === 'admin' ? 'admin' : 'student';
   const queryKey = role === 'admin' ? ['admin-conversations'] : ['conversations'];
 
   const { data: rawConversations, isLoading } = useQuery({
@@ -25,6 +26,10 @@ export const useUnreadCount = (role = 'student') => {
     (sum, c) => sum + (parseInt(c.unreadCount) || 0),
     0
   );
+
+  if (totalUnread > 0) {
+    console.log(`[UNREAD DEBUG] Role: ${role} | Key: ${JSON.stringify(queryKey)} | Count: ${totalUnread}`);
+  }
 
   return { totalUnread, isLoading };
 };
