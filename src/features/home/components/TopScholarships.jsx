@@ -7,7 +7,7 @@ import LoadingSpinner from '../../../components/common/LoadingSpinner.jsx';
 import { Link } from 'react-router-dom';
 
 function TopScholarships() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['top-scholarships-home'],
     queryFn: () => getScholarships({ isTop: true, limit: 3 })
   });
