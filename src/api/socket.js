@@ -3,9 +3,19 @@ import { API_BASE_URL } from "./config";
 
 let socket;
 
-export const initiateSocketConnection = (token) => {
-  if (socket?.connected) return socket;
+export const initiateSocketConnection = (token, roleName = 'user') => {
+  if (socket?.connected) {
+    console.log(`[Socket] Reusing active connection for ${roleName}...`);
+    return socket;
+  }
 
+  if (socket) {
+    console.log(`[Socket] Cleaning up previous inactive connection for ${roleName}...`);
+    socket.disconnect();
+  }
+
+  console.log(`[Socket] Initializing fresh connection for ${roleName}...`);
+  
   socket = io(API_BASE_URL.replace("/api", ""), {
     auth: {
       token,
@@ -18,8 +28,6 @@ export const initiateSocketConnection = (token) => {
     reconnectionDelay: 1000,
     timeout: 20000,
   });
-
-  console.log("Connecting socket (prioritizing polling for stability)...");
   
   socket.on("connect", () => {
     console.log("Socket connected!");
