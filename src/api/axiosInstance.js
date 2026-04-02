@@ -196,12 +196,6 @@ export const apiRequestFormData = (endpoint, formData, options = {}) => {
   });
 };
 
-/**
- * FormData-specific shortcut — replaces `apiRequestFormData` from config.js.
- */
-export const apiRequestFormData = (endpoint, formData, options = {}) =>
-  apiRequest(endpoint, { method: 'POST', ...options, body: formData, isFormData: true });
-
 // ─────────────────────────────────────────────
 // URL Helpers (unchanged)
 // ─────────────────────────────────────────────
