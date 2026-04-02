@@ -160,10 +160,9 @@ export default axiosInstance;
 // ─────────────────────────────────────────────
 
 /**
- * General-purpose API request — replaces the old `apiRequest` from config.js.
- * Service files pass method/body/headers; Axios interceptors handle auth.
+ * General-purpose API request utility.
  */
-export const apiRequest = (endpoint, options = {}) => {
+export const apiRequest = async (endpoint, options = {}) => {
   const {
     method = 'GET',
     body,
@@ -172,13 +171,28 @@ export const apiRequest = (endpoint, options = {}) => {
     isFormData = false,
   } = options;
 
-  return axiosInstance.request({
-    url:             endpoint,
+  // For FormData, prioritize the raw body and let browser set Content-Type
+  const config = {
+    url:        endpoint,
     method,
-    data:            body,
+    data:       body,
     headers,
-    _tokenType:      tokenType,
-    ...(isFormData && { data: body }),  // body is already FormData
+    _tokenType: tokenType,
+  };
+
+  return axiosInstance.request(config);
+};
+
+/**
+ * Specialized utility for multi-part form data uploads.
+ * Explicitly named to resolve 'not defined' errors during initialization.
+ */
+export const apiRequestFormData = (endpoint, formData, options = {}) => {
+  return apiRequest(endpoint, { 
+    method: 'POST', 
+    ...options, 
+    body:      formData, 
+    isFormData: true 
   });
 };
 

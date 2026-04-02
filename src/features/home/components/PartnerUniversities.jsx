@@ -24,7 +24,7 @@ function PartnerUniversities() {
 
   const universities = data?.data?.universities || [];
 
-  if (universities.length === 0 && !isLoading) return null;
+  if (universities.length === 0) return null;
 
   return (
     <section className="py-24 bg-white">

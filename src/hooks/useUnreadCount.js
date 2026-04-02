@@ -20,18 +20,23 @@ export const useUnreadCount = (roleInput = 'student') => {
     ? rawConversations
     : Array.isArray(rawConversations?.data)
     ? rawConversations.data
+    : Array.isArray(rawConversations?.conversations)
+    ? rawConversations.conversations
     : [];
 
   const unreadField = role === 'admin' ? 'unreadCountAdmin' : 'unreadCountStudent';
   
   const totalUnread = conversations.reduce(
-    (sum, c) => sum + (parseInt(c[unreadField]) || 0),
+    (sum, c) => {
+      const val = parseInt(c[unreadField]) || 0;
+      return sum + val;
+    },
     0
   );
 
-  // Deep Transparency Log
+  // Absolute Resilience & Traceability
   if (conversations.length > 0) {
-    console.log(`[UNREAD TRACE] Role: ${role} | Field: ${unreadField} | Total: ${totalUnread}`, conversations.map(c => ({ id: c.id, [unreadField]: c[unreadField] })));
+    console.log(`[UNREAD TRACE] Type: ${role} | Field: ${unreadField} | Total: ${totalUnread} | Items: ${conversations.length}`);
   }
 
   return { totalUnread, isLoading };

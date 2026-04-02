@@ -14,13 +14,14 @@ export const initiateSocketConnection = (token, roleName = 'user') => {
     socket.disconnect();
   }
 
-  console.log(`[Socket] Initializing fresh connection for ${roleName}...`);
+  console.log(`[Socket] Initializing fresh connection for ${roleName} (prioritizing polling for stability)...`);
   
   socket = io(API_BASE_URL.replace("/api", ""), {
     auth: {
       token,
     },
-    transports: ["polling", "websocket"],
+    transports: ["polling", "websocket"], // Polling first = guaranteed connection, then upgrade
+    withCredentials: true,
     upgrade: true,
     rememberUpgrade: true,
     reconnection: true,
