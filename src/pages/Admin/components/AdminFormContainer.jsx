@@ -17,12 +17,12 @@ const AdminFormContainer = ({
       <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
         <Button 
           type="submit" 
-          disabled={isLoading} 
+          isLoading={isLoading}
           size="lg" 
           shadow 
           className="px-24 rounded-full border-4 border-white shadow-2xl scale-105 active:scale-100 transition-all"
         >
-          {isLoading ? 'Processing...' : submitLabel}
+          {submitLabel}
         </Button>
       </div>
     </form>
