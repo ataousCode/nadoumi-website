@@ -1,5 +1,5 @@
 // MongoDB-backed documents API
-import { apiRequest, apiRequestFormData, API_BASE_URL } from './config.js'
+import { apiRequest, apiRequestFormData, API_BASE_URL } from './axiosInstance.js'
 
 // Get base URL without /api for static file serving
 const getBaseUrl = () => {

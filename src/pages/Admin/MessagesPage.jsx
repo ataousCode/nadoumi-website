@@ -9,7 +9,7 @@ import { messageService } from '../../api/messages';
 import { authService } from '../../api/auth.service';
 import { sendTypingStatus, subscribeToMessages } from '../../api/socket';
 import { useChatSocket } from '../../features/messages/hooks/useChatSocket';
-import AdminLoading from './components/AdminLoading';
+import AdminLoading from '../../features/admin/components/AdminLoading';
 
 const AdminMessagesPage = () => {
   const queryClient = useQueryClient();

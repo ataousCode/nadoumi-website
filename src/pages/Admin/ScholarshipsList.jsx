@@ -14,9 +14,9 @@ import {
   EyeSlashIcon
 } from '@heroicons/react/24/outline';
 import { getScholarships, deleteScholarship, updateScholarshipStatus } from '../../api/scholarships';
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
-import StatusBadge from './components/StatusBadge';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
+import StatusBadge from '../../features/admin/components/StatusBadge';
 import { useToast } from '../../context/ToastContext';
 import { cn } from '../../utils/cn';
 import ConfirmDialog from '../../components/common/ConfirmDialog';

@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL } from './axiosInstance.js';
 
 let socket;
 

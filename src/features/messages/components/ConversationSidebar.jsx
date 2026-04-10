@@ -1,5 +1,5 @@
 import React from 'react';
-import { getImageURL } from '../../../api/config';
+import { getImageURL } from '../../../api/axiosInstance.js';
 import logo from '../../../assets/icons/logo.jpg';
 import { usePresence } from '../../../hooks/usePresence';
 import Skeleton from '../../../components/common/Skeleton';

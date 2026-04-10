@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../../../components/common/Container.jsx';
-import ScholarshipCard from '../../../components/common/ScholarshipCard.jsx';
+import ScholarshipCard from '../../scholarships/components/ScholarshipCard.jsx';
 import { useQuery } from '@tanstack/react-query';
 import { getScholarships } from '../../../api/scholarships.js';
 import LoadingSpinner from '../../../components/common/LoadingSpinner.jsx';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { PhoneIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
-import { getImageURL } from '../../../api/config';
+import { getImageURL } from '../../../api/axiosInstance.js';
 import logo from '../../../assets/icons/logo.jpg';
 
 const ChatHeader = ({ conversation, isOnline, isAdminView = false }) => {

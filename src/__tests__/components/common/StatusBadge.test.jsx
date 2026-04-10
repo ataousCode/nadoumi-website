@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import StatusBadge from '../../../pages/Admin/components/StatusBadge';
+import StatusBadge from '../../../features/admin/components/StatusBadge';
 
 describe('StatusBadge Component', () => {
   it('renders the correct label for "accepted" status', () => {

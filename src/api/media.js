@@ -1,4 +1,4 @@
-import { apiRequestFormData } from './config.js';
+import { apiRequestFormData } from './axiosInstance.js';
 
 export async function uploadMedia(file, folder = 'nadoumi/assets') {
   const formData = new FormData();

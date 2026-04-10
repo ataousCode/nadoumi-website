@@ -1,4 +1,4 @@
-import { apiRequest, apiRequestFormData } from './config.js'
+import { apiRequest, apiRequestFormData } from './axiosInstance.js'
 import { APPLICATION_STATUS } from '../constants/applicationStatus.js'
 
 const API_BASE = 'applications'

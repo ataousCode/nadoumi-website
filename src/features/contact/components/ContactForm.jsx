@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import emailjs from 'emailjs-com'
 import Button from '../../../components/common/Button.jsx'
 import site from '../../../data/site.json'
-import validateContactForm from '../../../utils/validateForm'
+import validateContactForm from '../../../utils/validation'
 import { useI18n } from '../../../i18n/LocaleProvider.jsx'
 
 function ContactForm({ className = '' }) {

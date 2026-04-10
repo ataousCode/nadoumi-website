@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../../context/ToastContext';
-import UniversityForm from './components/UniversityForm';
+import UniversityForm from '../../features/admin/components/UniversityForm';
 import { createUniversity } from '../../api/universities';
 
 const NewUniversity = () => {

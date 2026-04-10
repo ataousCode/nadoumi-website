@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../../context/ToastContext';
-import ScholarshipForm from './components/ScholarshipForm';
+import ScholarshipForm from '../../features/admin/components/ScholarshipForm';
 import { createScholarship } from '../../api/scholarships';
 import { getUniversities } from '../../api/universities';
 
-import AdminLoading from './components/AdminLoading';
+import AdminLoading from '../../features/admin/components/AdminLoading';
 
 const NewScholarship = () => {
   const navigate = useNavigate();

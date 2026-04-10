@@ -2,7 +2,7 @@ import React from 'react';
 import Container from '../components/common/Container.jsx';
 import ScholarshipHero from '../features/scholarships/components/ScholarshipHero.jsx';
 import FilterSidebar from '../features/scholarships/components/FilterSidebar.jsx';
-import ScholarshipCard from '../components/common/ScholarshipCard.jsx';
+import ScholarshipCard from '../features/scholarships/components/ScholarshipCard.jsx';
 import ScholarshipTable from '../features/scholarships/components/ScholarshipTable.jsx';
 import { Icons } from '../assets/icons/Icons.jsx';
 import { cn } from '../utils/cn';

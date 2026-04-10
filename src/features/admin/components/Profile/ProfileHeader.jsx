@@ -1,6 +1,6 @@
 import React from 'react';
 import { CameraIcon, CheckBadgeIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
-import { getImageURL } from '../../../../api/config';
+import { getImageURL } from '../../../../api/axiosInstance.js';
 
 const ProfileHeader = ({ admin, isUploading, onUpload }) => {
   const maskDate = (date) => date ? new Date(date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown';

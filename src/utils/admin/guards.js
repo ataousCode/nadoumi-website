@@ -1,8 +1,8 @@
-import { getCurrentUser } from '../../api/auth.js'
+import { authService } from '../../api/auth.service.js'
 
 export function isAdminAuthenticated() {
   try {
-    const user = getCurrentUser()
+    const user = authService.getCurrentUser()
     return Boolean(user)
   } catch (_) {
     return false

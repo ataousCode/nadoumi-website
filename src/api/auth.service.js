@@ -1,4 +1,5 @@
-import { apiRequest, apiRequestFormData, setAuthToken, clearAuthTokens } from './config';
+import { apiRequest, apiRequestFormData, setAuthToken, getAuthToken, clearAuthTokens } from './axiosInstance.js';
+import { getUserFromToken } from '../utils/tokenUtils.js';
 
 export const authService = {
   register: async (studentData) => {
@@ -100,5 +101,23 @@ export const authService = {
     const formData = new FormData();
     formData.append('profilePicture', file);
     return await apiRequestFormData('students/me/profile-picture', formData);
+  },
+
+  getCurrentUser: (role = 'admin') => {
+    const token = getAuthToken(role);
+    return getUserFromToken(token, role);
+  },
+
+  verifyToken: async (role = 'admin') => {
+    const token = getAuthToken(role);
+    if (!token) return null;
+    
+    try {
+      const response = await apiRequest(`${role}/verify`);
+      return response.data?.admin || response.data?.user || response.admin || response.user;
+    } catch {
+      setAuthToken(null, role);
+      return null;
+    }
   }
 };

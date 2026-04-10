@@ -8,7 +8,7 @@ import {
     queryPresence,
     getSocket,
 } from '../../../api/socket';
-import { getAuthToken } from '../../../api/config';
+import { getAuthToken } from '../../../api/axiosInstance.js';
 
 export const useChatSocket = (activeConversationId, targetUserId, role = 'student') => {
     const queryClient = useQueryClient();

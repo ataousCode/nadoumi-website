@@ -8,7 +8,7 @@ import {
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 import { messageService } from '../../../api/messages';
-import { getImageURL } from '../../../api/config';
+import { getImageURL } from '../../../api/axiosInstance.js';
 
 const EMOJIS = ['😊','😂','❤️','👍','🙌','🔥','✨','🤔','😎','💡','✅','🚀','⭐','👋','🎓','📚'];
 

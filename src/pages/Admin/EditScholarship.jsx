@@ -3,12 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../../context/ToastContext';
-import ScholarshipForm from './components/ScholarshipForm';
+import ScholarshipForm from '../../features/admin/components/ScholarshipForm';
 import { getScholarship, updateScholarship } from '../../api/scholarships';
 import { getUniversities } from '../../api/universities';
 
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
 
 const EditScholarship = () => {
   const { id } = useParams();

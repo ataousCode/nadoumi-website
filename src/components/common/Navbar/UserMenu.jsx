@@ -1,5 +1,5 @@
 import React from 'react'
-import { getImageURL } from '../../../api/config.js'
+import { getImageURL } from '../../../api/axiosInstance.js'
 
 function UserMenu({ student, onLogout, isMobile = false }) {
   const initials = student?.firstName?.[0] || 'S'

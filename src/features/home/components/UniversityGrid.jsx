@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../../../components/common/Container.jsx';
-import UniversityIconCard from '../../../components/common/UniversityIconCard.jsx';
+import UniversityIconCard from '../../universities/components/UniversityIconCard.jsx';
 
 import { useQuery } from '@tanstack/react-query';
 import { getUniversities } from '../../../api/universities.js';

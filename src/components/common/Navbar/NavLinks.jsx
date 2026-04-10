@@ -6,6 +6,7 @@ const navItems = [
   { path: '/universities', label: 'Universities' },
   { path: '/programs', label: 'Program Search' },
   { path: '/about', label: 'About Us' },
+  { path: '/contact', label: 'Contact Us' },
 ];
 
 function NavLinks({ onItemClick, className = '', itemClassName = '' }) {

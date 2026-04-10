@@ -71,9 +71,6 @@ function ContactInfo({ className = '' }) {
               {site?.social?.facebook && (
                 <a href={site.social.facebook} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-orange-600">Facebook</a>
               )}
-              {site?.social?.linkedin && (
-                <a href={site.social.linkedin} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-orange-600">LinkedIn</a>
-              )}
               {site?.social?.instagram && (
                 <a href={site.social.instagram} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-orange-600">Instagram</a>
               )}

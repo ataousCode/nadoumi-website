@@ -4,7 +4,7 @@ import { GlobeAltIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import StatusBadge from '../../../components/common/Dashboard/StatusBadge';
 import { authService } from '../../../api/auth.service';
 import { useToast } from '../../../context/ToastContext';
-import { getImageURL } from '../../../api/config';
+import { getImageURL } from '../../../api/axiosInstance.js';
 
 const ProfileHero = ({ student }) => {
   const queryClient = useQueryClient();

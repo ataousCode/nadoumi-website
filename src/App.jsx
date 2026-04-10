@@ -25,6 +25,8 @@ import Universities from "./pages/Universities.jsx";
 import UniversityProfile from "./pages/UniversityProfile.jsx";
 import Programs from "./pages/Programs.jsx";
 import ScholarshipProfile from "./pages/ScholarshipProfile.jsx";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
 
 // Educational Guides
 import CityGuides from "./pages/Guides/CityGuides.jsx";
@@ -143,6 +145,8 @@ function AppContent() {
               } 
             />
 
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </Suspense>

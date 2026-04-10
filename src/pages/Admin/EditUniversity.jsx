@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../../context/ToastContext';
-import UniversityForm from './components/UniversityForm';
+import UniversityForm from '../../features/admin/components/UniversityForm';
 import { getUniversity, updateUniversity } from '../../api/universities';
 
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
 
 const EditUniversity = () => {
   const { id } = useParams();

@@ -46,17 +46,18 @@ function Login() {
   return (
     <div className="min-h-screen bg-white flex flex-col md:flex-row overflow-hidden font-sans">
       {/* Left: Hero Image Section */}
-      <div className="hidden md:flex md:w-[45%] relative bg-gray-900 overflow-hidden">
+      <div className="hidden md:flex md:w-[45%] relative bg-gray-100 overflow-hidden">
         <img 
-          src="/assets/images/auth-hero.png" 
-          alt="Modern Chinese Campus" 
-          className="absolute inset-0 w-full h-full object-cover opacity-50 animate-slow-zoom"
+          src="/src/assets/images/login-hero.png" 
+          alt="Student Success at Nadoumi" 
+          className="absolute inset-0 w-full h-full object-cover animate-slow-zoom"
         />
-        <div className="absolute inset-0 bg-gradient-to-tr from-orange-600/90 via-orange-500/80 to-transparent" />
+        {/* Subtle Bottom Gradient for Text Readability */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         
-        <div className="relative z-10 p-16 flex flex-col justify-center h-full text-white max-w-xl animate-fade-in-up">
-           <div className="w-12 h-1 bg-white mb-8 rounded-full opacity-50" />
-           <h1 className="text-5xl lg:text-6xl font-black mb-6 leading-[1.05] tracking-tighter">
+        <div className="relative z-10 p-16 flex flex-col justify-end h-full text-white max-w-xl animate-fade-in-up">
+           <div className="w-12 h-1 bg-orange-500 mb-8 rounded-full" />
+           <h1 className="text-5xl lg:text-6xl font-black mb-6 leading-[1.05] tracking-tighter text-white">
              Your Future Begins <br/> in China
            </h1>
            <p className="text-xl text-white/90 font-medium leading-relaxed max-w-sm">

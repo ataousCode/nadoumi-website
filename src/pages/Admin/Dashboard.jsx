@@ -7,12 +7,12 @@ import {
   AcademicCapIcon 
 } from '@heroicons/react/24/outline';
 import { adminService } from '../../api/admin.service';
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
 import StatsCard from '../../components/common/StatsCard';
-import ApplicationTrendsChart from './components/ApplicationTrendsChart';
-import RecentSubmissionsTable from './components/RecentSubmissionsTable';
-import UniversityPerformance from './components/UniversityPerformance';
+import ApplicationTrendsChart from '../../features/admin/components/ApplicationTrendsChart';
+import RecentSubmissionsTable from '../../features/admin/components/RecentSubmissionsTable';
+import UniversityPerformance from '../../features/admin/components/UniversityPerformance';
 
 const AdminDashboard = () => {
   const { data: stats, isLoading, isError, error, refetch } = useQuery({

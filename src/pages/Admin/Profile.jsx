@@ -4,9 +4,9 @@ import { authService } from '../../api/auth.service';
 import { useToast } from '../../context/ToastContext';
 
 // Modular Components
-import ProfileHeader from './components/Profile/ProfileHeader';
-import PersonalInfoForm from './components/Profile/PersonalInfoForm';
-import CredentialsForm from './components/Profile/CredentialsForm';
+import ProfileHeader from '../../features/admin/components/Profile/ProfileHeader';
+import PersonalInfoForm from '../../features/admin/components/Profile/PersonalInfoForm';
+import CredentialsForm from '../../features/admin/components/Profile/CredentialsForm';
 
 /**
  * Admin Profile Page

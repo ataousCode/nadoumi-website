@@ -1,5 +1,5 @@
 import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { getImageURL } from '../../api/config';
+import { getImageURL } from '../../api/axiosInstance.js';
 import { useUnreadCount } from '../../hooks/useUnreadCount';
 
 const StudentTopNav = ({ user }) => {

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { DocumentTextIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
-import { getImageURL } from '../../../api/config';
+import { getImageURL } from '../../../api/axiosInstance.js';
 import logo from '../../../assets/icons/logo.jpg';
 
 const MessageThread = ({ messages, typingUser, currentUserId, participant, isAdminView = false, isLoading }) => {

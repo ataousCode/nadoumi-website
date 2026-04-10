@@ -11,8 +11,8 @@ import {
   UserIcon
 } from '@heroicons/react/24/outline';
 import { getUniversities, deleteUniversity, updateUniversityStatus } from '../../api/universities';
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
 import { useToast } from '../../context/ToastContext';
 import { cn } from '../../utils/cn';
 import ConfirmDialog from '../../components/common/ConfirmDialog';

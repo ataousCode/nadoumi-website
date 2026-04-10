@@ -1,5 +1,5 @@
 // Student API client
-import { apiRequest, setAuthToken, getAuthToken, API_BASE_URL } from './config.js'
+import { apiRequest, setAuthToken, getAuthToken, API_BASE_URL } from './axiosInstance.js'
 import { getUserFromToken } from '../utils/tokenUtils.js'
 
 const API_BASE = 'students'

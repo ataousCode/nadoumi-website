@@ -1,4 +1,4 @@
-import { apiRequest, apiRequestFormData, getAuthToken, API_BASE_URL } from './config';
+import { apiRequest, apiRequestFormData, getAuthToken, API_BASE_URL } from './axiosInstance.js';
 
 const BASE = 'messages';
 

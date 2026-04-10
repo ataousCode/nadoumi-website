@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../../../components/common/Container.jsx';
-import ScholarshipCard from '../../../components/common/ScholarshipCard.jsx';
+import ScholarshipCard from '../../scholarships/components/ScholarshipCard.jsx';
 import { Link } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';

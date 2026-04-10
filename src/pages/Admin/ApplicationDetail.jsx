@@ -16,11 +16,11 @@ import {
   DocumentTextIcon as DocumentTextSolid,
   DocumentPlusIcon as DocumentPlusSolid
 } from '@heroicons/react/24/solid';
-import { applicationAdminService } from '../../api/application.admin.service';
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
+import { adminService } from '../../api/admin.service';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
 import { usePresence } from '../../hooks/usePresence';
-import StatusBadge from './components/StatusBadge';
+import StatusBadge from '../../features/admin/components/StatusBadge';
 
 const ApplicationDetail = () => {
   const { id } = useParams();
@@ -32,12 +32,12 @@ const ApplicationDetail = () => {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['admin-application', id],
-    queryFn: () => applicationAdminService.getById(id),
+    queryFn: () => adminService.getApplicationById(id),
     refetchOnWindowFocus: false,
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: (statusData) => applicationAdminService.updateStatus(id, statusData),
+    mutationFn: (statusData) => adminService.updateApplicationStatus(id, statusData),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin-application', id]);
       queryClient.invalidateQueries(['admin-applications']);
@@ -73,7 +73,7 @@ const ApplicationDetail = () => {
     formData.append('type', 'admission'); // Default for admin uploads
 
     try {
-      await applicationAdminService.uploadAdminDoc(id, formData);
+      await adminService.uploadAdminDoc(id, formData);
       queryClient.invalidateQueries(['admin-application', id]);
     } catch (err) {
       console.error('Upload failed:', err);

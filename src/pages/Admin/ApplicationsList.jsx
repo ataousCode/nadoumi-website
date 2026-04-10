@@ -9,10 +9,10 @@ import {
   DocumentTextIcon
 } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
-import { applicationAdminService } from '../../api/application.admin.service';
-import AdminLoading from './components/AdminLoading';
-import AdminError from './components/AdminError';
-import StatusBadge from './components/StatusBadge';
+import { adminService } from '../../api/admin.service';
+import AdminLoading from '../../features/admin/components/AdminLoading';
+import AdminError from '../../features/admin/components/AdminError';
+import StatusBadge from '../../features/admin/components/StatusBadge';
 import { usePresence } from '../../hooks/usePresence';
 import { cn } from '../../utils/cn';
 
@@ -25,7 +25,7 @@ const ApplicationsList = () => {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['admin-applications', statusFilter, searchTerm, currentPage],
-    queryFn: () => applicationAdminService.getAll({
+    queryFn: () => adminService.getAllApplications({
       status: statusFilter === 'all' ? undefined : statusFilter,
       search: searchTerm || undefined,
       page: currentPage,

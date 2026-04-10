@@ -1,4 +1,4 @@
-import { apiRequest } from './config.js'
+import { apiRequest } from './axiosInstance.js'
 
 const API_BASE = 'universities'
 

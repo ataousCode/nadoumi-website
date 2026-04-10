@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../../../components/common/Container.jsx';
-import UniversityCard from '../../../components/common/UniversityCard.jsx';
+import UniversityCard from '../../universities/components/UniversityCard.jsx';
 import { useQuery } from '@tanstack/react-query';
 import { getUniversities } from '../../../api/universities.js';
 import LoadingSpinner from '../../../components/common/LoadingSpinner.jsx';

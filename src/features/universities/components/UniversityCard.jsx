@@ -1,102 +1,82 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Badge from '../../../components/common/Badge.jsx';
+import Skeleton from '../../../components/common/Skeleton.jsx';
 import { cn } from '../../../utils/cn';
 
-function UniversityCard({ 
-  id,
-  universityId, 
-  name, 
-  nameInChinese, 
-  city, 
-  province, 
-  logo, 
-  bannerImage,
-  image, 
-  qsRank, 
-  type, 
-  isRecommended,
-  scholarships = [],
-  tags = ["Project 985", "Project 211"]
-}) {
-  const displayImage = bannerImage || image || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80';
-  const displayId = id || universityId;
-  const viewCount = qsRank ? parseInt(qsRank) * 25 : 1240;
-
-  return (
-    <div className="group bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden transition-all duration-700 hover:shadow-2xl hover:shadow-orange-100 hover:-translate-y-1 flex flex-col h-full relative">
-      <Link to={`/universities/${displayId}`} className="relative h-52 overflow-hidden block">
-        <img 
-          src={displayImage} 
-          alt={name}
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/10 to-transparent opacity-80" />
-        
-        {/* Glass Badge Header */}
-        <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-          <div className="flex flex-wrap gap-2">
-            {tags && tags.slice(0, 1).map((tag, idx) => (
-              <div key={idx} className="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-[8px] font-black text-white uppercase tracking-widest">
-                {tag}
-              </div>
-            ))}
+/**
+ * Unified UniversityCard component mimicking ScholarshipCard style
+ * @param {Object} props
+ * @param {Object} props.university - University data object
+ * @param {string} props.variant - 'simple' (home) or 'detailed' (listing)
+ * @param {boolean} props.loading - Loading state
+ */
+export default function UniversityCard({ university, variant = 'simple', loading = false }) {
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full">
+        <Skeleton className="h-48 w-full" />
+        <div className="p-6 flex flex-col flex-1 space-y-4">
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <div className="pt-4 border-t border-gray-50 mt-auto">
+            <Skeleton className="h-4 w-24" />
           </div>
-          {isRecommended && (
-            <div className="bg-orange-600/90 backdrop-blur-md text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border border-orange-500/20">
-              ★ Hot
-            </div>
-          )}
         </div>
+      </div>
+    );
+  }
 
-        {/* Identity Overlay */}
-        <div className="absolute bottom-4 left-6 right-16">
-           <h3 className="text-lg font-black text-white leading-tight drop-shadow-2xl group-hover:text-orange-400 transition-colors">
-            {name}
-          </h3>
-          <p className="text-white/60 font-bold text-[9px] mt-1 tracking-widest uppercase">
-            {nameInChinese || 'Institutional Excellence'}
-          </p>
+  if (!university) return null;
+
+  const name = university.name;
+  const logo = university.logo;
+  const banner = university.bannerImage || university.banner;
+  const city = university.city;
+  const province = university.province;
+  const rank = university.qsRank;
+
+  if (variant === 'simple') {
+    return (
+      <Link 
+        to={`/universities/${university.id || university.universityId}`}
+        className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 flex flex-col h-full group cursor-pointer"
+      >
+        <div className="relative h-48 overflow-hidden bg-gray-100">
+          <img 
+            src={banner || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe1?auto=format&fit=crop&q=80'} 
+            alt={name} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+          />
+        </div>
+        
+        <div className="p-6 pt-2 flex flex-col flex-1 relative">
+          {/* Logo Overlay - Moved outside overflow-hidden container */}
+          <div className="absolute -top-10 left-6 w-20 h-20 bg-white rounded-2xl p-2 shadow-xl border border-gray-100 flex items-center justify-center z-10 transition-transform duration-300 group-hover:-translate-y-1">
+            <img src={logo} alt={`${name} logo`} className="w-full h-full object-contain" />
+          </div>
+
+          <div className="mt-12">
+            <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-1">
+              {name}
+            </h3>
+            <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-4">
+              {city}{city && province ? ', ' : ''}{province}
+            </p>
+          </div>
+          
+          <div className="flex items-center justify-between pt-4 border-t border-gray-50 mt-auto">
+            <div className="flex items-center gap-2 text-orange-600 text-[10px] font-black uppercase tracking-widest">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+              <span>QS Rank: #{rank || 'N/A'}</span>
+            </div>
+          </div>
         </div>
       </Link>
+    );
+  }
 
-      <div className="p-6 flex-1 flex flex-col relative">
-        {/* Logo Float */}
-        <div className="absolute -top-8 right-6 w-16 h-16 bg-white rounded-2xl p-2.5 shadow-xl border border-gray-50 flex items-center justify-center transition-transform group-hover:-translate-y-1">
-          <img src={logo || '/default-uni-logo.png'} alt="Logo" className="w-full h-full object-contain" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="space-y-1">
-            <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block">Location</span>
-            <p className="text-[11px] font-black text-gray-900 truncate">{city}{province ? `, ${province}` : ''}</p>
-          </div>
-          <div className="space-y-1">
-            <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block">World Rank</span>
-            <p className="text-[11px] font-black text-indigo-600">#{qsRank || 'TOP 100'}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between mb-8 py-3 border-y border-gray-50">
-           <div className="flex flex-col">
-              <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Scholarships</span>
-              <span className="text-xs font-black text-gray-900">{scholarships?.length || 0} Programs</span>
-           </div>
-           <div className="flex items-center gap-1.5 text-orange-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
-              <span className="text-[9px] font-black uppercase tracking-widest">{viewCount.toLocaleString()} Viewing</span>
-           </div>
-        </div>
-
-        <Link 
-          to={`/universities/${displayId}`}
-          className="mt-auto w-full inline-flex items-center justify-center py-3 bg-orange-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-orange-100 transition-all hover:bg-gray-900 hover:shadow-orange-200"
-        >
-          View
-        </Link>
-      </div>
-    </div>
-  );
+  // Detailed variant could be added here later if needed
+  return null;
 }
-
-export default UniversityCard;

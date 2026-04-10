@@ -1,8 +1,8 @@
-import Button from './Button.jsx'
+import Button from '../../../components/common/Button.jsx'
 import { Link, useNavigate } from 'react-router-dom'
-import Skeleton from './Skeleton.jsx'
-import { cn } from '../../utils/cn'
-import { isAuthenticated } from '../../api/axiosInstance.js'
+import Skeleton from '../../../components/common/Skeleton.jsx'
+import { cn } from '../../../utils/cn'
+import { isAuthenticated } from '../../../api/axiosInstance.js'
 
 function formatDate(value) {
   if (!value) return '—'
